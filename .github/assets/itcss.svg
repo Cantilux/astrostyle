@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="520" viewBox="0 0 1040 520" role="img" aria-labelledby="title desc">
+  <title id="title">The astrostyle inverted triangle</title>
+  <desc id="desc">Seven ITCSS layers from wide reach to narrow reach, all kept at low specificity: Settings, Tools, Generic, Elements, Objects, Components, Utilities.</desc>
+  <defs>
+    <pattern id="halftone" width="8" height="8" patternUnits="userSpaceOnUse">
+      <circle cx="4" cy="4" r="1" fill="#130d1c" fill-opacity=".06"/>
+    </pattern>
+  </defs>
+  <rect width="1040" height="520" rx="18" fill="#f0eee8"/>
+  <rect width="1040" height="520" rx="18" fill="url(#halftone)"/>
+
+  <g font-family="'Feature Mono', 'SFMono-Regular', Menlo, Consolas, monospace" font-size="17" letter-spacing="2" text-anchor="middle">
+    <polygon points="210,40 830,40 802,96 238,96" fill="none" stroke="#130d1c" stroke-width="2" stroke-dasharray="6 6"/>
+    <text x="520" y="74" fill="#130d1c">SETTINGS · tokens &amp; config</text>
+    <polygon points="240,104 800,104 772,160 268,160" fill="none" stroke="#130d1c" stroke-width="2" stroke-dasharray="6 6"/>
+    <text x="520" y="138" fill="#130d1c">TOOLS · functions &amp; mixins</text>
+
+    <polygon points="270,168 770,168 742,224 298,224" fill="#54009d"/>
+    <text x="520" y="202" fill="#f0eee8">GENERIC · box model &amp; reset</text>
+    <polygon points="300,232 740,232 712,288 328,288" fill="#d50059"/>
+    <text x="520" y="266" fill="#f0eee8">ELEMENTS · bare HTML</text>
+    <polygon points="330,296 710,296 682,352 358,352" fill="#ef476e"/>
+    <text x="520" y="330" fill="#130d1c">OBJECTS · ap-o-</text>
+    <polygon points="360,360 680,360 652,416 388,416" fill="#ff603e"/>
+    <text x="520" y="394" fill="#130d1c">COMPONENTS · ap-c-</text>
+    <polygon points="390,424 650,424 622,480 418,480" fill="#ffbd5c"/>
+    <text x="520" y="458" fill="#130d1c">UTILITIES · ap-u-</text>
+  </g>
+
+  <g font-family="'Feature Mono', 'SFMono-Regular', Menlo, Consolas, monospace" font-size="13" letter-spacing="2" fill="#130d1c">
+    <text x="822" y="122">NO CSS</text>
+    <text x="822" y="142">OUTPUT</text>
+    <text x="790" y="330">CSS @LAYERS,</text>
+    <text x="790" y="350">IN THIS ORDER</text>
+
+    <line x1="66" y1="40" x2="66" y2="464" stroke="#130d1c" stroke-width="2"/>
+    <polygon points="58,462 74,462 66,480" fill="#130d1c"/>
+    <text transform="rotate(90 40 260)" x="40" y="260" text-anchor="middle">REACH · WIDE → NARROW</text>
+
+    <line x1="974" y1="40" x2="974" y2="464" stroke="#ef476e" stroke-width="2"/>
+    <polygon points="966,462 982,462 974,480" fill="#ef476e"/>
+    <text transform="rotate(90 1000 260)" x="1000" y="260" text-anchor="middle" fill="#ab0048">SPECIFICITY · NEVER ABOVE ONE CLASS</text>
+  </g>
+</svg>
