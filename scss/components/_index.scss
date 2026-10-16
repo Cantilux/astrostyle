@@ -21,6 +21,9 @@
 @use 'progress/progress';
 @use 'spinner/spinner';
 @use 'empty-state/empty-state';
+@use 'pagination/pagination';
+@use 'tabs/tabs';
+@use 'toast/toast';
 
 // Emission order: a component that adjusts another one comes after it.
 $order: (
@@ -41,6 +44,9 @@ $order: (
   progress,
   spinner,
   empty-state,
+  pagination,
+  tabs,
+  toast,
 );
 
 // Public tokens of every component, keyed by component name.
@@ -62,6 +68,9 @@ $tokens: (
   progress: progress.$tokens,
   spinner: spinner.$tokens,
   empty-state: empty-state.$tokens,
+  pagination: pagination.$tokens,
+  tabs: tabs.$tokens,
+  toast: toast.$tokens,
 );
 
 // Fails compilation when `$names` (`all` or a list) contains an unknown component.

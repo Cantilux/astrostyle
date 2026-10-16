@@ -1,0 +1,94 @@
+// Tabs (ITCSS Components): a tablist of buttons over its panels, wired by `createTabs()`. The
+// selected tab is marked by an accent rule along the list's edge.
+// Contract and tokens: scss/components/tabs/README.md.
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults.
+$tokens: (
+  gap: fn.space(xxs),
+  border-color: fn.token('border-subtle'),
+  tab-fg: fn.token('text-muted'),
+  tab-hover-fg: fn.token('text'),
+  tab-hover-bg: color-mix(in oklab, #{fn.token('text')} 6%, transparent),
+  selected-fg: fn.token('text'),
+  indicator-color: fn.token('accent'),
+  indicator-size: fn.token('border-width-strong'),
+  panel-padding: fn.space(lg),
+);
+
+// Emits `.ap-c-tabs` and its elements.
+@mixin emit {
+  #{c.component(tabs)} {
+    @include c.tokens(tabs, $tokens);
+
+    display: block;
+    min-inline-size: 0;
+  }
+
+  #{c.component(tabs, list)} {
+    display: flex;
+    gap: c.private(gap);
+    overflow-x: auto;
+    border-block-end: fn.token('border-width-hairline') solid c.private(border-color);
+    scrollbar-width: thin;
+
+    &:where([aria-orientation='vertical']) {
+      flex-direction: column;
+      overflow-x: visible;
+      border-block-end: 0;
+      border-inline-start: fn.token('border-width-hairline') solid c.private(border-color);
+    }
+  }
+
+  #{c.component(tabs, tab)} {
+    @include mixins.text(action);
+
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: fn.space(sm);
+    min-block-size: fn.token('size-control');
+    padding-inline: fn.space(lg);
+    border-radius: fn.token('radius-control') fn.token('radius-control') 0 0;
+    box-shadow: inset 0 calc(#{c.private(indicator-size)} * -1) 0 transparent;
+    color: c.private(tab-fg);
+    white-space: nowrap;
+
+    @include mixins.interactive;
+    @include mixins.focus-ring;
+
+    &:where(:focus-visible) {
+      outline-offset: calc(#{fn.token('focus-width')} * -1);
+    }
+
+    &:where(:hover):where(:not(:disabled, [aria-disabled='true'])) {
+      background-color: c.private(tab-hover-bg);
+      color: c.private(tab-hover-fg);
+    }
+
+    &:where([aria-selected='true']) {
+      box-shadow: inset 0 calc(#{c.private(indicator-size)} * -1) 0 c.private(indicator-color);
+      color: c.private(selected-fg);
+    }
+
+    &:where(:disabled, [aria-disabled='true']) {
+      color: fn.token('text-disabled');
+    }
+
+    &:where([aria-orientation='vertical'] > *) {
+      border-radius: 0 fn.token('radius-control') fn.token('radius-control') 0;
+    }
+
+    &:where([aria-orientation='vertical'] > [aria-selected='true']) {
+      box-shadow: inset c.private(indicator-size) 0 0 c.private(indicator-color);
+    }
+  }
+
+  #{c.component(tabs, panel)} {
+    padding-block: c.private(panel-padding);
+
+    @include mixins.focus-ring;
+  }
+}

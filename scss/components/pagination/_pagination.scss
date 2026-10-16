@@ -1,0 +1,84 @@
+// Pagination (ITCSS Components): page links or buttons with previous and next steps, rendered by
+// `createPagination()` or written by hand. Contract and tokens: scss/components/pagination/README.md.
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults.
+$tokens: (
+  gap: fn.space(xxs),
+  size: fn.token('size-control'),
+  radius: fn.token('radius-pill'),
+  fg: fn.token('text'),
+  hover-bg: color-mix(in oklab, #{fn.token('text')} 8%, transparent),
+  current-bg: fn.token('accent'),
+  current-fg: fn.token('on-accent'),
+  gap-color: fn.token('text-subtle'),
+);
+
+// Emits `.ap-c-pagination` and its elements.
+@mixin emit {
+  #{c.component(pagination)} {
+    @include c.tokens(pagination, $tokens);
+
+    display: block;
+    min-inline-size: 0;
+  }
+
+  #{c.component(pagination, list)} {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: c.private(gap);
+    list-style: none;
+  }
+
+  #{c.component(pagination, item)} {
+    display: flex;
+  }
+
+  #{c.component(pagination, link)} {
+    @include mixins.text(data);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-block-size: c.private(size);
+    min-inline-size: c.private(size);
+    padding-inline: fn.space(sm);
+    border-radius: c.private(radius);
+    color: c.private(fg);
+    font-variant-numeric: tabular-nums;
+    text-decoration-line: none;
+
+    @include mixins.interactive;
+    @include mixins.focus-ring;
+
+    &:where(:hover):where(:not(:disabled, [aria-disabled='true'], [aria-current='page'])) {
+      background-color: c.private(hover-bg);
+    }
+
+    &:where([aria-current='page']) {
+      background-color: c.private(current-bg);
+      color: c.private(current-fg);
+      cursor: default;
+    }
+
+    &:where(:disabled, [aria-disabled='true']) {
+      color: fn.token('text-disabled');
+    }
+  }
+
+  #{c.component(pagination, icon)} {
+    inline-size: fn.token('size-icon');
+    block-size: fn.token('size-icon');
+  }
+
+  #{c.component(pagination, gap)} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: c.private(size);
+    color: c.private(gap-color);
+  }
+}
