@@ -89,7 +89,7 @@ Generic patterns the framework turns into components. Shapes are measured in §3
 
 ### 3.6 Light and dark
 
-The guide uses both pairings ("Astro Black on White", "Astro White on Black"); the companion app uses only dark. astrostyle ships both as complete themes from the same semantic tokens (§7.3). Default: `light`, the guide's own presentation (pending confirmation, §14). Theme selection is explicit (`data-ap-theme`), never from OS preferences.
+The guide uses both pairings ("Astro Black on White", "Astro White on Black"); the companion app uses only dark. astrostyle ships both as complete themes from the same semantic tokens (§7.3). Default: `light`, the guide's own presentation. Theme selection is explicit (`data-ap-theme`), never from OS preferences.
 
 ### 3.7 Shapes
 
@@ -101,9 +101,9 @@ Measured on the guide's vector artwork (A4 landscape, 841.92 × 595.44 pt), corn
 | Dark swatch card | 62.9 pt | ≈ 11.5 pt | ≈ 18% of height |
 | Buttons ("WANTED STORE PAGE", "GIMP DOWNLOAD LINK") | ≈ 10 pt | full | pill |
 
-Print sizes do not map 1:1 to screens. Scaling by body text (≈ 8 pt in the guide, 15px on screen, factor ≈ 1.9) gives the proposed tokens, pending confirmation (§14):
+Print sizes do not map 1:1 to screens. Scaling by body text (≈ 8 pt in the guide, 15px on screen, factor ≈ 1.9) gives the shape tokens:
 
-| Token | Proposed value | Used by |
+| Token | Value | Used by |
 | --- | --- | --- |
 | `radius-control` | 6px | inputs, windows, tiles, square buttons |
 | `radius-card` | 22px | cards and grouped panels |
@@ -398,8 +398,12 @@ Definition of done per component: SCSS partial; documented component tokens; HTM
 
 - The package ships **no font files**. It declares font-family tokens with fallbacks (`'Feature Mono', ui-monospace, monospace`) and documents where to obtain each font. Several guide fonts are only "free for personal and commercial use", which does not grant redistribution in a public package; Newake is paid.
 - An optional `astrostyle/fonts.css` with `@font-face` rules pointing to consumer-provided URLs can be added later.
-- README states that astrostyle is an unofficial, fan-made project, not affiliated with or endorsed by the ASTROPRISMA authors.
-- The Creator Kit files contain no license text; the guide only states that its graphic elements may be "used freely in your creations". Permission to use the name and the palette in a public package is still to be confirmed with the authors before the first npm release (§14).
+- astrostyle is published under the [ASTROPRISMA Third Party License](https://www.astroprisma.com/license), which allows free or commercial third-party products without explicit permission when its rules are followed:
+  - Independence statement, wherever the product is promoted (README, npm page, docs site): "astrostyle is an independent production by Enrico Cantile and is not affiliated with Crescent Chimera. It is published under the ASTROPRISMA Third Party License."
+  - Copyright line, legibly included in the product: "ASTROPRISMA is copyright Camila Mera and Crescent Chimera."
+  - No Crescent Chimera logo, no ASTROPRISMA logo, no other Crescent Chimera logos; nothing may suggest the product is official or sponsored. The "Compatible with ASTROPRISMA" logos are allowed but optional.
+  - Art and text from the books are not reused; game-world names (factions, equipment) may be used.
+- Every compiled stylesheet starts with a preserved comment (`/*! … */`) carrying the package name, version, MIT license, the independence statement and the copyright line, so the notice survives minification.
 
 ## 12. Package, tooling, release
 
@@ -439,18 +443,19 @@ Definition of done per component: SCSS partial; documented component tokens; HTM
 - Sass projects need the `pkg:` importer (`NodePackageImporter`) or a bundler that resolves bare package names in `@use`.
 - Map project vocabulary onto astrostyle tokens (e.g. `--faction-warg: var(--ap-palette-red)`) instead of adding project names to the framework.
 
-## 14. Open items and calls made without explicit instruction
+## 14. Decisions log
 
-Open (roadmap step 1, #2):
+No open items.
 
-- Confirm `light` as the default theme.
-- Confirm the shape tokens proposed in §3.7.
-- Confirm with the ASTROPRISMA authors the use of the name and the palette.
+Confirmed by the maintainer:
 
-Calls made:
+- `light` is the default theme; both themes are shipped.
+- Shape tokens of §3.7.
+- Licensing under the ASTROPRISMA Third Party License (§11).
+
+Calls made without explicit instruction:
 
 - Palette token names are neutral hues (`red`, `teal`, …) instead of faction names.
-- Default theme `light`; both themes shipped.
 - Default shapes follow the guide (pill buttons, rounded cards); pixel-cut and sharp corners are variants.
 - No font files in the package.
 - `on-accent` defaults to Astroprisma Black: bone white on `#ef476e` is 3.12:1, below 4.5:1 for button text; black on pink is 5.26:1. For the same reason pink text on the light theme (3.12:1) is limited to display-size headings, as in the guide.
