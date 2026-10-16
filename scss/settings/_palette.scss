@@ -1,0 +1,39 @@
+// Design Guide palette (ITCSS Settings, no CSS output). Values are the sRGB fills of the
+// ASTROPRISMA Creator Kit Design Guide; see docs/design.md §3.1.
+@use 'sass:map';
+
+$_defaults: (
+  'black': #130d1c,
+  'white': #f0eee8,
+  'off-white': #e9dcd3,
+  'pink': #ef476e,
+  'pink-dark': #d50059,
+  'pink-shadow': #ab0048,
+  'yellow': #ffbd5c,
+  'orange': #ff603e,
+  'magenta': #d50059,
+  'indigo': #54009d,
+  'red': #ca2632,
+  'teal': #5fc3b0,
+  'green': #6abd45,
+  'sea': #4bba7a,
+  'amber': #faa21e,
+  'rose': #d51b5b,
+);
+
+// Overrides or additions, merged over the defaults.
+$palette: () !default;
+
+// Copy of `$map` with every key as a string, so `pink` (a CSS color keyword) and 'pink' match.
+@function _string-keys($map) {
+  $result: ();
+
+  @each $key, $value in $map {
+    $result: map.set($result, '#{$key}', $value);
+  }
+
+  @return $result;
+}
+
+// Resolved palette used by the framework, keyed by color name strings.
+$palette-values: map.merge(_string-keys($_defaults), _string-keys($palette));

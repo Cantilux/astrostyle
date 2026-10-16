@@ -1,0 +1,21 @@
+// Public functions (ITCSS Tools, no CSS output); see docs/design.md §7.4.
+@use 'registry';
+
+// `var()` reference to a design token; unknown names fail compilation.
+@function token($name) {
+  @if not registry.has-token($name) {
+    @error 'astrostyle: unknown token `#{$name}`.';
+  }
+
+  @return registry.css-var($name);
+}
+
+// Raw palette color, for Sass-time computations; unknown names fail compilation.
+@function palette($name) {
+  @return registry.palette-color($name);
+}
+
+// Spacing token for a step of the space scale (`xxs` … `xxl`).
+@function space($step) {
+  @return token('space-#{$step}');
+}

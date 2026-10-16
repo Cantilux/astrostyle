@@ -1,0 +1,236 @@
+// Token registry (ITCSS Tools, no CSS output). Single list of the framework's custom
+// properties, shared by the Generic emitter, `token()` validation and the tokens.json export.
+@use 'sass:color';
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:math';
+@use 'sass:meta';
+@use 'sass:string';
+@use '../settings/config';
+@use '../settings/palette';
+@use '../settings/typography';
+@use '../settings/scales';
+@use '../settings/themes';
+
+// Converts a px length to rem on a 16px root; other values pass through unchanged.
+@function rem($length) {
+  @if meta.type-of($length) == 'number' and math.unit($length) == 'px' {
+    @return math.div($length, 16px) * 1rem;
+  }
+
+  @return $length;
+}
+
+// `var()` reference to one of the framework's custom properties.
+@function css-var($name) {
+  @return string.unquote('var(--#{config.$prefix}-#{$name})');
+}
+
+// Raw palette color; unknown names fail compilation.
+@function palette-color($name) {
+  @if not map.has-key(palette.$palette-values, '#{$name}') {
+    @error 'astrostyle: unknown palette color `#{$name}`.';
+  }
+
+  @return map.get(palette.$palette-values, '#{$name}');
+}
+
+// CSS `cubic-bezier()` from four control points.
+@function _cubic-bezier($points) {
+  @return string.unquote(
+    'cubic-bezier(#{list.nth($points, 1)}, #{list.nth($points, 2)}, #{list.nth($points, 3)}, #{list.nth($points, 4)})'
+  );
+}
+
+// CSS shadow from an (x, y, blur, spread, color) map.
+@function _shadow($shadow) {
+  @return string.unquote(
+    '#{map.get($shadow, x)} #{map.get($shadow, y)} #{map.get($shadow, blur)} #{map.get($shadow, spread)} #{map.get($shadow, color)}'
+  );
+}
+
+// Four-band hard-edged gradient of the Design Guide.
+@function spectrum-gradient($direction: 90deg) {
+  @return string.unquote(
+    'linear-gradient(#{$direction}, #{css-var(palette-yellow)} 0 25%, #{css-var(palette-orange)} 25% 50%, #{css-var(palette-magenta)} 50% 75%, #{css-var(palette-indigo)} 75% 100%)'
+  );
+}
+
+// Theme-independent tokens as (name: CSS value).
+@function _root-tokens() {
+  $tokens: ();
+
+  @each $name, $color in palette.$palette-values {
+    $tokens: map.set($tokens, 'palette-#{$name}', $color);
+  }
+
+  $tokens: map.set($tokens, 'gradient', spectrum-gradient());
+
+  @each $name, $families in map.get(typography.$typography-values, families) {
+    $tokens: map.set($tokens, 'font-#{$name}', string.unquote(meta.inspect($families)));
+  }
+
+  $tokens: map.set($tokens, 'font-scale', 1);
+
+  @each $name, $weight in map.get(typography.$typography-values, weights) {
+    $tokens: map.set($tokens, 'weight-#{$name}', $weight);
+  }
+
+  @each $role, $spec in map.get(typography.$typography-values, roles) {
+    $tokens: map.merge(
+      $tokens,
+      (
+        'text-#{$role}-family': css-var('font-#{map.get($spec, family)}'),
+        'text-#{$role}-size': rem(map.get($spec, size)),
+        'text-#{$role}-weight': css-var('weight-#{map.get($spec, weight)}'),
+        'text-#{$role}-leading': map.get($spec, leading),
+        'text-#{$role}-tracking': map.get($spec, tracking),
+      )
+    );
+  }
+
+  @each $name, $value in scales.$space-values {
+    $tokens: map.set($tokens, 'space-#{$name}', rem($value));
+  }
+
+  @each $name, $value in scales.$size-values {
+    $tokens: map.set($tokens, 'size-#{$name}', rem($value));
+  }
+
+  @each $name, $value in scales.$shape-values {
+    $tokens: map.set($tokens, $name, $value);
+  }
+
+  @each $name, $shadow in scales.$elevation-values {
+    $tokens: map.set($tokens, 'elevation-#{$name}', _shadow($shadow));
+  }
+
+  @each $name, $value in map.get(scales.$motion-values, durations) {
+    $tokens: map.set($tokens, 'duration-#{$name}', $value);
+  }
+
+  @each $name, $points in map.get(scales.$motion-values, easings) {
+    $tokens: map.set($tokens, 'ease-#{$name}', _cubic-bezier($points));
+  }
+
+  @each $name, $value in scales.$z-index-values {
+    $tokens: map.set($tokens, 'z-#{$name}', $value);
+  }
+
+  @return $tokens;
+}
+
+// CSS value of one theme entry (raw color or reference map, see settings/_themes.scss).
+@function theme-value-css($value) {
+  @if meta.type-of($value) != 'map' {
+    @return $value;
+  }
+
+  @if map.has-key($value, palette) {
+    $name: map.get($value, palette);
+    $unused: palette-color($name);
+
+    @return css-var('palette-#{$name}');
+  }
+
+  @if map.has-key($value, token) {
+    @return css-var(map.get($value, token));
+  }
+
+  @if map.has-key($value, mix) {
+    $args: map.get($value, mix);
+
+    @return string.unquote(
+      'color-mix(in oklab, #{css-var(list.nth($args, 1))} #{list.nth($args, 3)}, #{css-var(list.nth($args, 2))})'
+    );
+  }
+
+  @if map.has-key($value, alpha) {
+    $args: map.get($value, alpha);
+
+    @return string.unquote(
+      'color-mix(in oklab, #{css-var(list.nth($args, 1))} #{list.nth($args, 2)}, transparent)'
+    );
+  }
+
+  @error 'astrostyle: invalid theme value #{meta.inspect($value)}.';
+}
+
+// Static sRGB color of one theme entry, resolving references inside `$theme`.
+@function theme-value-color($theme, $value) {
+  @if meta.type-of($value) == 'color' {
+    @return $value;
+  }
+
+  @if meta.type-of($value) != 'map' {
+    @error 'astrostyle: theme value #{meta.inspect($value)} has no static color.';
+  }
+
+  @if map.has-key($value, palette) {
+    @return palette-color(map.get($value, palette));
+  }
+
+  @if map.has-key($value, token) {
+    @return theme-value-color($theme, map.get($theme, map.get($value, token)));
+  }
+
+  @if map.has-key($value, mix) {
+    $args: map.get($value, mix);
+    $a: theme-value-color($theme, map.get($theme, list.nth($args, 1)));
+    $b: theme-value-color($theme, map.get($theme, list.nth($args, 2)));
+
+    @return color.to-space(color.mix($a, $b, list.nth($args, 3), $method: oklab), srgb);
+  }
+
+  @if map.has-key($value, alpha) {
+    $args: map.get($value, alpha);
+    $a: theme-value-color($theme, map.get($theme, list.nth($args, 1)));
+
+    @return color.change($a, $alpha: math.div(list.nth($args, 2), 100%));
+  }
+
+  @error 'astrostyle: invalid theme value #{meta.inspect($value)}.';
+}
+
+// Selector of an explicit theme: the scope root or any descendant carrying `data-ap-theme`.
+@function theme-selector($name) {
+  $attribute: "[data-#{config.$prefix}-theme='#{$name}']";
+
+  @return ':where(#{config.$scope}#{$attribute}, #{config.$scope} #{$attribute})';
+}
+
+// Emits `color-scheme` and every semantic custom property of `$theme`.
+@mixin theme-declarations($theme) {
+  @if map.has-key($theme, color-scheme) {
+    color-scheme: map.get($theme, color-scheme);
+  }
+
+  @each $name, $value in $theme {
+    @if $name != color-scheme {
+      --#{config.$prefix}-#{$name}: #{theme-value-css($value)};
+    }
+  }
+}
+
+// Theme-independent tokens of the current configuration.
+$root-tokens: _root-tokens();
+
+// Names of every token, theme-independent and semantic.
+$known-tokens: map.keys($root-tokens);
+
+@each $name, $theme in themes.$themes-values {
+  @each $key in map.keys($theme) {
+    @if map.has-key($root-tokens, $key) {
+      @error 'astrostyle: theme `#{$name}` redefines the theme-independent token `#{$key}`.';
+    }
+
+    @if $key != color-scheme and not list.index($known-tokens, $key) {
+      $known-tokens: list.append($known-tokens, $key, $separator: comma);
+    }
+  }
+}
+
+// Whether `$name` is a token of the current configuration.
+@function has-token($name) {
+  @return list.index($known-tokens, $name) != null;
+}

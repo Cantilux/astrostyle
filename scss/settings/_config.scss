@@ -1,0 +1,17 @@
+// Global configuration (ITCSS Settings, no CSS output). Every variable is !default and can be
+// set with `@use 'astrostyle' with (...)`.
+
+// Prefix of every class and custom property: `.ap-c-button`, `--ap-accent`.
+$prefix: 'ap' !default;
+
+// Root selector that receives the tokens and limits the reset; ':root' styles the whole page.
+$scope: ':root' !default;
+
+// Name of the parent cascade layer; sublayers follow the ITCSS order.
+$layer: 'astrostyle' !default;
+
+// Theme applied on `$scope` without a `data-ap-theme` attribute.
+$theme-default: 'light' !default;
+
+// Replacement accent color. `null` keeps the Design Guide pink and its two darker shades.
+$accent: null !default;

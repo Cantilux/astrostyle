@@ -1,2 +1,12 @@
-// astrostyle public Sass API. Forwards Settings and Tools and exposes `emit()`; it outputs no
-// CSS by itself. Layers are added from roadmap step 2 onward (docs/design.md §6).
+// astrostyle public Sass API: configuration variables, functions and mixins, plus `emit()`.
+// Using it outputs no CSS; `@include emit()` does. See docs/design.md §7.1.
+@forward 'settings/config';
+@forward 'settings/palette' show $palette;
+@forward 'settings/typography' show $typography;
+@forward 'settings/scales' show $space, $size, $shape, $elevation, $motion, $z-index, $breakpoints;
+@forward 'settings/themes' show $themes;
+@forward 'tools/functions';
+@forward 'tools/mixins';
+@forward 'tools/media';
+@forward 'tools/variants';
+@forward 'emit';

@@ -1,0 +1,281 @@
+// Build-only entry: serializes the design tokens of the default configuration as W3C Design
+// Tokens (DTCG) JSON and hands it to the build script through `@debug`. Outputs no CSS.
+@use 'sass:color';
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:math';
+@use 'sass:meta';
+@use 'sass:string';
+@use 'settings/palette';
+@use 'settings/typography';
+@use 'settings/scales';
+@use 'settings/themes';
+@use 'tools/registry';
+
+$_q: '"';
+
+// JSON string literal.
+@function _string($value) {
+  @return '#{$_q}#{$value}#{$_q}';
+}
+
+// Comma-joined JSON fragments.
+@function _join($parts) {
+  $out: '';
+  @each $part in $parts {
+    @if $out == '' {
+      $out: $part;
+    } @else {
+      $out: '#{$out}, #{$part}';
+    }
+  }
+  @return $out;
+}
+
+// Serializes Sass maps, lists, strings, unitless numbers, booleans and null as JSON.
+@function json($value) {
+  $type: meta.type-of($value);
+  @if $type == 'map' {
+    $parts: ();
+    @each $key, $item in $value {
+      $parts: list.append($parts, '#{_string($key)}: #{json($item)}');
+    }
+    @return '{#{_join($parts)}}';
+  }
+  @if $type == 'list' or $type == 'arglist' {
+    $parts: ();
+    @each $item in $value {
+      $parts: list.append($parts, json($item));
+    }
+    @return '[#{_join($parts)}]';
+  }
+  @if $type == 'string' {
+    @return _string($value);
+  }
+  @if $type == 'number' {
+    @if not math.is-unitless($value) {
+      @error 'tokens.json: number with unit #{$value}; wrap it in _dimension().';
+    }
+    @return '#{$value}';
+  }
+  @if $type == 'bool' {
+    @if $value {
+      @return 'true';
+    }
+    @return 'false';
+  }
+  @if $type == 'null' {
+    @return 'null';
+  }
+  @error 'tokens.json: cannot serialize #{meta.inspect($value)}.';
+}
+
+// Number rounded to four decimals.
+@function _round($number) {
+  @return math.div(math.round($number * 10000), 10000);
+}
+
+// Two-digit lowercase hex of a 0–255 channel.
+@function _hex-byte($channel) {
+  $digits: '0123456789abcdef';
+  $n: math.round($channel);
+  $high: math.floor(math.div($n, 16));
+  $low: $n - $high * 16;
+  @return string.slice($digits, $high + 1, $high + 1) + string.slice($digits, $low + 1, $low + 1);
+}
+
+// DTCG color value: sRGB components, alpha and the opaque hex.
+@function _color($color) {
+  $srgb: color.to-space($color, rgb);
+  $r: color.channel($srgb, 'red');
+  $g: color.channel($srgb, 'green');
+  $b: color.channel($srgb, 'blue');
+  @return (
+    colorSpace: 'srgb',
+    components: (
+      _round(math.div($r, 255)),
+      _round(math.div($g, 255)),
+      _round(math.div($b, 255)),
+    ),
+    alpha: _round(color.channel($srgb, 'alpha')),
+    hex: '##{_hex-byte($r)}#{_hex-byte($g)}#{_hex-byte($b)}'
+  );
+}
+
+// DTCG dimension value. px lengths are converted to rem when `$to-rem` is true; em lengths are
+// expressed in rem relative to `$em-base` (DTCG dimensions allow only px and rem).
+@function _dimension($length, $to-rem: true, $em-base: 1rem) {
+  @if math.is-unitless($length) {
+    @return (value: $length, unit: 'px');
+  }
+  @if math.unit($length) == 'em' {
+    @return (value: _round(math.div($length, 1em) * math.div($em-base, 1rem)), unit: 'rem');
+  }
+  @if math.unit($length) == 'px' and $to-rem {
+    $length: registry.rem($length);
+  }
+  @if math.unit($length) == 'rem' {
+    @return (value: _round(math.div($length, 1rem)), unit: 'rem');
+  }
+  @if math.unit($length) == 'px' {
+    @return (value: _round(math.div($length, 1px)), unit: 'px');
+  }
+  @error 'tokens.json: unsupported dimension #{$length}.';
+}
+
+// Token object with a DTCG `$type` and `$value`.
+@function _token($type, $value) {
+  @return ('$type': $type, '$value': $value);
+}
+
+// Palette group.
+@function _palette-group() {
+  $group: ();
+  @each $name, $color in palette.$palette-values {
+    $group: map.set($group, $name, _token('color', _color($color)));
+  }
+  @return $group;
+}
+
+// Gradient token with hard edges (each band starts where the previous one ends).
+@function _gradient() {
+  $stops: ();
+  $bands: ('yellow', 'orange', 'magenta', 'indigo');
+  @for $i from 1 through 4 {
+    $color: '{palette.#{list.nth($bands, $i)}}';
+    $start: ($i - 1) * 0.25;
+    $end: $i * 0.25;
+    $stops: list.append($stops, (color: $color, position: $start), $separator: comma);
+    $stops: list.append($stops, (color: $color, position: $end), $separator: comma);
+  }
+  @return _token('gradient', $stops);
+}
+
+// Font families, weights, scale and type roles.
+@function _type-groups() {
+  $families: ();
+  @each $name, $list in map.get(typography.$typography-values, families) {
+    $names: ();
+    @each $family in $list {
+      $names: list.append($names, '#{$family}', $separator: comma);
+    }
+    $families: map.set($families, $name, _token('fontFamily', $names));
+  }
+  $weights: ();
+  @each $name, $weight in map.get(typography.$typography-values, weights) {
+    $weights: map.set($weights, $name, _token('fontWeight', $weight));
+  }
+  $roles: ();
+  @each $role, $spec in map.get(typography.$typography-values, roles) {
+    $size: registry.rem(map.get($spec, size));
+    $tracking: map.get($spec, tracking);
+    @if math.is-unitless($tracking) {
+      $tracking: 0em;
+    }
+    $roles: map.set(
+      $roles,
+      $role,
+      _token(
+        'typography',
+        (
+          fontFamily: '{font.family.#{map.get($spec, family)}}',
+          fontSize: _dimension($size),
+          fontWeight: '{font.weight.#{map.get($spec, weight)}}',
+          lineHeight: map.get($spec, leading),
+          letterSpacing: _dimension($tracking, true, $size),
+        )
+      )
+    );
+  }
+  @return (font: (family: $families, weight: $weights, scale: _token('number', 1)), text: $roles);
+}
+
+// Group of dimension tokens from a scale map.
+@function _dimension-group($scale, $to-rem: true) {
+  $group: ();
+  @each $name, $value in $scale {
+    $group: map.set($group, $name, _token('dimension', _dimension($value, $to-rem)));
+  }
+  @return $group;
+}
+
+// Shadows, durations, easings and z-indexes.
+@function _effect-groups() {
+  $shadows: ();
+  @each $name, $s in scales.$elevation-values {
+    $shadows: map.set(
+      $shadows,
+      $name,
+      _token(
+        'shadow',
+        (
+          color: _color(map.get($s, color)),
+          offsetX: _dimension(map.get($s, x), false),
+          offsetY: _dimension(map.get($s, y), false),
+          blur: _dimension(map.get($s, blur), false),
+          spread: _dimension(map.get($s, spread), false),
+        )
+      )
+    );
+  }
+  $durations: ();
+  @each $name, $value in map.get(scales.$motion-values, durations) {
+    $duration: (value: math.div($value, 1ms), unit: 'ms');
+    $durations: map.set($durations, $name, _token('duration', $duration));
+  }
+  $easings: ();
+  @each $name, $points in map.get(scales.$motion-values, easings) {
+    $easings: map.set($easings, $name, _token('cubicBezier', $points));
+  }
+  $layers: ();
+  @each $name, $value in scales.$z-index-values {
+    $layers: map.set($layers, $name, _token('number', $value));
+  }
+  @return (elevation: $shadows, duration: $durations, easing: $easings, z-index: $layers);
+}
+
+// Semantic colors of every theme: palette references become DTCG aliases, the rest static sRGB.
+@function _theme-group() {
+  $group: ();
+  @each $name, $theme in themes.$themes-values {
+    $tokens: ();
+    @each $key, $value in $theme {
+      @if $key != color-scheme {
+        @if meta.type-of($value) == 'map' and map.has-key($value, palette) {
+          $tokens: map.set($tokens, $key, _token('color', '{palette.#{map.get($value, palette)}}'));
+        } @else {
+          $tokens: map.set(
+            $tokens,
+            $key,
+            _token('color', _color(registry.theme-value-color($theme, $value)))
+          );
+        }
+      }
+    }
+    $group: map.set($group, $name, $tokens);
+  }
+  @return $group;
+}
+
+$_document: map.merge(
+  (
+    '$description':
+      'astrostyle design tokens (default configuration). astrostyle is an independent production by Enrico Cantile and is not affiliated with Crescent Chimera. It is published under the ASTROPRISMA Third Party License. ASTROPRISMA is copyright Camila Mera and Crescent Chimera.',
+    palette: _palette-group(),
+    gradient: _gradient(),
+  ),
+  _type-groups()
+);
+$_document: map.merge(
+  $_document,
+  (
+    space: _dimension-group(scales.$space-values),
+    size: _dimension-group(scales.$size-values),
+    shape: _dimension-group(scales.$shape-values, false),
+    breakpoint: _dimension-group(scales.$breakpoints-values),
+  )
+);
+$_document: map.merge($_document, _effect-groups());
+$_document: map.set($_document, theme, _theme-group());
+
+@debug string.unquote(json($_document));

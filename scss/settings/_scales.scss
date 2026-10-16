@@ -1,0 +1,74 @@
+// Space, size, shape, elevation, motion, z-index and breakpoint scales (ITCSS Settings, no CSS
+// output). Each public map is merged over its defaults; see docs/design.md §7.2.
+@use 'sass:map';
+
+// Spacing steps, emitted in rem.
+$space: () !default;
+$space-values: map.merge(
+  (xxs: 2px, xs: 4px, sm: 8px, md: 12px, lg: 16px, xl: 24px, xxl: 32px),
+  $space
+);
+
+// Control and icon sizes, emitted in rem. Controls never go below 40px.
+$size: () !default;
+$size-values: map.merge(
+  (control: 40px, control-lg: 48px, icon-sm: 16px, icon: 20px, icon-lg: 24px),
+  $size
+);
+
+// Radii, border widths, pixel-cut size and focus ring geometry, emitted in px.
+$shape: () !default;
+$shape-values: map.merge(
+  (
+    radius-none: 0,
+    radius-control: 6px,
+    radius-card: 22px,
+    radius-pill: 999px,
+    border-width-hairline: 1px,
+    border-width-strong: 2px,
+    cut: 5px,
+    focus-width: 2px,
+    focus-offset: 2px,
+  ),
+  $shape
+);
+
+// Shadows as (x, y, blur, spread, color) maps.
+$elevation: () !default;
+$elevation-values: map.deep-merge(
+  (
+    raised: (x: 0, y: 2px, blur: 6px, spread: 0, color: rgb(19 13 28 / 18%)),
+    overlay: (x: 0, y: 16px, blur: 40px, spread: 0, color: rgb(19 13 28 / 32%)),
+  ),
+  $elevation
+);
+
+// Durations in ms and easings as cubic-bezier control points.
+$motion: () !default;
+$motion-values: map.deep-merge(
+  (
+    durations: (fast: 120ms, base: 200ms, slow: 320ms),
+    easings: (out: (0.23, 1, 0.32, 1), in-out: (0.65, 0, 0.35, 1)),
+  ),
+  $motion
+);
+
+// Stacking order of layered UI.
+$z-index: () !default;
+$z-index-values: map.merge(
+  (
+    base: 0,
+    raised: 10,
+    dropdown: 100,
+    sticky: 200,
+    overlay: 300,
+    dialog: 400,
+    toast: 500,
+    tooltip: 600,
+  ),
+  $z-index
+);
+
+// Mobile-first breakpoints in em (Sass only: media queries cannot read custom properties).
+$breakpoints: () !default;
+$breakpoints-values: map.merge((sm: 36em, md: 48em, lg: 64em, xl: 80em), $breakpoints);

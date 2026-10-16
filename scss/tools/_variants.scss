@@ -1,0 +1,36 @@
+// Extension mixins for consumers and components (ITCSS Tools); see docs/design.md §8.3.
+@use 'sass:map';
+@use '../settings/config';
+@use '../settings/themes';
+@use 'registry';
+
+// Emits a component variant class that only sets that component's tokens.
+@mixin variant($component, $name, $tokens) {
+  .#{config.$prefix}-c-#{$component}--#{$name} {
+    @each $key, $value in $tokens {
+      --#{config.$prefix}-#{$component}-#{$key}: #{$value};
+    }
+  }
+}
+
+// Emits an extra theme, selected with `data-ap-theme="<name>"`, built over the default theme.
+@mixin theme($name, $tokens, $base: config.$theme-default) {
+  $theme: map.merge(map.get(themes.$themes-values, $base), $tokens);
+  #{registry.theme-selector($name)} {
+    @include registry.theme-declarations($theme);
+  }
+}
+
+// Declares a new accent, its two derived shades, its ink and the focus color in the current
+// rule, so a region can be recolored at runtime without rebuilding.
+@mixin accent($color) {
+  @include registry.theme-declarations(
+    (
+      accent: $color,
+      accent-strong: (mix: (accent, text, 82%)),
+      accent-deep: (mix: (accent, text, 64%)),
+      on-accent: themes.ink-for($color),
+      focus: (token: accent),
+    )
+  );
+}

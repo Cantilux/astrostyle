@@ -1,0 +1,41 @@
+// Universal reset (ITCSS Generic), zero specificity apart from pseudo-elements; see
+// docs/design.md §6.
+@use '../settings/config';
+
+// Removes default spacing and borders, and normalizes media, form controls and long words.
+@mixin emit {
+  $s: config.$scope;
+
+  :where(#{$s}),
+  :where(#{$s}) *,
+  :where(#{$s}) ::before,
+  :where(#{$s}) ::after {
+    margin: 0;
+    padding: 0;
+    border: 0 solid;
+  }
+
+  :where(#{$s}) {
+    text-size-adjust: none;
+  }
+
+  :where(#{$s}) :where(img, picture, video, canvas, svg) {
+    display: block;
+    max-inline-size: 100%;
+  }
+
+  :where(#{$s}) :where(img, video) {
+    block-size: auto;
+  }
+
+  :where(#{$s}) :where(input, button, textarea, select) {
+    font: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    background-color: transparent;
+  }
+
+  :where(#{$s}) :where(p, h1, h2, h3, h4, h5, h6) {
+    overflow-wrap: break-word;
+  }
+}
