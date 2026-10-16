@@ -268,6 +268,13 @@ Font files are **not bundled**: each font has its own license, so every project 
 
 ### The principles, in short
 
+<p align="center">
+  <img src=".github/assets/principles.svg" alt="The nine astrostyle principles and their meaning; full text in the expandable section below" width="100%">
+</p>
+
+<details>
+<summary>Text version of the principles</summary>
+
 | | Principle | What it means |
 | --- | --- | --- |
 | 🧩 | **Generic, not game-specific** | Interface building blocks only. Combat trackers, star maps and character sheets live in your project, built on top of astrostyle. |
@@ -279,6 +286,8 @@ Font files are **not bundled**: each font has its own license, so every project 
 | 🧱 | **Component-based** | Self-contained components with no outer margins, combined with layout objects. |
 | 🎨 | **Easy to customize** | Change a custom property at runtime, configure with Sass `@use … with (…)`, add variants and themes with public mixins, or build new components with the same tools. |
 | 🚫 | **No framework lock-in** | Plain HTML and CSS first, native elements (`<dialog>`, popover, `<details>`) where possible, and tiny vanilla JS modules only where HTML is not enough. |
+
+</details>
 
 <p align="center">
   <img src=".github/assets/itcss.svg" alt="The astrostyle inverted triangle: Settings and Tools emit no CSS; Generic, Elements, Objects, Components and Utilities are emitted as cascade layers in that order" width="90%">
