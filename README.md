@@ -15,6 +15,13 @@
   <sub>SCSS core · plain CSS build · a pinch of vanilla JavaScript · no framework required</sub>
 </p>
 
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset=".github/assets/compatible-with-astroprisma-white.png">
+    <img src=".github/assets/compatible-with-astroprisma-black.png" alt="Compatible with ASTROPRISMA" width="140">
+  </picture>
+</p>
+
 > [!IMPORTANT]
 > **🛰️ We are still on the drawing board.** astrostyle is in its **design phase**: architecture and design rules are being defined, there is no usable code yet and nothing is on npm. Everything below describes where the ship is headed, and the course may change.
 

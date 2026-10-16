@@ -401,7 +401,7 @@ Definition of done per component: SCSS partial; documented component tokens; HTM
 - astrostyle is published under the [ASTROPRISMA Third Party License](https://www.astroprisma.com/license), which allows free or commercial third-party products without explicit permission when its rules are followed:
   - Independence statement, wherever the product is promoted (README, npm page, docs site): "astrostyle is an independent production by Enrico Cantile and is not affiliated with Crescent Chimera. It is published under the ASTROPRISMA Third Party License."
   - Copyright line, legibly included in the product: "ASTROPRISMA is copyright Camila Mera and Crescent Chimera."
-  - No Crescent Chimera logo, no ASTROPRISMA logo, no other Crescent Chimera logos; nothing may suggest the product is official or sponsored. The "Compatible with ASTROPRISMA" logos are allowed but optional.
+  - No Crescent Chimera logo, no ASTROPRISMA logo, no other Crescent Chimera logos; nothing may suggest the product is official or sponsored. The "Compatible with ASTROPRISMA" logos are allowed but optional; the README shows them (`.github/assets/compatible-with-astroprisma-{black,white}.png`, from the Creator Kit, switched by GitHub color scheme).
   - Art and text from the books are not reused; game-world names (factions, equipment) may be used.
 - Every compiled stylesheet starts with a preserved comment (`/*! … */`) carrying the package name, version, MIT license, the independence statement and the copyright line, so the notice survives minification.
 
