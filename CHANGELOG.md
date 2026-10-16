@@ -1,5 +1,24 @@
 # astrostyle
 
+## 0.3.0
+
+### Minor Changes
+
+- 646c71c: Navigation and feedback components, CSS only:
+  
+  - `ap-c-breadcrumb`: the path to the current page, joined by the guide's slash (`--ap-breadcrumb-separator` to change it); separators are hidden from screen readers.
+  - `ap-c-tag`: pill label for statuses, categories and counts, with `--accent`, `--success`, `--warning`, `--danger`, `--info` tones, `--solid` fill and any color through `--ap-tag-tone`.
+  - `ap-c-callout`: the guide's filled block with an optional title; tones add a start bar and tint the fill.
+  - `ap-c-progress`: a native `<progress>` as a pill bar, with status colors and an indeterminate sweep.
+  - `ap-c-spinner`: a CSS-only turning ring, with `--sm`, `--lg` and the guide's four-band `--spectrum`.
+  - `ap-c-empty-state`: icon, title, text and actions for empty lists and panels.
+- 48c04b3: Pagination, tabs and toasts, with their JavaScript modules:
+  
+  - `ap-c-pagination` with `createPagination()` from `astrostyle/js/pagination`: renders links (`href(page)`) or buttons with previous and next steps and a constant-length page window (`siblings`, `boundaries`), fires a cancelable `ap:page`; `pageWindow()` is exported as pure logic.
+  - `ap-c-tabs` with `createTabs()` from `astrostyle/js/tabs`: WAI-ARIA tabs from plain buttons and panels, roving tabindex, arrows, Home and End, automatic or manual activation, horizontal or vertical, `ap:change`.
+  - `ap-c-toast` with `createToaster()` from `astrostyle/js/toast`: toasts in a polite live region, tones, optional action, `urgent` alerts, a timeout that pauses on hover and focus, at most `max` visible at once, `ap:open` and `ap:close`.
+  - `autoInit()` also enhances `nav[data-ap-pagination]` (`data-ap-page`, `data-ap-count`, `data-ap-href`) and `[data-ap-tabs]` (`data-ap-tabs="manual"`).
+
 ## 0.2.0
 
 ### Minor Changes
