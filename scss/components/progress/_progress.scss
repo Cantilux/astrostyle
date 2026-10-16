@@ -1,0 +1,81 @@
+// Progress (ITCSS Components): a native <progress> as a continuous pill bar. Without a value it is
+// indeterminate: a band sweeps along the track. Contract and tokens:
+// scss/components/progress/README.md.
+@use '../../settings/config';
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+
+// Public tokens and their defaults.
+$tokens: (
+  fill: fn.token('accent'),
+  track: fn.token('surface-3'),
+  height: fn.space(sm),
+  radius: fn.token('radius-pill'),
+  duration: calc(#{fn.token('duration-slow')} * 5),
+);
+
+// Fill color of each status modifier.
+$statuses: (
+  success: fn.token('success'),
+  warning: fn.token('warning'),
+  danger: fn.token('danger'),
+);
+
+// Declarations of the value pseudo-elements.
+@mixin _value {
+  border-radius: c.private(radius);
+  background-color: c.private(fill);
+}
+
+// Emits `.ap-c-progress`, its parts, the indeterminate sweep and the status modifiers.
+@mixin emit {
+  #{c.component(progress)} {
+    @include c.tokens(progress, $tokens);
+
+    display: block;
+    inline-size: 100%;
+    block-size: c.private(height);
+    overflow: hidden;
+    border-radius: c.private(radius);
+    background-color: c.private(track);
+    color: c.private(fill);
+    appearance: none;
+
+    &::-webkit-progress-bar {
+      background-color: transparent;
+    }
+
+    &::-webkit-progress-value {
+      @include _value;
+    }
+
+    &::-moz-progress-bar {
+      @include _value;
+    }
+
+    &:where(:indeterminate) {
+      background-image: linear-gradient(90deg, currentcolor, currentcolor);
+      background-repeat: no-repeat;
+      background-size: 40% 100%;
+      animation: #{config.$prefix}-progress-sweep c.private(duration) linear infinite;
+    }
+
+    &:where(:indeterminate)::-moz-progress-bar {
+      background-color: transparent;
+    }
+  }
+
+  @each $name, $color in $statuses {
+    @include c.modifier(progress, $name, (fill: $color));
+  }
+
+  @keyframes #{config.$prefix}-progress-sweep {
+    from {
+      background-position: -60% 0;
+    }
+
+    to {
+      background-position: 160% 0;
+    }
+  }
+}

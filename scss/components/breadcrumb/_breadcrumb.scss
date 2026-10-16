@@ -1,0 +1,69 @@
+// Breadcrumb (ITCSS Components): the path to the current page, items joined by the guide's
+// slash. Contract and tokens: scss/components/breadcrumb/README.md.
+@use 'sass:string';
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults.
+$tokens: (
+  gap: fn.space(sm),
+  link-color: fn.token('text-muted'),
+  link-hover-color: fn.token('link'),
+  current-color: fn.token('text'),
+  separator: string.unquote('"/"'),
+  separator-color: fn.token('text-subtle'),
+);
+
+// Emits `.ap-c-breadcrumb` and its elements.
+@mixin emit {
+  #{c.component(breadcrumb)} {
+    @include c.tokens(breadcrumb, $tokens);
+    @include mixins.text(label);
+
+    display: block;
+    min-inline-size: 0;
+  }
+
+  #{c.component(breadcrumb, list)} {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: c.private(gap);
+    list-style: none;
+  }
+
+  #{c.component(breadcrumb, item)} {
+    display: inline-flex;
+    align-items: center;
+    gap: c.private(gap);
+    min-inline-size: 0;
+
+    &:where(:not(:first-child))::before {
+      color: c.private(separator-color);
+      content: c.private(separator) / '';
+    }
+  }
+
+  #{c.component(breadcrumb, link)} {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: fn.token('size-control');
+    color: c.private(link-color);
+    text-decoration-line: none;
+
+    @include mixins.interactive;
+    @include mixins.focus-ring;
+
+    &:where(:hover) {
+      color: c.private(link-hover-color);
+      text-decoration-line: underline;
+    }
+
+    &:where([aria-current='page']) {
+      color: c.private(current-color);
+      cursor: default;
+      text-decoration-line: none;
+    }
+  }
+}
