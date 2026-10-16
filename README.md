@@ -24,9 +24,7 @@
 >
 > ASTROPRISMA is copyright Camila Mera and Crescent Chimera.
 
----
-
-## `01` / Installation
+## ![01 / Installation](.github/assets/section-installation.svg)
 
 ```sh
 npm install astrostyle
@@ -135,9 +133,7 @@ At runtime, any token can be overridden with plain CSS. astrostyle lives in casc
 :root { --ap-radius-card: 8px; --ap-font-scale: 1.1; }
 ```
 
----
-
-## `02` / Design philosophy
+## ![02 / Design philosophy](.github/assets/section-design-philosophy.svg)
 
 ### The Design Guide is the captain
 
@@ -243,9 +239,7 @@ Font files are **not bundled**: each font has its own license, so every project 
   <img src=".github/assets/itcss.svg" alt="The astrostyle inverted triangle: Settings and Tools emit no CSS; Generic, Elements, Objects, Components and Utilities are emitted as cascade layers in that order" width="90%">
 </p>
 
----
-
-## `03` / Code conventions
+## ![03 / Code conventions](.github/assets/section-code-conventions.svg)
 
 The house rules. Click a section to open it.
 
@@ -336,9 +330,7 @@ The house rules. Click a section to open it.
 
 </details>
 
----
-
-## `04` / Workflow
+## ![04 / Workflow](.github/assets/section-workflow.svg)
 
 How a change travels from an idea to `master`, and from `master` to npm.
 
@@ -387,9 +379,7 @@ Releases are cut from a pull request, never from a laptop.
 
 Run `bun run check:package` to see exactly what npm would receive.
 
----
-
-## `05` / License
+## ![05 / License](.github/assets/section-license.svg)
 
 The astrostyle code is released under the [MIT license](LICENSE). Take it, fork it, fly it.
 

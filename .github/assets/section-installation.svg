@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="112" viewBox="0 0 1280 112" role="img" aria-labelledby="title">
+  <title id="title">01 / Installation</title>
+  <defs>
+    <clipPath id="panel"><rect width="1280" height="112" rx="12"/></clipPath>
+  </defs>
+  <g clip-path="url(#panel)">
+    <rect width="1280" height="112" fill="#130d1c"/>
+    <g fill="#ef476e" font-family="'Arial Black', 'Helvetica Neue', Arial, sans-serif" font-weight="900">
+      <text x="48" y="64" font-size="40">INSTALLATION</text>
+      <text x="1232" y="64" text-anchor="end" font-size="36">01</text>
+    </g>
+    <line x1="48" y1="84" x2="1232" y2="84" stroke="#ef476e"/>
+    <rect y="108" width="320" height="4" fill="#ffbd5c"/>
+    <rect x="320" y="108" width="320" height="4" fill="#ff603e"/>
+    <rect x="640" y="108" width="320" height="4" fill="#d50059"/>
+    <rect x="960" y="108" width="320" height="4" fill="#54009d"/>
+  </g>
+</svg>
