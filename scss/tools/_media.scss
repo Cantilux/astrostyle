@@ -1,0 +1,33 @@
+// Mobile-first media and container queries (ITCSS Tools); see docs/design.md §7.6.
+@use 'sass:map';
+@use '../settings/scales';
+
+// Breakpoint length; unknown names fail compilation.
+@function _breakpoint($name) {
+  @if not map.has-key(scales.$breakpoints-values, $name) {
+    @error 'astrostyle: unknown breakpoint `#{$name}`. Known: #{map.keys(scales.$breakpoints-values)}.';
+  }
+
+  @return map.get(scales.$breakpoints-values, $name);
+}
+
+// Applies the content from the `$from` viewport width upward. There is no max-width variant.
+@mixin mq($from) {
+  @media (min-width: _breakpoint($from)) {
+    @content;
+  }
+}
+
+// Applies the content when the (optionally named) container is at least `$from` wide.
+@mixin cq($from, $name: null) {
+  @if $name {
+    /* stylelint-disable-next-line container-name-pattern -- the name is a consumer argument */
+    @container #{$name} (min-width: #{_breakpoint($from)}) {
+      @content;
+    }
+  } @else {
+    @container (min-width: #{_breakpoint($from)}) {
+      @content;
+    }
+  }
+}

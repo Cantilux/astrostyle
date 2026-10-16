@@ -1,0 +1,12 @@
+// Universal box model (ITCSS Generic), zero specificity apart from pseudo-elements.
+@use '../settings/config';
+
+// Applies `border-box` sizing to the scope root, its descendants and their pseudo-elements.
+@mixin emit {
+  :where(#{config.$scope}),
+  :where(#{config.$scope}) *,
+  :where(#{config.$scope}) ::before,
+  :where(#{config.$scope}) ::after {
+    box-sizing: border-box;
+  }
+}

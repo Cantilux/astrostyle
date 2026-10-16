@@ -1,0 +1,28 @@
+// Output entry point: declares the ITCSS cascade layers and emits the implemented layers.
+@use 'sass:list';
+@use 'settings/config';
+@use 'generic/tokens';
+@use 'generic/box-sizing';
+@use 'generic/reset';
+
+// ITCSS layers that output CSS, in cascade order.
+$_layers: (generic, elements, objects, components, utilities);
+
+// Emits the framework. Include it once, at the root of a stylesheet.
+@mixin emit {
+  $names: ();
+
+  @each $layer in $_layers {
+    $names: list.append($names, '#{config.$layer}.#{$layer}', $separator: comma);
+  }
+
+  /* stylelint-disable-next-line layer-name-pattern -- names come from the configurable $layer */
+  @layer #{$names};
+
+  /* stylelint-disable-next-line layer-name-pattern -- names come from the configurable $layer */
+  @layer #{config.$layer}.generic {
+    @include tokens.emit;
+    @include box-sizing.emit;
+    @include reset.emit;
+  }
+}

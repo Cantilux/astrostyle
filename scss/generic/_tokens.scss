@@ -1,0 +1,23 @@
+// Token emission (ITCSS Generic): every design token as a custom property on the scope root,
+// plus one block per theme selectable with `data-ap-theme`.
+@use 'sass:map';
+@use '../settings/config';
+@use '../settings/themes';
+@use '../tools/registry';
+
+// Emits the theme-independent tokens and the default theme on the scope root, then every theme.
+@mixin emit {
+  :where(#{config.$scope}) {
+    @each $name, $value in registry.$root-tokens {
+      --#{config.$prefix}-#{$name}: #{$value};
+    }
+
+    @include registry.theme-declarations(map.get(themes.$themes-values, config.$theme-default));
+  }
+
+  @each $name, $theme in themes.$themes-values {
+    #{registry.theme-selector($name)} {
+      @include registry.theme-declarations($theme);
+    }
+  }
+}

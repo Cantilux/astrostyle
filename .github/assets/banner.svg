@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="360" viewBox="0 0 1280 360" role="img" aria-labelledby="title desc">
   <title id="title">astrostyle</title>
-  <desc id="desc">A CSS framework in the ASTROPRISMA style. Design phase.</desc>
+  <desc id="desc">A CSS framework in the ASTROPRISMA style. In development.</desc>
   <defs>
     <pattern id="halftone" width="8" height="8" patternUnits="userSpaceOnUse">
       <circle cx="4" cy="4" r="1" fill="#f0eee8" fill-opacity=".09"/>
@@ -29,8 +29,8 @@
   <text x="72" y="296" fill="#e9dcd3" font-family="'Feature Mono', 'SFMono-Regular', Menlo, Consolas, monospace" font-size="19" letter-spacing="1">Buttons, inputs, panels &amp; friends, dressed for deep space.</text>
 
   <!-- status pill -->
-  <rect x="1012" y="72" width="196" height="36" rx="18" fill="#ef476e"/>
-  <text x="1110" y="96" text-anchor="middle" fill="#130d1c" font-family="'Feature Mono', 'SFMono-Regular', Menlo, Consolas, monospace" font-size="15" font-weight="700" letter-spacing="2">DESIGN PHASE</text>
+  <rect x="992" y="72" width="216" height="36" rx="18" fill="#ef476e"/>
+  <text x="1100" y="96" text-anchor="middle" fill="#130d1c" font-family="'Feature Mono', 'SFMono-Regular', Menlo, Consolas, monospace" font-size="15" font-weight="700" letter-spacing="2">IN DEVELOPMENT</text>
 
   <!-- spectrum: four hard-edged bands -->
   <rect x="0" y="336" width="320" height="24" fill="#ffbd5c"/>

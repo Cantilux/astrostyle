@@ -3,3 +3,4 @@ bun.lock
 CHANGELOG.md
 .changeset/*.md
 *.md
+*.scss

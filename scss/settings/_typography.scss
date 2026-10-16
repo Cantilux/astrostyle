@@ -1,0 +1,32 @@
+// Font families, weights and type roles (ITCSS Settings, no CSS output). Sizes are in px for
+// readability and emitted in rem; see docs/design.md §3.3.
+@use 'sass:map';
+
+$_defaults: (
+  families: (
+    body: ('Feature Mono', ui-monospace, 'SFMono-Regular', 'Menlo', 'Consolas', monospace),
+    display: ('Newake', 'Powerr', 'Arial Black', 'Helvetica Neue', 'Arial', sans-serif),
+    serif: ('Instrument Serif', 'Georgia', 'Times New Roman', serif),
+    accent-rimma: ('Rimma Sans', 'Arial Black', sans-serif),
+    accent-fat: ('Free Fat Font', 'Arial Black', sans-serif),
+    accent-genesys: ('Genesys', 'Arial Black', sans-serif),
+    accent-cyberillic: ('ST-Cyberillic', 'Arial Black', sans-serif),
+    accent-schabo: ('SCHABO', 'Arial Narrow', sans-serif),
+  ),
+  weights: (hairline: 100, light: 300, regular: 400, medium: 500, bold: 700),
+  roles: (
+    display: (family: display, size: 30px, weight: bold, leading: 1.05, tracking: 0.08em),
+    screen-title: (family: display, size: 24px, weight: bold, leading: 1.1, tracking: 0.12em),
+    panel-title: (family: display, size: 18px, weight: medium, leading: 1.2, tracking: 0.09em),
+    body: (family: body, size: 15px, weight: light, leading: 1.45, tracking: 0),
+    data: (family: body, size: 14px, weight: medium, leading: 1.35, tracking: 0),
+    label: (family: body, size: 12px, weight: hairline, leading: 1.25, tracking: 0.12em),
+    caption: (family: body, size: 12px, weight: hairline, leading: 1.35, tracking: 0.02em),
+  ),
+);
+
+// Overrides or additions, deep-merged over the defaults.
+$typography: () !default;
+
+// Resolved typography used by the framework.
+$typography-values: map.deep-merge($_defaults, $typography);

@@ -21,6 +21,20 @@
   "license": "MIT",
   "author": "Enrico Cantile",
   "type": "module",
+  "sass": "scss/_index.scss",
+  "style": "dist/astrostyle.css",
+  "exports": {
+    ".": {
+      "sass": "./scss/_index.scss",
+      "style": "./dist/astrostyle.css",
+      "default": "./dist/astrostyle.css"
+    },
+    "./css": "./dist/astrostyle.css",
+    "./css/min": "./dist/astrostyle.min.css",
+    "./tokens.json": "./dist/tokens.json",
+    "./scss/*": "./scss/*",
+    "./package.json": "./package.json"
+  },
   "files": [
     "scss",
     "dist",
@@ -38,14 +52,23 @@
     "lint:styles": "stylelint \"scss/**/*.scss\"",
     "lint:format": "prettier --check .",
     "format": "prettier --write .",
-    "changeset": "changeset"
+    "changeset": "changeset",
+    "check:package": "node scripts/check-package.mjs",
+    "release:version": "changeset version",
+    "prepublishOnly": "node scripts/build.mjs"
   },
   "devDependencies": {
     "@changesets/cli": "3.0.3",
+    "@csstools/selector-specificity": "6.0.1",
+    "postcss": "8.5.30",
+    "postcss-selector-parser": "7.1.6",
     "prettier": "3.9.10",
     "sass": "1.105.2",
     "stylelint": "17.16.0",
     "stylelint-config-standard-scss": "17.0.0",
     "stylelint-declaration-strict-value": "1.12.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

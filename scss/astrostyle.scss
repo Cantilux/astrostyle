@@ -1,2 +1,3 @@
-// Full bundle compiled to dist/astrostyle.css: the public API with its default configuration.
-@use 'index';
+// Full bundle compiled to dist/astrostyle.css: the framework with its default configuration.
+@use 'index' as ap;
+@include ap.emit;

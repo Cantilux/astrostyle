@@ -1,0 +1,133 @@
+// Semantic color themes (ITCSS Settings, no CSS output); see docs/design.md §7.2 and §7.3.
+// A theme value is a raw color or a reference map:
+//   (palette: 'pink')       the palette color
+//   (token: text)           another semantic token of the same theme
+//   (mix: (text, bg, 62%))  color-mix(in oklab, text 62%, bg)
+//   (alpha: (text, 12%))    text at 12% opacity
+// The `color-scheme` key is emitted as the CSS `color-scheme` property, not as a token.
+@use 'sass:color';
+@use 'sass:map';
+@use 'sass:math';
+@use 'config';
+@use 'palette';
+
+$_light: (
+  color-scheme: light,
+  bg: (palette: 'white'),
+  surface-1: (palette: 'off-white'),
+  surface-2: (mix: (surface-1, text, 94%)),
+  surface-3: (mix: (surface-1, text, 88%)),
+  inset: (token: bg),
+  text: (palette: 'black'),
+  text-muted: (mix: (text, bg, 78%)),
+  text-subtle: (mix: (text, bg, 66%)),
+  text-disabled: (mix: (text, bg, 42%)),
+  border-subtle: (alpha: (text, 12%)),
+  border: (alpha: (text, 24%)),
+  border-strong: (alpha: (text, 48%)),
+  accent: (palette: 'pink'),
+  accent-strong: (palette: 'pink-dark'),
+  accent-deep: (palette: 'pink-shadow'),
+  on-accent: (palette: 'black'),
+  success: (palette: 'green'),
+  warning: (palette: 'amber'),
+  danger: (palette: 'red'),
+  info: (palette: 'teal'),
+  focus: (palette: 'pink-dark'),
+);
+
+$_dark: (
+  color-scheme: dark,
+  bg: (palette: 'black'),
+  surface-1: (mix: (bg, text, 94%)),
+  surface-2: (mix: (bg, text, 89%)),
+  surface-3: (mix: (bg, text, 84%)),
+  inset: (token: bg),
+  text: (palette: 'white'),
+  text-muted: (mix: (text, bg, 80%)),
+  text-subtle: (mix: (text, bg, 64%)),
+  text-disabled: (mix: (text, bg, 42%)),
+  border-subtle: (alpha: (text, 12%)),
+  border: (alpha: (text, 24%)),
+  border-strong: (alpha: (text, 48%)),
+  accent: (palette: 'pink'),
+  accent-strong: (palette: 'pink-dark'),
+  accent-deep: (palette: 'pink-shadow'),
+  on-accent: (palette: 'black'),
+  success: (palette: 'green'),
+  warning: (palette: 'amber'),
+  danger: (palette: 'red'),
+  info: (palette: 'teal'),
+  focus: (palette: 'pink'),
+);
+
+// Overrides or additional themes, merged key by key over the defaults.
+$themes: () !default;
+
+// Relative luminance (WCAG 2) of an opaque color.
+@function _luminance($color) {
+  $linear: color.to-space($color, srgb-linear);
+  $red: 0.2126 * color.channel($linear, 'red');
+  $green: 0.7152 * color.channel($linear, 'green');
+  $blue: 0.0722 * color.channel($linear, 'blue');
+
+  @return $red + $green + $blue;
+}
+
+// WCAG contrast ratio between two opaque colors.
+@function _contrast($a, $b) {
+  $la: _luminance($a);
+  $lb: _luminance($b);
+
+  @return math.div(math.max($la, $lb) + 0.05, math.min($la, $lb) + 0.05);
+}
+
+// Ink color (palette black or white) with the higher contrast on `$fill`, as a theme reference.
+@function ink-for($fill) {
+  $black: map.get(palette.$palette-values, 'black');
+  $white: map.get(palette.$palette-values, 'white');
+
+  @if _contrast($fill, $black) >= _contrast($fill, $white) {
+    @return (palette: 'black');
+  }
+
+  @return (palette: 'white');
+}
+
+// Applies a configured `$accent` to a theme: the accent, two derived shades and its ink.
+@function _with-accent($theme) {
+  @if not config.$accent {
+    @return $theme;
+  }
+
+  @return map.merge(
+    $theme,
+    (
+      accent: config.$accent,
+      accent-strong: (mix: (accent, text, 82%)),
+      accent-deep: (mix: (accent, text, 64%)),
+      on-accent: ink-for(config.$accent),
+      focus: (token: accent),
+    )
+  );
+}
+
+// Merges user themes over the defaults, one theme at a time, and applies the accent.
+@function _resolve-themes($defaults, $overrides) {
+  $result: ();
+
+  @each $name, $theme in map.merge($defaults, $overrides) {
+    $base: map.get($defaults, $name) or map.get($defaults, light);
+    $own: map.get($overrides, $name) or ();
+    $result: map.set($result, $name, _with-accent(map.merge($base, $own)));
+  }
+
+  @return $result;
+}
+
+// Resolved themes used by the framework.
+$themes-values: _resolve-themes((light: $_light, dark: $_dark), $themes);
+
+@if not map.has-key($themes-values, config.$theme-default) {
+  @error 'astrostyle: unknown $theme-default `#{config.$theme-default}`. Known themes: #{map.keys($themes-values)}.';
+}

@@ -1,0 +1,56 @@
+// Public mixins (ITCSS Tools, no CSS output until included); see docs/design.md §7.4.
+@use 'sass:map';
+@use '../settings/typography';
+@use 'functions' as fn;
+@use 'registry';
+
+// Applies a full type role: family, size × `--ap-font-scale`, weight, line height, tracking.
+// The scale is applied here, at the use site, so changing it on any element takes effect.
+@mixin text($role) {
+  @if not map.has-key(map.get(typography.$typography-values, roles), $role) {
+    @error 'astrostyle: unknown type role `#{$role}`.';
+  }
+
+  font-family: fn.token('text-#{$role}-family');
+  font-size: calc(#{fn.token('text-#{$role}-size')} * #{fn.token('font-scale')});
+  font-weight: fn.token('text-#{$role}-weight');
+  line-height: fn.token('text-#{$role}-leading');
+  letter-spacing: fn.token('text-#{$role}-tracking');
+}
+
+// The single keyboard focus style, added without raising specificity.
+@mixin focus-ring {
+  &:where(:focus-visible) {
+    outline: fn.token('focus-width') solid fn.token('focus');
+    outline-offset: fn.token('focus-offset');
+  }
+}
+
+// Shared behavior of interactive controls: pointer, transitions, disabled cursor.
+@mixin interactive {
+  cursor: pointer;
+  transition-property: color, background-color, border-color, box-shadow, transform;
+  transition-duration: fn.token('duration-fast');
+  transition-timing-function: fn.token('ease-out');
+
+  &:where(:disabled, [aria-disabled='true']) {
+    cursor: not-allowed;
+  }
+}
+
+// Pixel-cut corners (top-right and bottom-left), the companion-app signature shape.
+@mixin cut-corners($size: fn.token('cut')) {
+  clip-path: polygon(
+    0 0,
+    calc(100% - #{$size}) 0,
+    100% $size,
+    100% 100%,
+    $size 100%,
+    0 calc(100% - #{$size})
+  );
+}
+
+// Four hard-edged gradient bands of the Design Guide as a background image.
+@mixin spectrum($direction: 90deg) {
+  background-image: registry.spectrum-gradient($direction);
+}

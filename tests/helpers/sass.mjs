@@ -13,3 +13,19 @@ export function compileFixture(source) {
 export function compileEntry(relativePath) {
   return sass.compile(`${scssDir}${relativePath}`, { style: 'expanded' }).css
 }
+
+// Compiles the framework with a `with (...)` configuration and optional extra source after it.
+export function compileConfigured(config = '', body = '@include ap.emit;') {
+  const using = config ? `@use 'index' as ap with (${config});` : `@use 'index' as ap;`
+  return compileFixture(`${using}\n${body}`)
+}
+
+// Returns the Sass error message raised by `source`, or null when it compiles.
+export function compileError(source) {
+  try {
+    compileFixture(source)
+    return null
+  } catch (error) {
+    return error.message
+  }
+}

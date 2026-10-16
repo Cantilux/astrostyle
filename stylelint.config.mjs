@@ -29,6 +29,12 @@ export default {
     'media-feature-name-disallowed-list': ['max-width', 'max-height'],
     'media-feature-range-notation': 'prefix',
     'selector-class-pattern': null,
+    // A leading underscore marks a Sass member as private to its module.
+    'scss/at-function-pattern': '^_?[a-z][a-z0-9]*(-[a-z0-9]+)*$',
+    'scss/at-mixin-pattern': '^_?[a-z][a-z0-9]*(-[a-z0-9]+)*$',
+    'scss/dollar-variable-pattern': '^_?[a-z][a-z0-9]*(-[a-z0-9]+)*$',
+    // Blank lines between settings maps are kept for readability.
+    'scss/dollar-variable-empty-line-before': null,
     'scale-unlimited/declaration-strict-value': [
       tokenOnlyProperties,
       {

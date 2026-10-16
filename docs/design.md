@@ -65,7 +65,7 @@ Where (1) and (2) disagree, (1) wins.
 | Accent display | Rimma Sans, Free Fat Font, Genesys, ST-Cyberillic, SCHABO | Free, mixed terms | `--ap-font-accent-*` (opt-in) |
 | Italic | Instrument Serif | SIL OFL 1.1 | `--ap-font-serif` |
 
-Type roles and sizes come from the companion-app design rules (display 30, screen-title 24, panel-title 18, body 15, data 14, label 12, caption 12 px; weights and tracking as listed there), multiplied by `--ap-font-scale`.
+Type roles and sizes come from the companion-app design rules (display 30, screen-title 24, panel-title 18, body 15, data 14, label 12, caption 12 px; weights and tracking as listed there). Sizes are written in px in the settings and emitted in rem, so they follow the user's browser font size; `ap.text()` multiplies them by `--ap-font-scale` at the use site, so changing the scale on any element takes effect there.
 
 ### 3.4 Texture
 
@@ -220,7 +220,9 @@ $themes: (
 ```
 
 - Emitted as `[data-ap-theme='light']` / `[data-ap-theme='dark']` blocks plus the default theme on `$scope`. Themes nest: a dark `ap-window` inside a light page sets `data-ap-theme="dark"` on itself.
-- Derived steps (hover, pressed, subtle fills, surface steps) use `color-mix(in oklab, …)` on custom properties, so changing one token at runtime recolors its derived states.
+- Derived steps (hover, pressed, subtle fills, surface steps) use `color-mix(in oklab, …)` on custom properties, so overriding a base token on the same element as the theme block (e.g. `:root`) recolors its derived states.
+- Theme values are raw colors or references: `(palette: 'pink')`, `(token: text)`, `(mix: (text, bg, 62%))`, `(alpha: (text, 12%))`. References become `var()`/`color-mix()` in CSS and static sRGB colors (or `{palette.*}` aliases) in `tokens.json`.
+- A theme may not redefine a theme-independent token; compilation fails on such a collision.
 
 ### 7.4 Functions and mixins (public)
 
@@ -250,7 +252,7 @@ $themes: (
 
 | Layer | Max specificity | How |
 | --- | --- | --- |
-| Generic, Elements | (0,0,0) | Everything inside `:where()` |
+| Generic, Elements | (0,0,0); (0,0,1) for selectors ending in a pseudo-element | Everything inside `:where()`; pseudo-elements cannot go inside it |
 | Objects, Components, Utilities | (0,1,0) | One class; element parts, states and modifiers combine as `.ap-c-x:where(…)` or are their own class |
 | Anywhere | no IDs, no `!important`, no qualified selectors (`button.ap-c-button`), no descendant chains between components | |
 
@@ -341,7 +343,8 @@ Each component's docs page lists its tokens, defaults and states.
 ### 8.4 Overriding
 
 - Any unlayered consumer CSS beats astrostyle (cascade layers), without `!important` or extra specificity.
-- The accent is a single token as the guide requires ("choose a different color as your accent"): `accent-strong`, `accent-deep` and `on-accent` are derived from it unless set explicitly. With the default pink they resolve to the guide's Dark/Shadow Pink.
+- The accent is a single setting as the guide requires ("choose a different color as your accent"). With the default pink, `accent-strong` and `accent-deep` are the guide's Dark and Shadow Pink. With `$accent` configured, they are derived from it with `color-mix()`, `on-accent` becomes the palette black or white with the higher WCAG contrast, and `focus` follows the accent.
+- At runtime, `@include ap.accent($color)` declares the same set (accent, shades, ink, focus) in any rule, so one region can be recolored. Setting only `--ap-accent` recolors the accent but keeps the default pink shades.
 
 ### 8.5 JavaScript
 
@@ -412,29 +415,35 @@ Definition of done per component: SCSS partial; documented component tokens; HTM
   "name": "astrostyle",
   "license": "MIT",
   "type": "module",
+  "sass": "scss/_index.scss",
+  "style": "dist/astrostyle.css",
   "exports": {
     ".": { "sass": "./scss/_index.scss", "style": "./dist/astrostyle.css", "default": "./dist/astrostyle.css" },
-    "./scss/*": "./scss/*",
     "./css": "./dist/astrostyle.css",
-    "./css/*": "./dist/components/*",
-    "./js/*": "./js/*/index.js",
-    "./tokens.json": "./dist/tokens.json"
+    "./css/min": "./dist/astrostyle.min.css",
+    "./tokens.json": "./dist/tokens.json",
+    "./scss/*": "./scss/*",
+    "./package.json": "./package.json"
   },
   "sideEffects": ["*.css"],
-  "files": ["scss", "js", "dist", "LICENSE", "README.md", "CHANGELOG.md"]
+  "files": ["scss", "dist", "LICENSE", "README.md", "CHANGELOG.md"],
+  "publishConfig": { "access": "public" }
 }
 ```
+
+Per-component CSS (`./css/*`) and JavaScript (`./js/*`) exports are added with the first components and the first JS module.
 
 | Concern | Choice |
 | --- | --- |
 | Runtime/package manager | Bun |
-| Compile | Dart Sass CLI/API → `dist/astrostyle.css`, `dist/components/*.css`, `dist/tokens.json` |
+| Compile | Dart Sass API (`scripts/build.mjs`) → `dist/astrostyle.css`, `dist/astrostyle.min.css`, each with the license header; `dist/tokens.json` from `scripts/tokens.scss`, which serializes the settings and reports the JSON through `@debug` |
 | Sass consumers | `@use 'pkg:astrostyle'` (Dart Sass ≥ 1.71 `NodePackageImporter`) or bare `astrostyle` resolved by Vite |
-| Lint | Stylelint + `stylelint-config-standard-scss` + `stylelint-scss`: no raw colors, px font sizes, radii, durations or z-index outside `settings/`; `selector-max-specificity: 0,1,0`; `selector-max-id: 0`; `declaration-no-important`; `selector-no-qualifying-type`; `max-width` disallowed in media features; class pattern `ap-(o\|c\|u)-…` per layer folder |
-| Tests | `node --test`: compile fixtures (default and customized configs) and assert CSS; pure JS logic; DOM behavior with happy-dom or jsdom |
+| Lint | Stylelint + `stylelint-config-standard-scss` + `stylelint-scss`: no raw colors, px font sizes, radii, durations or z-index outside `settings/`; `selector-max-specificity: 0,1,0`; `selector-max-id: 0`; `declaration-no-important`; `selector-no-qualifying-type`; `max-width` disallowed in media features; class namespaces per layer are checked on the compiled CSS by tests. Prettier formats JS, JSON and YAML only: it breaks Sass expressions and pads Markdown tables |
+| Tests | `node --test`: compile fixtures (default and customized configs) and assert CSS; specificity budget and layers of the compiled CSS; WCAG contrast of the themes from `tokens.json`; lint rules; package contract; later pure JS logic and DOM behavior with happy-dom or jsdom |
+| Package check | `bun run check:package` (CI, after build): `npm pack` file list and `@use 'pkg:astrostyle'` from a scratch consumer project |
 | Docs | Static HTML pages per component (built with Vite), published on GitHub Pages; they use only the public API |
-| Versioning | SemVer, `0.x` until phase 2; Changesets for the changelog |
-| Publish | GitHub Actions on tag, npm trusted publishing with provenance |
+| Versioning | SemVer, `0.x` until 1.0.0; Changesets for the changelog; versions are bumped in a release PR with `bun run release:version` |
+| Publish | `.github/workflows/release.yml` on every push to `master`: when the package is not `private` and its version is not on npm, it runs lint, tests, build and the package check, publishes with npm trusted publishing (provenance included) and tags `vX.Y.Z`. The very first version is published by hand, because npm accepts a trusted publisher only for an existing package |
 
 ## 13. Adoption in consuming projects
 
