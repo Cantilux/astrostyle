@@ -30,34 +30,44 @@ $tokens: (
   meter: meter.$tokens,
 );
 
-@if config.$components != all {
-  @each $name in config.$components {
-    @if not list.index($order, $name) {
-      @error 'astrostyle: unknown component `#{$name}`. Known: #{$order}.';
-    }
-  }
-}
-
-// Components selected by `$components`, in emission order.
-@function selected() {
-  @if config.$components == all {
-    @return $order;
-  }
-
-  $names: ();
-
-  @each $name in $order {
-    @if list.index(config.$components, $name) {
-      $names: list.append($names, $name, $separator: comma);
+// Fails compilation when `$names` (`all` or a list) contains an unknown component.
+@function _validate($names) {
+  @if $names != all {
+    @each $name in $names {
+      @if not list.index($order, $name) {
+        @error 'astrostyle: unknown component `#{$name}`. Known: #{$order}.';
+      }
     }
   }
 
   @return $names;
 }
 
-// Emits the selected components.
-@mixin emit {
-  @each $name in selected() {
+// Validates the configured selection as soon as the module loads.
+$_configured: _validate(config.$components);
+
+// Components of `$names` (`all` or a list) in emission order.
+@function selected($names: config.$components) {
+  $names: _validate($names);
+
+  @if $names == all {
+    @return $order;
+  }
+
+  $result: ();
+
+  @each $name in $order {
+    @if list.index($names, $name) {
+      $result: list.append($result, $name, $separator: comma);
+    }
+  }
+
+  @return $result;
+}
+
+// Emits the components of `$names` (`all` or a list), in emission order.
+@mixin emit($names: config.$components) {
+  @each $name in selected($names) {
     @include meta.apply(meta.get-mixin(emit, $name));
   }
 }

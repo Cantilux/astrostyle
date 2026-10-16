@@ -27,8 +27,10 @@
 // ITCSS layers that output CSS, in cascade order.
 $_layers: (generic, elements, objects, components, utilities);
 
-// Emits the framework. Include it once, at the root of a stylesheet.
-@mixin emit {
+// Emits the framework. Include it once, at the root of a stylesheet. `$core: false` leaves out
+// everything but components (for per-component files); `$components` overrides the configured
+// selection. The layer order is always declared first.
+@mixin emit($core: true, $components: config.$components) {
   $names: ();
 
   @each $layer in $_layers {
@@ -38,6 +40,29 @@ $_layers: (generic, elements, objects, components, utilities);
   /* stylelint-disable-next-line layer-name-pattern -- names come from the configurable $layer */
   @layer #{$names};
 
+  @if $core {
+    @include _core-before-components;
+  }
+
+  @if list.length(components.selected($components)) > 0 {
+    /* stylelint-disable-next-line layer-name-pattern -- names come from the configurable $layer */
+    @layer #{config.$layer}.components {
+      @include components.emit($components);
+    }
+  }
+
+  @if $core {
+    /* stylelint-disable-next-line layer-name-pattern -- names come from the configurable $layer */
+    @layer #{config.$layer}.utilities {
+      @include visually-hidden.emit;
+      @include text-utilities.emit;
+      @include display.emit;
+    }
+  }
+}
+
+// Generic, Elements and Objects layers.
+@mixin _core-before-components {
   /* stylelint-disable-next-line layer-name-pattern -- names come from the configurable $layer */
   @layer #{config.$layer}.generic {
     @include tokens.emit;
@@ -68,17 +93,5 @@ $_layers: (generic, elements, objects, components, utilities);
     @include sidebar.emit;
     @include switcher.emit;
     @include frame.emit;
-  }
-
-  /* stylelint-disable-next-line layer-name-pattern -- names come from the configurable $layer */
-  @layer #{config.$layer}.components {
-    @include components.emit;
-  }
-
-  /* stylelint-disable-next-line layer-name-pattern -- names come from the configurable $layer */
-  @layer #{config.$layer}.utilities {
-    @include visually-hidden.emit;
-    @include text-utilities.emit;
-    @include display.emit;
   }
 }
