@@ -1,4 +1,7 @@
-// Docs-only behavior: the light/dark theme switch, remembered per browser when storage works.
+// Docs-only behavior: the light/dark theme switch (remembered per browser when storage works),
+// demo states, and the astrostyle behaviors through autoInit().
+import { autoInit } from './js/index.js'
+
 const storageKey = 'astrostyle-docs-theme'
 
 // Reads the saved theme, or null when storage is unavailable or empty.
@@ -41,3 +44,4 @@ function initIndeterminate() {
 
 initThemeToggle()
 initIndeterminate()
+autoInit(document)

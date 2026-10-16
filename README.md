@@ -17,7 +17,7 @@
 </p>
 
 > [!IMPORTANT]
-> **🛰️ Engines warming up.** The foundation is in place: design tokens, light and dark themes, the reset, element defaults, layout objects (stack, cluster, grid, sidebar, switcher, frame, container), utilities, the Sass toolbox and the first components: buttons, button groups, fields, inputs, checkboxes, radios, switches, ranges and segmented meters. More components (select, pagination, tabs…) arrive over the next releases, following the [roadmap](https://github.com/Cantilux/astrostyle/issues). Until `1.0.0`, minor versions may still change the API.
+> **🛰️ Engines warming up.** The foundation is in place: design tokens, light and dark themes, the reset, element defaults, layout objects (stack, cluster, grid, sidebar, switcher, frame, container), utilities, the Sass toolbox and the first components: buttons, button groups, fields, inputs, selects, a searchable combobox (the first vanilla JavaScript module), checkboxes, radios, switches, ranges and segmented meters. More components (pagination, tabs, dialogs…) arrive over the next releases, following the [roadmap](https://github.com/Cantilux/astrostyle/issues). Until `1.0.0`, minor versions may still change the API.
 
 > [!NOTE]
 > astrostyle is an independent production by Enrico Cantile and is not affiliated with Crescent Chimera. It is published under the [ASTROPRISMA Third Party License](https://www.astroprisma.com/license).
@@ -40,7 +40,7 @@ The Sass entry point gives you the whole toolbox and lets you configure everythi
 ```scss
 @use 'pkg:astrostyle' as ap;   // or 'astrostyle' with Vite and other bundlers
 
-@include ap.emit;               // outputs tokens, themes and the reset, inside cascade layers
+@include ap.emit;               // tokens, themes, reset, elements, layouts, components, utilities
 ```
 
 The `pkg:` URL needs Sass's Node package importer:
@@ -79,6 +79,23 @@ import 'astrostyle/css/input'
 
 Every file declares the cascade layer order, so the load order of the files does not matter. `button-group` adjusts `button`, so load both.
 
+### / JavaScript /
+
+A few components get optional behavior from small, dependency-free ES modules. Without JavaScript they still work as native HTML.
+
+```js
+import { autoInit } from 'astrostyle/js'
+
+autoInit(document)   // turns every select[data-ap-combobox] into a searchable combobox
+```
+
+```js
+import { createCombobox } from 'astrostyle/js/combobox'
+
+const ship = createCombobox(document.querySelector('#ship'), { creatable: true })
+ship.element.addEventListener('ap:change', (event) => console.log(event.detail))
+```
+
 ### / First flight /
 
 ```html
@@ -99,6 +116,7 @@ Every token is a CSS custom property (`--ap-accent`, `--ap-space-md`, `--ap-text
   $theme-default: 'dark',
   $scope: '.my-app',                     // keep everything inside one element
   $themes: (dark: (bg: #0c0812)),        // change one token of one theme
+  $components: (button, input, select),  // emit only the components you use
 );
 
 @include ap.emit;
@@ -287,7 +305,7 @@ The house rules. Click a section to open it.
 
 <br>
 
-- One folder per component: styles, component tokens, markup contract, docs page, tests and, if needed, a JavaScript module.
+- One folder per component in `scss/components/<name>/`: the styles, with a `$tokens` map of public tokens and defaults, and a `README.md` with the markup contract. Its docs page lives in `site/pages/`, its tests in `tests/`, its behavior (if any) in `js/<name>/`.
 - Every visual property reads a component token with a sensible fallback, so you can restyle it without writing new selectors.
 - No outer margins, no fixed outer widths.
 
@@ -299,7 +317,7 @@ The house rules. Click a section to open it.
 <br>
 
 - Native ES modules, zero dependencies, no build step needed on your side.
-- One module per interactive component, exposing a `createX(element, options)` factory that returns a handle with `destroy()`.
+- One module per interactive component, exposing a `createX(element, options, env)` factory that enhances native markup and returns a handle with `destroy()`; `env` injects the document and id generator for tests.
 - Components talk through DOM events prefixed with `ap:` (`ap:change`, `ap:open`, `ap:close`).
 - Pure logic (filtering, page ranges) is kept in separate functions and unit tested; `document` and timers are passed in, never hard-coded.
 - JavaScript never sets visual styles inline, except for positioning.
@@ -322,7 +340,7 @@ The house rules. Click a section to open it.
 
 ## `04` / Workflow
 
-How a change travels from an idea to `master`. The release half of the journey is still being built.
+How a change travels from an idea to `master`, and from `master` to npm.
 
 ### / Setup /
 
@@ -334,13 +352,13 @@ bun install
 
 | Command | What it does |
 | --- | --- |
-| `bun run dev` | Serves the docs at <http://localhost:4321/demo.html> and rebuilds and reloads the page on every change in `scss/` or `site/`; Sass errors appear in the page |
-| `bun run build` | Compiles `scss/astrostyle.scss` into `dist/astrostyle.css` and `dist/astrostyle.min.css`, and exports `dist/tokens.json` |
-| `bun run docs:build` | Builds the documentation site into `_site/` (open `_site/index.html`) |
+| `bun run dev` | Serves the docs at <http://localhost:4321/demo.html> and rebuilds and reloads the page on every change in `scss/`, `site/` or `scripts/`; Sass errors appear in the page |
+| `bun run build` | Builds `dist/`: the full bundle (`astrostyle.css`), `core.css`, one file per component in `components/` (each also `.min`) and `tokens.json` |
+| `bun run docs:build` | Builds the documentation site into `_site/` (serve it over HTTP, e.g. with `bun run dev`: JavaScript modules do not run from `file://`) |
 | `bun run test` | Runs every `tests/**/*.test.mjs` with `node --test` |
 | `bun run lint` | Stylelint on `scss/` plus a Prettier check |
 | `bun run format` | Rewrites files with Prettier (Markdown is left as written) |
-| `bun run check:package` | Checks what npm would publish and that `@use 'pkg:astrostyle'` resolves (after a build) |
+| `bun run check:package` | After a build: checks what npm would publish, that `@use 'pkg:astrostyle'` compiles and that every exported path (`astrostyle/css/button`, `astrostyle/js`…) resolves |
 | `bun run changeset` | Records a change for the next release |
 | `bun run release:version` | Applies pending changesets: new version and changelog entry |
 
@@ -357,7 +375,7 @@ bun install
    | `minor` | New components, tokens, variants or options |
    | `major` | Renamed or removed tokens, classes, mixins or options (while in `0.x`: `minor`) |
 
-5. **Open a Pull Request.** CI runs lint, tests and build; merging needs a green CI.
+5. **Open a Pull Request.** CI runs lint, tests, the build, the package check and the docs build; merging needs a green CI.
 
 ### / Releasing /
 

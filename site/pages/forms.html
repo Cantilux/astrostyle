@@ -41,8 +41,60 @@
   {{tokens-input}}
 </section>
 
+<section class="ap-o-stack" aria-labelledby="select">
+  <h2 class="docs-heading" id="select">Select and combobox <span class="docs-heading__index">02</span></h2>
+  <p>Start from a native <code>&lt;select&gt;</code>: it works without JavaScript and keeps posting its value with the form. Add <code>data-ap-combobox</code> and call <code>autoInit()</code> (or <code>createCombobox()</code>) to turn it into a searchable combobox; <code>data-ap-creatable</code> also accepts free text.</p>
+  <div class="ap-o-grid ap-o-grid--gap-lg">
+    <div class="ap-c-field">
+      <label class="ap-c-field__label" for="f-class">Ship class (native select)</label>
+      <select class="ap-c-input ap-c-select" id="f-class">
+        <option value="">Choose a class</option>
+        <option>Courier</option>
+        <option>Frigate</option>
+        <option>Hauler</option>
+        <option disabled>Dreadnought</option>
+      </select>
+    </div>
+    <div class="ap-c-field">
+      <label class="ap-c-field__label" for="f-registry">Ship (combobox)</label>
+      <select class="ap-c-input ap-c-select" id="f-registry" data-ap-combobox aria-describedby="f-registry-hint">
+        <option value="">Search the registry</option>
+        <option value="heron">Night Heron</option>
+        <option value="hammer">Hammerhead</option>
+        <option value="dawn" disabled>Cybérillic Dawn</option>
+        <option value="moth">Iron Moth</option>
+        <option value="lark">Saltmarsh Lark</option>
+        <option value="vigil">Quiet Vigil</option>
+      </select>
+      <p class="ap-c-field__hint" id="f-registry-hint">Type to filter, arrows to move, Enter to pick.</p>
+    </div>
+    <div class="ap-c-field">
+      <label class="ap-c-field__label" for="f-planet">Planet type (free text)</label>
+      <select class="ap-c-input ap-c-select" id="f-planet" data-ap-combobox data-ap-creatable>
+        <option value="">Pick or type a type</option>
+        <option>Barren</option>
+        <option>Gas giant</option>
+        <option>Ice world</option>
+        <option>Ocean</option>
+      </select>
+    </div>
+  </div>
+  <pre><code>&lt;select class="ap-c-input ap-c-select" id="ship" name="ship" data-ap-combobox&gt;
+  &lt;option value=""&gt;Search the registry&lt;/option&gt;
+  &lt;option value="heron"&gt;Night Heron&lt;/option&gt;
+&lt;/select&gt;
+
+&lt;script type="module"&gt;
+  import { autoInit } from 'astrostyle/js'
+  autoInit(document)
+&lt;/script&gt;</code></pre>
+  <p class="docs-note">Keyboard: type to filter, <kbd>↓</kbd>/<kbd>↑</kbd> to move (skipping disabled options), <kbd>Enter</kbd> to choose, <kbd>Esc</kbd> to close and restore, <kbd>Alt</kbd>+<kbd>↓</kbd> to open. Events on the select: <code>change</code>, <code>ap:change</code> (<code>detail: { value, label, created }</code>), <code>ap:open</code>, <code>ap:close</code>.</p>
+  {{tokens-select}}
+  {{tokens-combobox}}
+</section>
+
 <section class="ap-o-stack" aria-labelledby="choices">
-  <h2 class="docs-heading" id="choices">Checkbox, radio, switch <span class="docs-heading__index">02</span></h2>
+  <h2 class="docs-heading" id="choices">Checkbox, radio, switch <span class="docs-heading__index">03</span></h2>
   <div class="ap-o-switcher ap-o-switcher--gap-lg">
     <fieldset class="ap-o-stack ap-o-stack--gap-sm">
       <legend>Checkbox</legend>
@@ -74,7 +126,7 @@
 </section>
 
 <section class="ap-o-stack" aria-labelledby="range">
-  <h2 class="docs-heading" id="range">Range <span class="docs-heading__index">03</span></h2>
+  <h2 class="docs-heading" id="range">Range <span class="docs-heading__index">04</span></h2>
   <div class="ap-c-field">
     <label class="ap-c-field__label" for="f-thrust">Thrust</label>
     <input class="ap-c-range" id="f-thrust" type="range" min="0" max="10" value="6">
@@ -87,7 +139,7 @@
 </section>
 
 <section class="ap-o-stack" aria-labelledby="meter">
-  <h2 class="docs-heading" id="meter">Segmented meter <span class="docs-heading__index">04</span></h2>
+  <h2 class="docs-heading" id="meter">Segmented meter <span class="docs-heading__index">05</span></h2>
   <div class="ap-o-stack ap-o-stack--gap-md">
     <div class="ap-o-stack ap-o-stack--gap-xs"><span class="ap-u-text-label" id="m-hull">Hull 3 / 8</span><div class="ap-c-meter ap-c-meter--danger" role="meter" aria-labelledby="m-hull" aria-valuemin="0" aria-valuemax="8" aria-valuenow="3" style="--ap-meter-value: 3; --ap-meter-max: 8"></div></div>
     <div class="ap-o-stack ap-o-stack--gap-xs"><span class="ap-u-text-label" id="m-fuel">Fuel 12 / 20</span><div class="ap-c-meter" role="meter" aria-labelledby="m-fuel" aria-valuemin="0" aria-valuemax="20" aria-valuenow="12" style="--ap-meter-value: 12; --ap-meter-max: 20"></div></div>

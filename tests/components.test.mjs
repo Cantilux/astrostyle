@@ -10,6 +10,8 @@ const components = [
   'button-group',
   'field',
   'input',
+  'select',
+  'combobox',
   'checkbox',
   'radio',
   'switch',
