@@ -1,7 +1,7 @@
 // Local dev server helpers (scripts/dev.mjs).
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { debounce, injectClient, resolveRequest } from '../scripts/dev.mjs'
+import { debounce, handle, injectClient, resolveRequest } from '../scripts/dev.mjs'
 
 test('the dev client is injected just before </body>', () => {
   assert.equal(
@@ -26,4 +26,14 @@ test('debounce runs once per burst with the last arguments', async () => {
   run(3)
   await new Promise((resolve) => setTimeout(resolve, 60))
   assert.deepEqual(calls, [3])
+})
+
+test('a malformed URL gets a 404 instead of crashing the server', async () => {
+  const sent = {}
+  const response = {
+    writeHead: (status) => (sent.status = status),
+    end: (body) => (sent.body = body),
+  }
+  await handle({ url: '/%' }, response)
+  assert.deepEqual(sent, { status: 404, body: 'Not found' })
 })

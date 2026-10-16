@@ -193,14 +193,15 @@
   @error 'astrostyle: invalid theme value #{meta.inspect($value)}.';
 }
 
-// Selector list that matches `$selector` inside the scope or on the scope root itself, without
-// adding specificity. With the default ':root' scope it is `$selector` unchanged.
+// `$selector` limited to the scope root and its descendants, without adding specificity. It is a
+// single compound selector, so callers can append combinators or pseudo-classes to it. With the
+// default ':root' scope it is `$selector` unchanged.
 @function scoped($selector) {
   @if config.$scope == ':root' {
     @return $selector;
   }
 
-  @return ':where(#{config.$scope}) #{$selector}, #{$selector}:where(#{config.$scope})';
+  @return '#{$selector}:where(#{config.$scope}, #{config.$scope} *)';
 }
 
 // Selector of an explicit theme: the scope root or any descendant carrying `data-ap-theme`.

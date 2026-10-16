@@ -45,10 +45,6 @@ $tones: (
     gap: c.private(gap);
     pointer-events: none;
 
-    &:where(:empty) {
-      display: none;
-    }
-
     @include media.mq(sm) {
       inset-inline-start: auto;
       inline-size: c.private(width);

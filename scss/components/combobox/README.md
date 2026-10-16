@@ -38,5 +38,6 @@ const handle = createCombobox(select, { creatable: true, labels: { noResults: 'N
 ## API
 
 - Options: `creatable`, `placeholder`, `labels` (`noResults`, `results(count)`, `create(text)`, `toggle`), `filter(options, query)`.
+- The native select stays the source of truth: options added or removed later are picked up the next time the list opens or `setValue()` runs.
 - Handle: `element`, `getValue()`, `setValue(value)` (no events), `open()`, `close()`, `destroy()` (restores the select and its id).
 - Events on the select: `input` and `change` on user choices, `ap:change` (`detail: { value, label, created }`), `ap:open`, `ap:close`.

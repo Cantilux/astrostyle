@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { filterOptions, findByLabel, normalize } from '../js/combobox/filter.js'
-import { firstEnabled, moveActive } from '../js/combobox/navigation.js'
+import { firstEnabled, moveActive } from '../js/shared/navigation.js'
 
 const ships = [
   { value: 'heron', label: 'Night Heron' },

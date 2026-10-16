@@ -2,7 +2,8 @@
 // popup). The select stays in the form, hidden and in sync; the combobox replaces it on screen.
 // Contract: scss/components/combobox/README.md.
 import { filterOptions, findByLabel } from './filter.js'
-import { firstEnabled, moveActive } from './navigation.js'
+import { element, nextId } from '../shared/dom.js'
+import { firstEnabled, moveActive } from '../shared/navigation.js'
 
 /** Default texts; every one can be replaced through `options.labels`. */
 export const defaultLabels = {
@@ -10,14 +11,6 @@ export const defaultLabels = {
   create: (text) => `Press Enter to use “${text}”`,
   results: (count) => (count === 1 ? '1 result' : `${count} results`),
   toggle: 'Show options',
-}
-
-let lastId = 0
-
-// Unique id for generated elements.
-function nextId() {
-  lastId += 1
-  return `ap-combobox-${lastId}`
 }
 
 // Reads the choices of a <select>: options with an empty value act as its placeholder.
@@ -31,21 +24,13 @@ function readOptions(select) {
     }))
 }
 
-// Creates an element with a class and attributes in `doc`.
-function element(doc, tag, className, attributes = {}) {
-  const node = doc.createElement(tag)
-  if (className) node.className = className
-  for (const [name, value] of Object.entries(attributes)) node.setAttribute(name, value)
-  return node
-}
-
 // Enhances `select` with a searchable combobox and returns its handle. Options:
 // `creatable` (accept free text), `placeholder`, `labels`, `filter(options, query)`.
 // `env.document` and `env.createId` can be injected for tests.
 export function createCombobox(select, options = {}, env = {}) {
   const doc = env.document ?? select.ownerDocument
   const view = doc.defaultView ?? globalThis
-  const createId = env.createId ?? nextId
+  const createId = env.createId ?? (() => nextId('ap-combobox'))
   const labels = { ...defaultLabels, ...options.labels }
   const filter = options.filter ?? filterOptions
   const creatable = Boolean(options.creatable)
@@ -151,9 +136,11 @@ export function createCombobox(select, options = {}, env = {}) {
     setActive(query ? firstEnabled(visible) : visible.findIndex((c) => c.value === select.value))
   }
 
-  // Opens the popup filtered by `query`.
+  // Opens the popup filtered by `query`, reading the options again so ones added to the native
+  // select after setup are listed too.
   function open(query = '') {
     if (input.disabled) return
+    choices = readOptions(select)
     render(query)
     popup.hidden = false
     input.setAttribute('aria-expanded', 'true')
@@ -276,6 +263,7 @@ export function createCombobox(select, options = {}, env = {}) {
     getValue: () => select.value,
     // Selects `value` without firing change events (programmatic update).
     setValue(value) {
+      choices = readOptions(select)
       select.value = value
       input.value = selectedLabel()
     },

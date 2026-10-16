@@ -75,6 +75,5 @@ test('the end sidebar swaps the side and content roles', () => {
 
 test('a custom scope matches objects inside it and on its root, without extra specificity', () => {
   const scoped = compileConfigured("$scope: '.app'")
-  assert.ok(declarationsOf(scoped, ':where(.app) .ap-o-stack'))
-  assert.ok(declarationsOf(scoped, '.ap-o-stack:where(.app)'))
+  assert.ok(declarationsOf(scoped, '.ap-o-stack:where(.app, .app *)'))
 })

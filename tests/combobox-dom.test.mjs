@@ -201,3 +201,23 @@ test('autoInit enhances data-ap-combobox selects once, with free text when asked
   press(input, 'Enter')
   assert.equal(select.value, 'Starlight')
 })
+
+test('options added to the select after setup are searchable', () => {
+  const { select, input, listbox } = setup()
+  const option = document.createElement('option')
+  option.value = 'gull'
+  option.textContent = 'Grey Gull'
+  select.append(option)
+  type(input, 'gull')
+  assert.deepEqual(listed(listbox), ['Grey Gull'])
+})
+
+test('setValue shows the label of an option added after setup', () => {
+  const { select, input, handle } = setup()
+  const option = document.createElement('option')
+  option.value = 'gull'
+  option.textContent = 'Grey Gull'
+  select.append(option)
+  handle.setValue('gull')
+  assert.equal(input.value, 'Grey Gull')
+})

@@ -1,4 +1,5 @@
-// Pure keyboard navigation over a list of options: no DOM, no state.
+// Pure keyboard navigation over a list of items (`{ disabled }`): no DOM, no state. Shared by the
+// combobox options and the tabs.
 
 // Index of the next enabled option from `current` in `direction` (1 or -1), wrapping around;
 // from -1 it starts at the first (or last) enabled option. Returns -1 when none is enabled.
