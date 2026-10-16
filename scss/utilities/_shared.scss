@@ -1,0 +1,14 @@
+// Helpers shared by the utilities (ITCSS Utilities, no CSS output until included).
+@use '../settings/config';
+@use '../tools/registry';
+
+// Selector of a utility class, optionally with a responsive `@<breakpoint>` suffix.
+@function utility($name, $breakpoint: null) {
+  $class: '.#{config.$prefix}-u-#{$name}';
+
+  @if $breakpoint {
+    $class: '#{$class}\\@#{$breakpoint}';
+  }
+
+  @return registry.scoped($class);
+}
