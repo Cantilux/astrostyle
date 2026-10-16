@@ -1,6 +1,6 @@
 // Builds the static docs site into _site/: pages from site/pages wrapped in site/layout.html,
 // token sections generated from tokens.json, and the docs stylesheet compiled with the public API.
-import { copyFile, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises'
+import { copyFile, cp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import * as sass from 'sass'
 import { exportComponentTokens, exportTokens, licenseHeader } from './build.mjs'
@@ -190,6 +190,7 @@ export async function buildDocs({ style = 'compressed' } = {}) {
     }),
     writeFile(`${outDir}/docs.css`, `${licenseHeader(version)}\n${css}\n`),
     copyFile(`${siteDir}/docs.js`, `${outDir}/docs.js`),
+    cp(`${root}js`, `${outDir}/js`, { recursive: true }),
     copyFile(`${siteDir}/assets/favicon.svg`, `${outDir}/assets/favicon.svg`),
     writeFile(`${outDir}/.nojekyll`, ''),
   ])

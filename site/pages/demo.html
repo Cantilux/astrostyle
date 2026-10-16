@@ -64,8 +64,15 @@
         </fieldset>
         <div class="ap-c-field">
           <label class="ap-c-field__label" for="d-course">Course</label>
-          <input class="ap-c-input" id="d-course" placeholder="Sector 7G" aria-describedby="d-course-hint">
-          <p class="ap-c-field__hint" id="d-course-hint">Sector or coordinates.</p>
+          <select class="ap-c-input ap-c-select" id="d-course" data-ap-combobox data-ap-creatable aria-describedby="d-course-hint">
+            <option value="">Search a sector</option>
+            <option>Sector 7G</option>
+            <option>Medusa relay</option>
+            <option>Corsair dock</option>
+            <option>Wire drift</option>
+            <option>Intersolar gate</option>
+          </select>
+          <p class="ap-c-field__hint" id="d-course-hint">Pick a sector or type coordinates.</p>
         </div>
       </section>
     </div>

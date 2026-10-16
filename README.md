@@ -79,6 +79,23 @@ import 'astrostyle/css/input'
 
 Every file declares the cascade layer order, so the load order of the files does not matter. `button-group` adjusts `button`, so load both.
 
+### / JavaScript /
+
+A few components get optional behavior from small, dependency-free ES modules. Without JavaScript they still work as native HTML.
+
+```js
+import { autoInit } from 'astrostyle/js'
+
+autoInit(document)   // turns every select[data-ap-combobox] into a searchable combobox
+```
+
+```js
+import { createCombobox } from 'astrostyle/js/combobox'
+
+const ship = createCombobox(document.querySelector('#ship'), { creatable: true })
+ship.element.addEventListener('ap:change', (event) => console.log(event.detail))
+```
+
 ### / First flight /
 
 ```html
@@ -336,7 +353,7 @@ bun install
 | --- | --- |
 | `bun run dev` | Serves the docs at <http://localhost:4321/demo.html> and rebuilds and reloads the page on every change in `scss/` or `site/`; Sass errors appear in the page |
 | `bun run build` | Compiles `scss/astrostyle.scss` into `dist/astrostyle.css` and `dist/astrostyle.min.css`, and exports `dist/tokens.json` |
-| `bun run docs:build` | Builds the documentation site into `_site/` (open `_site/index.html`) |
+| `bun run docs:build` | Builds the documentation site into `_site/` (serve it over HTTP, e.g. with `bun run dev`: JavaScript modules do not run from `file://`) |
 | `bun run test` | Runs every `tests/**/*.test.mjs` with `node --test` |
 | `bun run lint` | Stylelint on `scss/` plus a Prettier check |
 | `bun run format` | Rewrites files with Prettier (Markdown is left as written) |

@@ -95,5 +95,8 @@ test('every page in site/pages is in the navigation and renders without leftover
     const html = renderPage(layout, readFileSync(`${site}pages/${file}`, 'utf8'), file, values)
     assert.doesNotMatch(html, /\{\{/, file)
     assert.match(html, /independent production by Enrico Cantile/, file)
+    const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1])
+    const duplicates = ids.filter((id, index) => ids.indexOf(id) !== index)
+    assert.deepEqual(duplicates, [], `${file} repeats ids`)
   }
 })

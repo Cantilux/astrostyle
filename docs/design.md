@@ -288,7 +288,7 @@ $themes: (
   - Controls are native elements with a class (`input.ap-c-checkbox`, `input.ap-c-switch[role=switch]`, `input.ap-c-range`), so keyboard, forms and assistive technology behave as the browser intends.
 - `scss/components/_index.scss` fixes the emission order (`button` before `button-group`, which adjusts it) and applies `$components` (`all` or a list; unknown names fail compilation).
 - Each component folder has a `README.md` with markup, modifiers, states and accessibility rules; the docs pages render the token tables from `$tokens` through `scripts/component-tokens.scss`.
-- Shipped: button, button group, field, input (and textarea), checkbox, radio, switch, range, segmented meter.
+- Shipped: button, button group, field, input (and textarea), select (native), combobox (with `js/combobox`), checkbox, radio, switch, range, segmented meter.
 
 ## 8. Customization
 
@@ -369,23 +369,30 @@ Only where native HTML is insufficient. Native first: `<dialog>` + `showModal()`
 
 | Module | Responsibility |
 | --- | --- |
-| `select` | Combobox with search filter, keyboard navigation, optional free text (`creatable`) |
+| `combobox` (shipped) | Searchable select from a native `<select>`: filter, keyboard navigation, optional free text (`creatable`) |
 | `dialog` | Focus return, backdrop close, stacking over native `<dialog>` |
 | `tabs` | Roving tabindex, arrow keys, ARIA selection |
 | `pagination` | Pure page-window computation + optional renderer |
 | `toast` | Queue, timeout, live region |
 | `popover` | Placement fallback where CSS anchor positioning is unavailable (tooltip, menu) |
 
-Contract:
+Contract (implemented by `js/combobox/`, the first module):
 
 ```js
-// Enhances `element` in place and returns a handle; callers must call destroy().
-export function createSelect(element, options = {}, env = { document: globalThis.document }) {
-  return { getValue, setValue, open, close, destroy }
+// Enhances `select` in place and returns a handle; call destroy() to undo it.
+export function createCombobox(select, options = {}, env = {}) {
+  return { element, getValue, setValue, open, close, destroy }
 }
 ```
 
-- ES modules, no dependencies, no consumer build step; import per component (`astrostyle/js/select`).
+- `env.document` and `env.createId` are injectable; events are created with the constructors of the document's own window, so the module runs unchanged in a test DOM.
+- Progressive enhancement: the module starts from native markup (a `<select>`), keeps it in the form, hidden and in sync, and `destroy()` restores it.
+- User-facing texts are options (`labels`), with English defaults.
+- Pure logic lives in separate files (`js/combobox/filter.js`, `js/combobox/navigation.js`) with unit tests; DOM behavior is tested with happy-dom (pinned to a release older than two weeks).
+- `js/index.js` re-exports every module; `js/auto-init/index.js` provides `autoInit(root)`, which enhances `select[data-ap-combobox]` once (`data-ap-enhanced`), with free text when `data-ap-creatable` is present.
+- The docs site loads `js/` as native modules, so it must be served over HTTP (`bun run dev`, GitHub Pages).
+
+- ES modules, no dependencies, no consumer build step; import per component (`astrostyle/js/combobox`) or everything from `astrostyle/js`.
 - Events: `ap:change`, `ap:open`, `ap:close`, `ap:page`.
 - Pure logic in separate files (`js/pagination/range.js`, `js/select/filter.js`), unit-tested.
 - Environment (document, timers) injected.
@@ -435,17 +442,19 @@ Definition of done per component: SCSS partial; documented component tokens; HTM
     "./css/core": "./dist/core.css",
     "./css/core.min": "./dist/core.min.css",
     "./css/*": "./dist/components/*.css",
+    "./js": "./js/index.js",
+    "./js/*": "./js/*/index.js",
     "./tokens.json": "./dist/tokens.json",
     "./scss/*": "./scss/*",
     "./package.json": "./package.json"
   },
   "sideEffects": ["*.css"],
-  "files": ["scss", "dist", "LICENSE", "README.md", "CHANGELOG.md"],
+  "files": ["scss", "js", "dist", "LICENSE", "README.md", "CHANGELOG.md"],
   "publishConfig": { "access": "public" }
 }
 ```
 
-Split CSS: `astrostyle/css/core` (everything but components) and `astrostyle/css/<component>`, each also as `.min` (`dist/core.css`, `dist/components/<component>.css`). They come from `emit($core, $components)`: `core` is `emit($components: ())`, a component file is `emit($core: false, $components: (<name>))`. Every file starts with the cascade layer declaration, so files can load in any order; core plus every component holds exactly the rules of the full bundle (tested). JavaScript exports (`./js/*`) arrive with the first JS module.
+Split CSS: `astrostyle/css/core` (everything but components) and `astrostyle/css/<component>`, each also as `.min` (`dist/core.css`, `dist/components/<component>.css`). They come from `emit($core, $components)`: `core` is `emit($components: ())`, a component file is `emit($core: false, $components: (<name>))`. Every file starts with the cascade layer declaration, so files can load in any order; core plus every component holds exactly the rules of the full bundle (tested). JavaScript: `astrostyle/js` (`js/index.js`) and `astrostyle/js/<module>` (`js/<module>/index.js`).
 
 | Concern | Choice |
 | --- | --- |
