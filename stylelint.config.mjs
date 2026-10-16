@@ -33,6 +33,8 @@ export default {
     'scss/at-function-pattern': '^_?[a-z][a-z0-9]*(-[a-z0-9]+)*$',
     'scss/at-mixin-pattern': '^_?[a-z][a-z0-9]*(-[a-z0-9]+)*$',
     'scss/dollar-variable-pattern': '^_?[a-z][a-z0-9]*(-[a-z0-9]+)*$',
+    // `--_name` marks a property private to a component (docs/design.md §7.5).
+    'custom-property-pattern': '^_?[a-z][a-z0-9]*(-[a-z0-9]+)*$',
     // Blank lines between settings maps are kept for readability.
     'scss/dollar-variable-empty-line-before': null,
     'scale-unlimited/declaration-strict-value': [

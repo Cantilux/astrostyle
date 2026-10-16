@@ -1,0 +1,46 @@
+// Field (ITCSS Components): a label, a control, an optional hint and an optional error.
+// Contract: scss/components/field/README.md.
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults.
+$tokens: (
+  gap: fn.space(xs),
+  label-color: fn.token('text-muted'),
+  hint-color: fn.token('text-subtle'),
+  error-color: fn.token('danger-text'),
+);
+
+// Emits `.ap-c-field` and its elements.
+@mixin emit {
+  #{c.component(field)} {
+    @include c.tokens(field, $tokens);
+
+    display: grid;
+    gap: c.private(gap);
+    min-inline-size: 0;
+  }
+
+  #{c.component(field, label)} {
+    @include mixins.text(label);
+
+    color: c.private(label-color);
+  }
+
+  #{c.component(field, hint)} {
+    @include mixins.text(caption);
+
+    color: c.private(hint-color);
+  }
+
+  #{c.component(field, error)} {
+    @include mixins.text(caption);
+
+    color: c.private(error-color);
+  }
+
+  #{c.component(field)}:where(:has(:disabled)) {
+    #{c.public-token(field, label-color)}: #{fn.token('text-disabled')};
+  }
+}

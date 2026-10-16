@@ -1,0 +1,46 @@
+// Helpers for components (ITCSS Tools, no CSS output until included); see docs/design.md §7.7.
+@use '../settings/config';
+@use 'registry';
+
+// Selector of a component block, element (`__x`) or modifier (`--x`), scoped without extra
+// specificity.
+@function component($name, $element: null, $modifier: null) {
+  $class: '.#{config.$prefix}-c-#{$name}';
+
+  @if $element {
+    $class: '#{$class}__#{$element}';
+  }
+
+  @if $modifier {
+    $class: '#{$class}--#{$modifier}';
+  }
+
+  @return registry.scoped($class);
+}
+
+// Name of a public component token (`--ap-button-bg`).
+@function public-token($name, $key) {
+  @return --#{config.$prefix}-#{$name}-#{$key};
+}
+
+// Declares one private `--_<key>` per component token: the public token when set (by the
+// consumer, a parent or a modifier), the default otherwise.
+@mixin tokens($name, $tokens) {
+  @each $key, $default in $tokens {
+    --_#{$key}: var(#{public-token($name, $key)}, #{$default});
+  }
+}
+
+// `var()` of a private component property.
+@function private($key) {
+  @return var(--_#{$key});
+}
+
+// Emits a modifier that only sets public tokens of the component.
+@mixin modifier($name, $modifier, $tokens) {
+  #{component($name, null, $modifier)} {
+    @each $key, $value in $tokens {
+      #{public-token($name, $key)}: #{$value};
+    }
+  }
+}

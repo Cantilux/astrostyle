@@ -1,0 +1,43 @@
+// Button group (ITCSS Components): buttons joined into one segmented control. Contract:
+// scss/components/button-group/README.md. Must come after the button in the cascade.
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+
+// Public tokens and their defaults.
+$tokens: (
+  radius: fn.token('radius-pill'),
+);
+
+// Emits `.ap-c-button-group`.
+@mixin emit {
+  #{c.component(button-group)} {
+    @include c.tokens(button-group, $tokens);
+
+    display: inline-flex;
+    flex-wrap: nowrap;
+    max-inline-size: 100%;
+  }
+
+  #{c.component(button-group)} > :where(*) {
+    border-radius: 0;
+  }
+
+  #{c.component(button-group)} > :where(:first-child) {
+    border-start-start-radius: c.private(radius);
+    border-end-start-radius: c.private(radius);
+  }
+
+  #{c.component(button-group)} > :where(:last-child) {
+    border-start-end-radius: c.private(radius);
+    border-end-end-radius: c.private(radius);
+  }
+
+  #{c.component(button-group)} > :where(:not(:first-child)) {
+    margin-inline-start: calc(-1 * #{fn.token('border-width-hairline')});
+  }
+
+  #{c.component(button-group)} > :where(:hover, :focus-visible, [aria-pressed='true']) {
+    position: relative;
+    z-index: fn.token('z-raised');
+  }
+}

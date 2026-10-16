@@ -37,6 +37,9 @@ const textPairs = [
   ['on-accent', 'accent'],
   ['link', 'bg'],
   ['link-hover', 'bg'],
+  ['danger-text', 'bg'],
+  ['danger-text', 'surface-1'],
+  ['on-danger', 'danger'],
 ]
 
 for (const theme of ['light', 'dark']) {
