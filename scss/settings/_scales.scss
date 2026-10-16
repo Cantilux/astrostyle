@@ -1,5 +1,5 @@
 // Space, size, shape, elevation, motion, z-index and breakpoint scales (ITCSS Settings, no CSS
-// output). Each public map is merged over its defaults; see docs/design.md §7.2.
+// output). Each public map is merged over its defaults.
 @use 'sass:map';
 
 // Spacing steps, emitted in rem.

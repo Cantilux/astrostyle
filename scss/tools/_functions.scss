@@ -1,4 +1,4 @@
-// Public functions (ITCSS Tools, no CSS output); see docs/design.md §7.4.
+// Public functions (ITCSS Tools, no CSS output).
 @use 'registry';
 
 // `var()` reference to a design token; unknown names fail compilation.

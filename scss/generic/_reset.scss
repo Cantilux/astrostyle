@@ -1,5 +1,4 @@
-// Universal reset (ITCSS Generic), zero specificity apart from pseudo-elements; see
-// docs/design.md §6.
+// Universal reset (ITCSS Generic), zero specificity apart from pseudo-elements.
 @use '../settings/config';
 
 // Removes default spacing and borders, and normalizes media, form controls and long words.

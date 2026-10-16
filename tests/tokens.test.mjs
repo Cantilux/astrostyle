@@ -1,4 +1,4 @@
-// Token emission and configuration (docs/design.md §3.1, §7.1–§7.3, §8.2).
+// Token emission and configuration.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { compileConfigured, compileError } from './helpers/sass.mjs'

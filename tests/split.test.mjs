@@ -1,4 +1,4 @@
-// Split build: core.css plus one stylesheet per component (docs/design.md §12).
+// Split build: core.css plus one stylesheet per component.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { compileSplit, exportComponentTokens, splitSources } from '../scripts/build.mjs'
