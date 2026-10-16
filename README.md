@@ -64,6 +64,21 @@ import 'astrostyle/css'        // bundlers: readable build
 import 'astrostyle/css/min'    // bundlers: minified build
 ```
 
+Only need a few components? Load the core, then just those components (each also as `.min`):
+
+```js
+import 'astrostyle/css/core'   // tokens, themes, reset, elements, layouts, utilities
+import 'astrostyle/css/button'
+import 'astrostyle/css/input'
+```
+
+```html
+<link rel="stylesheet" href="node_modules/astrostyle/dist/core.css">
+<link rel="stylesheet" href="node_modules/astrostyle/dist/components/button.css">
+```
+
+Every file declares the cascade layer order, so the load order of the files does not matter. `button-group` adjusts `button`, so load both.
+
 ### / First flight /
 
 ```html

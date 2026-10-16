@@ -38,6 +38,34 @@ export function compileTargets(entryPath, buildTargets = targets, compile = sass
   )
 }
 
+// Sass sources of the split build: `core` (everything but components) and one per component,
+// keyed by output path without extension. Every file declares the cascade layer order.
+export function splitSources(componentNames) {
+  const sources = { core: "@use 'index' as ap;\n@include ap.emit($components: ());" }
+  for (const name of componentNames) {
+    sources[`components/${name}`] =
+      `@use 'index' as ap;\n@include ap.emit($core: false, $components: (${name}));`
+  }
+  return sources
+}
+
+// Compiles each split source in readable and minified form, keyed by output file name.
+export function compileSplit(sources, compileString = sass.compileString) {
+  const outputs = {}
+  for (const [path, source] of Object.entries(sources)) {
+    for (const { suffix, style } of [
+      { suffix: '', style: 'expanded' },
+      { suffix: '.min', style: 'compressed' },
+    ]) {
+      outputs[`${path}${suffix}.css`] = compileString(source, {
+        loadPaths: [`${root}scss`],
+        style,
+      }).css
+    }
+  }
+  return outputs
+}
+
 // Runs a build-only Sass entry and returns the JSON document it reports via `@debug`.
 function exportJson(entryPath, compile) {
   let json = null
@@ -63,17 +91,20 @@ export function exportComponentTokens(entryPath = componentsEntry, compile = sas
 async function build() {
   const { version } = JSON.parse(await readFile(`${root}package.json`, 'utf8'))
   const header = licenseHeader(version)
-  const outputs = compileTargets(entry)
   const tokens = exportTokens()
+  const outputs = {
+    ...compileTargets(entry),
+    ...compileSplit(splitSources(Object.keys(exportComponentTokens()))),
+  }
   await rm(distDir, { recursive: true, force: true })
-  await mkdir(distDir, { recursive: true })
+  await mkdir(`${distDir}/components`, { recursive: true })
   await Promise.all([
     ...Object.entries(outputs).map(([file, css]) =>
       writeFile(`${distDir}/${file}`, `${header}\n${css}\n`),
     ),
     writeFile(`${distDir}/tokens.json`, `${JSON.stringify(tokens, null, 2)}\n`),
   ])
-  console.log(`Built ${[...Object.keys(outputs), 'tokens.json'].join(', ')} in dist/`)
+  console.log(`Built ${Object.keys(outputs).length} stylesheets and tokens.json in dist/`)
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) await build()

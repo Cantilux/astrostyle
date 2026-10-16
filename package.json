@@ -30,6 +30,9 @@
     },
     "./css": "./dist/astrostyle.css",
     "./css/min": "./dist/astrostyle.min.css",
+    "./css/core": "./dist/core.css",
+    "./css/core.min": "./dist/core.min.css",
+    "./css/*": "./dist/components/*.css",
     "./tokens.json": "./dist/tokens.json",
     "./scss/*": "./scss/*",
     "./package.json": "./package.json"

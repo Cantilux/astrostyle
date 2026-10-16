@@ -432,6 +432,9 @@ Definition of done per component: SCSS partial; documented component tokens; HTM
     ".": { "sass": "./scss/_index.scss", "style": "./dist/astrostyle.css", "default": "./dist/astrostyle.css" },
     "./css": "./dist/astrostyle.css",
     "./css/min": "./dist/astrostyle.min.css",
+    "./css/core": "./dist/core.css",
+    "./css/core.min": "./dist/core.min.css",
+    "./css/*": "./dist/components/*.css",
     "./tokens.json": "./dist/tokens.json",
     "./scss/*": "./scss/*",
     "./package.json": "./package.json"
@@ -442,16 +445,16 @@ Definition of done per component: SCSS partial; documented component tokens; HTM
 }
 ```
 
-JavaScript exports (`./js/*`) arrive with the first JS module. Plain-CSS consumers get the full bundle; Sass consumers pick components with `$components`. Per-component CSS files are deferred until the bundle size makes them worth it.
+Split CSS: `astrostyle/css/core` (everything but components) and `astrostyle/css/<component>`, each also as `.min` (`dist/core.css`, `dist/components/<component>.css`). They come from `emit($core, $components)`: `core` is `emit($components: ())`, a component file is `emit($core: false, $components: (<name>))`. Every file starts with the cascade layer declaration, so files can load in any order; core plus every component holds exactly the rules of the full bundle (tested). JavaScript exports (`./js/*`) arrive with the first JS module.
 
 | Concern | Choice |
 | --- | --- |
 | Runtime/package manager | Bun |
-| Compile | Dart Sass API (`scripts/build.mjs`) → `dist/astrostyle.css`, `dist/astrostyle.min.css`, each with the license header; `dist/tokens.json` from `scripts/tokens.scss`, which serializes the settings and reports the JSON through `@debug` |
+| Compile | Dart Sass API (`scripts/build.mjs`) → `dist/astrostyle.css`, `dist/astrostyle.min.css`, `dist/core(.min).css`, `dist/components/<component>(.min).css`, each with the license header; `dist/tokens.json` from `scripts/tokens.scss`, which serializes the settings and reports the JSON through `@debug` |
 | Sass consumers | `@use 'pkg:astrostyle'` (Dart Sass ≥ 1.71 `NodePackageImporter`) or bare `astrostyle` resolved by Vite |
 | Lint | Stylelint + `stylelint-config-standard-scss` + `stylelint-scss`: no raw colors, px font sizes, radii, durations or z-index outside `settings/`; `selector-max-specificity: 0,1,0`; `selector-max-id: 0`; `declaration-no-important`; `selector-no-qualifying-type`; `max-width` disallowed in media features; class namespaces per layer are checked on the compiled CSS by tests. Prettier formats JS, JSON and YAML only: it breaks Sass expressions and pads Markdown tables |
 | Tests | `node --test`: compile fixtures (default and customized configs) and assert CSS; specificity budget and layers of the compiled CSS; WCAG contrast of the themes from `tokens.json`; lint rules; package contract; later pure JS logic and DOM behavior with happy-dom or jsdom |
-| Package check | `bun run check:package` (CI, after build): `npm pack` file list and `@use 'pkg:astrostyle'` from a scratch consumer project |
+| Package check | `bun run check:package` (CI, after build): `npm pack` file list (including every split stylesheet), `@use 'pkg:astrostyle'` and every `exports` subpath resolved from a scratch consumer project |
 | Docs | <https://cantilux.github.io/astrostyle/>: static pages in `site/pages/` wrapped in `site/layout.html` by `scripts/build-docs.mjs` (no bundler); token sections are generated from `tokens.json`, the stylesheet `site/docs.scss` uses only the public API; `.github/workflows/pages.yml` deploys `_site/` from `master`. One page per component from roadmap step 4. The **Demo** page (`site/pages/demo.html`) is a sample screen built only with what astrostyle ships; every new component is added to it. `bun run dev` (`scripts/dev.mjs`) serves the site locally with readable CSS, rebuilds on changes in `scss/`, `site/` and `scripts/`, and reloads the pages through server-sent events or shows the Sass error in them |
 | Versioning | SemVer, `0.x` until 1.0.0; Changesets for the changelog; versions are bumped in a release PR with `bun run release:version` |
 | Publish | `.github/workflows/release.yml` on every push to `master`: when the package is not `private` and its version is not on npm, it runs lint, tests, build and the package check, publishes with npm trusted publishing (provenance included) and tags `vX.Y.Z`. The very first version is published by hand, because npm accepts a trusted publisher only for an existing package |
