@@ -3,7 +3,7 @@
 import { copyFile, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import * as sass from 'sass'
-import { exportTokens, licenseHeader } from './build.mjs'
+import { exportComponentTokens, exportTokens, licenseHeader } from './build.mjs'
 
 const root = fileURLToPath(new URL('..', import.meta.url))
 const siteDir = `${root}site`
@@ -17,6 +17,8 @@ export const navigation = [
   ['elements.html', 'Elements'],
   ['layouts.html', 'Layouts'],
   ['utilities.html', 'Utilities'],
+  ['buttons.html', 'Buttons'],
+  ['forms.html', 'Forms'],
 ]
 
 /** Design Guide names of the palette tokens. */
@@ -108,6 +110,30 @@ export function shapesHtml(tokens) {
   return [...radii, ...shadows].join('\n')
 }
 
+// Escapes text for HTML content.
+const escapeHtml = (text) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+
+// Table of a component's public tokens and their defaults.
+export function componentTokensHtml(name, tokens) {
+  const rows = Object.entries(tokens)
+    .map(
+      ([key, value]) =>
+        `<tr><td><code>--ap-${name}-${key}</code></td><td><code>${escapeHtml(value)}</code></td></tr>`,
+    )
+    .join('\n')
+  return `<div style="overflow-x: auto"><table><caption>Tokens of ${name}: set them on the element, on a parent or in a modifier.</caption><thead><tr><th scope="col">Token</th><th scope="col">Default</th></tr></thead><tbody>${rows}</tbody></table></div>`
+}
+
+// One `tokens-<component>` placeholder value per component.
+export function componentTokenValues(components) {
+  return Object.fromEntries(
+    Object.entries(components).map(([name, tokens]) => [
+      `tokens-${name}`,
+      componentTokensHtml(name, tokens),
+    ]),
+  )
+}
+
 // Navigation links, marking the current page.
 export function navHtml(currentFile) {
   return navigation
@@ -146,6 +172,7 @@ export async function buildDocs({ style = 'compressed' } = {}) {
     'type-roles': typeRolesHtml(tokens),
     spacing: spacingHtml(tokens),
     shapes: shapesHtml(tokens),
+    ...componentTokenValues(exportComponentTokens()),
   }
   const layout = await readFile(`${siteDir}/layout.html`, 'utf8')
   const css = sass.compile(`${siteDir}/docs.scss`, {

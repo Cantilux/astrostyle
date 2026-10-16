@@ -4,7 +4,13 @@
     <p class="docs-eyebrow">Ship console / live demo</p>
     <h1 class="docs-display">Night Heron</h1>
   </div>
-  <p class="docs-note">A sample screen built only with what astrostyle ships today: tokens, themes, element defaults, layout objects and utilities. Every new component lands here first, so this page shows how far the framework has come. Switch the theme from the header.</p>
+  <p class="docs-note">A sample screen built only with what astrostyle ships today: tokens, themes, element defaults, layout objects, utilities and the first components. Every new component lands here first, so this page shows how far the framework has come. Switch the theme from the header.</p>
+  <div class="ap-o-cluster">
+    <button class="ap-c-button ap-c-button--primary ap-c-button--lg" type="button">Jump</button>
+    <button class="ap-c-button ap-c-button--lg" type="button">Scan sector</button>
+    <button class="ap-c-button ap-c-button--quiet ap-c-button--lg" type="button">Hail</button>
+    <button class="ap-c-button ap-c-button--danger ap-c-button--lg ap-c-button--cut" type="button">Abort</button>
+  </div>
 </section>
 
 <div class="ap-o-sidebar ap-o-sidebar--gap-xl" style="--ap-sidebar-width: 15rem">
@@ -22,8 +28,8 @@
     <section class="ap-o-stack" aria-labelledby="status">
       <h2 class="docs-heading" id="status">Status <span class="docs-heading__index">02</span></h2>
       <div class="ap-o-grid ap-o-grid--gap-sm" style="--ap-grid-min: 9rem">
-        <div class="docs-card ap-o-stack ap-o-stack--gap-xxs"><span class="ap-u-text-label">Hull</span><span class="demo-stat">3 / 8</span></div>
-        <div class="docs-card ap-o-stack ap-o-stack--gap-xxs"><span class="ap-u-text-label">Fuel</span><span class="demo-stat">62%</span></div>
+        <div class="docs-card ap-o-stack ap-o-stack--gap-xs"><span class="ap-u-text-label" id="d-hull">Hull</span><span class="demo-stat">3 / 8</span><div class="ap-c-meter ap-c-meter--danger" role="meter" aria-labelledby="d-hull" aria-valuemin="0" aria-valuemax="8" aria-valuenow="3" style="--ap-meter-value: 3; --ap-meter-max: 8"></div></div>
+        <div class="docs-card ap-o-stack ap-o-stack--gap-xs"><span class="ap-u-text-label" id="d-fuel">Fuel</span><span class="demo-stat">62%</span><div class="ap-c-meter" role="meter" aria-labelledby="d-fuel" aria-valuemin="0" aria-valuemax="10" aria-valuenow="6" style="--ap-meter-value: 6; --ap-meter-max: 10"></div></div>
         <div class="docs-card ap-o-stack ap-o-stack--gap-xxs"><span class="ap-u-text-label">Credits</span><span class="demo-stat">2,045</span></div>
         <div class="docs-card ap-o-stack ap-o-stack--gap-xxs"><span class="ap-u-text-label">Jump drive</span><span class="demo-stat">Ready</span></div>
       </div>
@@ -43,20 +49,34 @@
         <h2 class="docs-heading" id="systems">Systems <span class="docs-heading__index">04</span></h2>
         <fieldset class="ap-o-stack ap-o-stack--gap-sm">
           <legend>Online</legend>
-          <label class="ap-o-cluster"><input type="checkbox" checked> Shields</label>
-          <label class="ap-o-cluster"><input type="checkbox" checked> Life support</label>
-          <label class="ap-o-cluster"><input type="checkbox"> Cloak</label>
+          <label class="ap-o-cluster"><input class="ap-c-switch" type="checkbox" role="switch" checked> Shields</label>
+          <label class="ap-o-cluster"><input class="ap-c-switch" type="checkbox" role="switch" checked> Life support</label>
+          <label class="ap-o-cluster"><input class="ap-c-switch" type="checkbox" role="switch"> Cloak</label>
         </fieldset>
         <fieldset class="ap-o-stack ap-o-stack--gap-sm">
           <legend>Thrust</legend>
-          <label class="ap-o-cluster"><input type="radio" name="thrust" checked> Cruise</label>
-          <label class="ap-o-cluster"><input type="radio" name="thrust"> Overdrive</label>
+          <label class="ap-o-cluster"><input class="ap-c-radio" type="radio" name="thrust" checked> Cruise</label>
+          <label class="ap-o-cluster"><input class="ap-c-radio" type="radio" name="thrust"> Overdrive</label>
+          <div class="ap-c-field">
+            <label class="ap-c-field__label" for="d-power">Power</label>
+            <input class="ap-c-range" id="d-power" type="range" min="0" max="10" value="6">
+          </div>
         </fieldset>
+        <div class="ap-c-field">
+          <label class="ap-c-field__label" for="d-course">Course</label>
+          <input class="ap-c-input" id="d-course" placeholder="Sector 7G" aria-describedby="d-course-hint">
+          <p class="ap-c-field__hint" id="d-course-hint">Sector or coordinates.</p>
+        </div>
       </section>
     </div>
 
     <section class="ap-o-stack" aria-labelledby="cargo">
       <h2 class="docs-heading" id="cargo">Cargo <span class="docs-heading__index">05</span></h2>
+      <div class="ap-c-button-group" role="group" aria-label="Filter cargo">
+        <button class="ap-c-button" type="button" aria-pressed="true">All</button>
+        <button class="ap-c-button" type="button" aria-pressed="false">Equipment</button>
+        <button class="ap-c-button" type="button" aria-pressed="false">Hacks</button>
+      </div>
       <div style="overflow-x: auto">
         <table>
           <caption>Manifest, cycle 7</caption>

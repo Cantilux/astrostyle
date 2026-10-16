@@ -1,0 +1,62 @@
+// JSON serializer for the build-only Sass exports (tokens.scss, component-tokens.scss).
+@use 'sass:list';
+@use 'sass:math';
+@use 'sass:meta';
+
+$_q: '"';
+
+// JSON string literal.
+@function _string($value) {
+  @return '#{$_q}#{$value}#{$_q}';
+}
+
+// Comma-joined JSON fragments.
+@function _join($parts) {
+  $out: '';
+  @each $part in $parts {
+    @if $out == '' {
+      $out: $part;
+    } @else {
+      $out: '#{$out}, #{$part}';
+    }
+  }
+  @return $out;
+}
+
+// Serializes Sass maps, lists, strings, unitless numbers, booleans and null as JSON.
+@function json($value) {
+  $type: meta.type-of($value);
+  @if $type == 'map' {
+    $parts: ();
+    @each $key, $item in $value {
+      $parts: list.append($parts, '#{_string($key)}: #{json($item)}');
+    }
+    @return '{#{_join($parts)}}';
+  }
+  @if $type == 'list' or $type == 'arglist' {
+    $parts: ();
+    @each $item in $value {
+      $parts: list.append($parts, json($item));
+    }
+    @return '[#{_join($parts)}]';
+  }
+  @if $type == 'string' {
+    @return _string($value);
+  }
+  @if $type == 'number' {
+    @if not math.is-unitless($value) {
+      @error 'tokens.json: number with unit #{$value}; wrap it in _dimension().';
+    }
+    @return '#{$value}';
+  }
+  @if $type == 'bool' {
+    @if $value {
+      @return 'true';
+    }
+    @return 'false';
+  }
+  @if $type == 'null' {
+    @return 'null';
+  }
+  @error 'tokens.json: cannot serialize #{meta.inspect($value)}.';
+}
