@@ -68,6 +68,9 @@
 }
 
 .docs-main {
+  // More room between page sections than the largest spacing step.
+  --ap-stack-gap: calc(#{ap.space(xxl)} * 1.5);
+
   padding-block: ap.space(xl) ap.space(xxl);
 }
 

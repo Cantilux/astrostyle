@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="144" viewBox="0 0 1280 144" role="img" aria-labelledby="title desc">
+  <title id="title">Documentation and live examples</title>
+  <desc id="desc">An open book and an outward arrow invite you to visit the astrostyle documentation website.</desc>
+  <defs>
+    <clipPath id="panel"><rect width="1280" height="144" rx="12"/></clipPath>
+  </defs>
+  <g clip-path="url(#panel)">
+    <rect width="1280" height="144" fill="#ef476e"/>
+    <g fill="none" stroke="#130d1c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M80 48c-10-7-20-10-32-10v54c12 0 22 3 32 10 10-7 20-10 32-10V38c-12 0-22 3-32 10Z"/>
+      <path d="M80 48v54"/>
+      <path d="m1184 88 40-40m-36 0h36v36"/>
+    </g>
+    <text x="152" y="68" fill="#130d1c" font-family="'Arial Black', 'Helvetica Neue', Arial, sans-serif" font-weight="900" font-size="44">DOCUMENTATION</text>
+    <text x="154" y="104" fill="#130d1c" font-family="'Feature Mono', 'SFMono-Regular', Menlo, Consolas, monospace" font-size="24" letter-spacing="2">AND LIVE EXAMPLES</text>
+    <rect y="140" width="320" height="4" fill="#ffbd5c"/>
+    <rect x="320" y="140" width="320" height="4" fill="#ff603e"/>
+    <rect x="640" y="140" width="320" height="4" fill="#d50059"/>
+    <rect x="960" y="140" width="320" height="4" fill="#54009d"/>
+  </g>
+</svg>
