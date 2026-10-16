@@ -1,123 +1,245 @@
-# astrostyle
+<p align="center">
+  <img src=".github/assets/banner.svg" alt="astrostyle: a CSS framework in the ASTROPRISMA style, currently in its design phase" width="100%">
+</p>
 
-A CSS/SCSS framework for building websites and web apps in the visual style of the ASTROPRISMA tabletop RPG: buttons, form controls, pagination, panels and the other generic pieces of an interface. It has no framework dependency; the few interactive parts are vanilla JavaScript.
+<p align="center">
+  <img alt="Status: design phase" src="https://img.shields.io/badge/status-design_phase-ef476e?style=flat-square&labelColor=130d1c">
+  <img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-ffbd5c?style=flat-square&labelColor=130d1c">
+  <img alt="Dependencies: none" src="https://img.shields.io/badge/dependencies-none-6abd45?style=flat-square&labelColor=130d1c">
+  <img alt="Built with Sass" src="https://img.shields.io/badge/built_with-Sass-5fc3b0?style=flat-square&labelColor=130d1c">
+</p>
 
-> **Status: design phase.** The architecture and the design rules are being defined. There is no usable code yet and nothing is published on npm. Everything below describes the planned framework and may change.
+<p align="center">
+  <b>Buttons, inputs, pagination, panels and all the other bits a website needs,<br>
+  dressed in the colors and attitude of the ASTROPRISMA tabletop RPG.</b><br>
+  <sub>SCSS core · plain CSS build · a pinch of vanilla JavaScript · no framework required</sub>
+</p>
 
-astrostyle is an unofficial, community-made project. It is not affiliated with or endorsed by the authors of ASTROPRISMA.
+> [!IMPORTANT]
+> **🛰️ We are still on the drawing board.** astrostyle is in its **design phase**: architecture and design rules are being defined, there is no usable code yet and nothing is on npm. Everything below describes where the ship is headed, and the course may change.
 
-## Contents
+> [!NOTE]
+> astrostyle is an unofficial, fan-made project. It is not affiliated with or endorsed by the authors of ASTROPRISMA.
 
-- [Installation](#installation)
-- [Design philosophy](#design-philosophy)
-- [Code conventions](#code-conventions)
-- [Workflow](#workflow)
-- [License](#license)
+---
 
-## Installation
+## `01` / Installation
 
-[Work in progress]
+> [!WARNING]
+> **[Work in progress]**: installation instructions will land here with the first release.
 
-## Design philosophy
+---
 
-### The ASTROPRISMA Design Guide comes first
+## `02` / Design philosophy
 
-The visual source of truth is the **ASTROPRISMA Design Guide** (`06_Design Guide [PDF]`), distributed in the official ASTROPRISMA Creator Kit. When the framework and the guide disagree, the guide wins. astrostyle translates its print rules into interface tokens and components:
+### The Design Guide is the captain
 
-- **Color.** ASTROPRISMA Black is a dark indigo, never a neutral black. The two whites are warm bone whites, never pure white. Pink is the accent, and the guide explicitly allows replacing it, so the accent is a single token. Values are taken from the guide's vector artwork (sRGB):
+Everything starts from the **ASTROPRISMA Design Guide** (`06_Design Guide [PDF]`), included in the official ASTROPRISMA Creator Kit. When astrostyle and the guide disagree, **the guide wins**. The framework turns its print rules into screen-ready tokens and components.
 
-  | Guide name | Value | Guide name | Value |
-  | --- | --- | --- | --- |
-  | ASTROPRISMA Black | `#130d1c` | Gradient Yellow | `#ffbd5c` |
-  | ASTROPRISMA White | `#f0eee8` | Gradient Orange | `#ff603e` |
-  | ASTROPRISMA Off-White | `#e9dcd3` | Gradient Magenta | `#d50059` |
-  | ASTROPRISMA Pink | `#ef476e` | Gradient Indigo | `#54009d` |
-  | Dark Pink | `#d50059` | WARG Red | `#ca2632` |
-  | Shadow Pink | `#ab0048` | Intersolar Blue | `#5fc3b0` |
-  | Corsair Yellow | `#faa21e` | Medusa Green | `#6abd45` |
-  | Synth Magenta | `#d51b5b` | Wire Teal | `#4bba7a` |
+### / Colors /
 
-- **Gradient.** The four gradient colors always appear as four equal, hard-edged bands in the fixed order yellow, orange, magenta, indigo; never as a smooth blend.
-- **Light and dark.** The guide pairs black on white and white on black. astrostyle ships both as complete themes, selected explicitly with `data-ap-theme`, never inferred from operating-system settings.
-- **Typography.** Feature Mono for text (Light for body, Medium for emphasis, Hairline for details) and Newake for titles, with Powerr as its free alternative. Rimma Sans, Free Fat Font, Genesys, Instrument Serif, ST-Cyberillic and SCHABO are available as accent roles. Font files are not bundled: fonts have different licenses, and each project provides its own.
-- **Texture.** The guide's halftone (50% opacity) and noise filters become optional surfaces for decorative areas. They never sit on top of text or controls.
-- **Graphic motifs.** Recurring elements of the guide become components: the masthead with a small eyebrow over a large display word, the pink section heading with a hairline rule and a two-digit index, the window panel with a dark title bar, pill buttons, segmented pill legends, side-tab boxes, callouts and `/ SLASHED /` subheadings.
+ASTROPRISMA Black is a **dark indigo**, never a flat black. The whites are **warm bone whites**, never pure white. Pink is the accent, and the guide openly invites you to swap it, so in astrostyle the accent is a single token you can change.
 
-### Principles
+Every value below comes straight from the guide's vector artwork (sRGB).
 
-- **Generic, not game-specific.** astrostyle contains interface building blocks only. Game tools (combat trackers, star maps, character sheets) belong to the projects that use it, built on top of its tokens and components.
-- **Design tokens.** Every color, size, space, radius, duration and layer index is a token. Tokens are defined once in Sass maps and published as CSS custom properties and as a W3C Design Tokens JSON file. Components never contain raw values.
-- **ITCSS.** Styles are organized as an inverted triangle, from generic and far-reaching to explicit and narrow: Settings, Tools, Generic, Elements, Objects, Components, Utilities. Each layer that outputs CSS is also a native CSS cascade layer, so the browser enforces the order.
-- **Universal box model and reset.** `border-box` sizing and a minimal reset apply to every element, at zero specificity.
-- **Mobile first.** Base styles target the narrowest screen; larger layouts are added with `min-width` queries only. Components respond to the size of their container rather than the viewport, so the same component works in a sidebar and in a full page.
-- **Low specificity.** At most one class per selector, no IDs, no `!important`. Any style written by the consuming project overrides the framework without fighting it.
-- **Component-based.** Each component is self-contained, owns only its own markup, has no outer margins and is placed by layout objects. Interfaces are built by composing components, not by multiplying variants.
-- **Easy to customize.** Change one custom property at runtime, configure the framework at build time with Sass `@use … with (…)`, add variants and themes with public mixins, or build new components with the same tools. Token names, class names and mixin signatures are public API and follow semantic versioning.
-- **No framework lock-in.** Plain HTML and CSS first, native elements (`<dialog>`, popover, `<details>`) where possible, and small vanilla JavaScript modules only where HTML is not enough.
+<table>
+  <tr>
+    <th colspan="3">Core</th>
+    <th colspan="3">Accent</th>
+  </tr>
+  <tr>
+    <td><img src=".github/assets/swatches/black.svg" width="24" alt=""></td><td>ASTROPRISMA Black</td><td><code>#130d1c</code></td>
+    <td><img src=".github/assets/swatches/pink.svg" width="24" alt=""></td><td>ASTROPRISMA Pink</td><td><code>#ef476e</code></td>
+  </tr>
+  <tr>
+    <td><img src=".github/assets/swatches/white.svg" width="24" alt=""></td><td>ASTROPRISMA White</td><td><code>#f0eee8</code></td>
+    <td><img src=".github/assets/swatches/pink-dark.svg" width="24" alt=""></td><td>Dark Pink</td><td><code>#d50059</code></td>
+  </tr>
+  <tr>
+    <td><img src=".github/assets/swatches/off-white.svg" width="24" alt=""></td><td>ASTROPRISMA Off-White</td><td><code>#e9dcd3</code></td>
+    <td><img src=".github/assets/swatches/pink-shadow.svg" width="24" alt=""></td><td>Shadow Pink</td><td><code>#ab0048</code></td>
+  </tr>
+</table>
 
-## Code conventions
+<table>
+  <tr>
+    <th colspan="3">Gradient</th>
+    <th colspan="3">Factions</th>
+  </tr>
+  <tr>
+    <td><img src=".github/assets/swatches/yellow.svg" width="24" alt=""></td><td>Yellow</td><td><code>#ffbd5c</code></td>
+    <td><img src=".github/assets/swatches/red.svg" width="24" alt=""></td><td>WARG Red</td><td><code>#ca2632</code></td>
+  </tr>
+  <tr>
+    <td><img src=".github/assets/swatches/orange.svg" width="24" alt=""></td><td>Orange</td><td><code>#ff603e</code></td>
+    <td><img src=".github/assets/swatches/teal.svg" width="24" alt=""></td><td>Intersolar Blue</td><td><code>#5fc3b0</code></td>
+  </tr>
+  <tr>
+    <td><img src=".github/assets/swatches/magenta.svg" width="24" alt=""></td><td>Magenta</td><td><code>#d50059</code></td>
+    <td><img src=".github/assets/swatches/green.svg" width="24" alt=""></td><td>Medusa Green</td><td><code>#6abd45</code></td>
+  </tr>
+  <tr>
+    <td><img src=".github/assets/swatches/indigo.svg" width="24" alt=""></td><td>Indigo</td><td><code>#54009d</code></td>
+    <td><img src=".github/assets/swatches/sea.svg" width="24" alt=""></td><td>Wire Teal</td><td><code>#4bba7a</code></td>
+  </tr>
+  <tr>
+    <td colspan="3"></td>
+    <td><img src=".github/assets/swatches/amber.svg" width="24" alt=""></td><td>Corsair Yellow</td><td><code>#faa21e</code></td>
+  </tr>
+  <tr>
+    <td colspan="3"></td>
+    <td><img src=".github/assets/swatches/rose.svg" width="24" alt=""></td><td>Synth Magenta</td><td><code>#d51b5b</code></td>
+  </tr>
+</table>
 
-### Sass
+### / Gradient /
+
+<img src=".github/assets/spectrum.svg" alt="The ASTROPRISMA gradient: yellow, orange, magenta, indigo" width="100%">
+
+Four colors, four equal bands, always in this order. **Hard edges only**: the gradient is never a soft blend.
+
+### / Light & dark /
+
+The guide uses both pairings: black on white and white on black. astrostyle ships **two complete themes**. You pick one with `data-ap-theme`; the framework never guesses from operating-system settings.
+
+### / Typography /
+
+| Font | Role in the guide | In astrostyle |
+| --- | --- | --- |
+| **Feature Mono** | Main text: Light for body, Medium for bold, Hairline for details | Body and data |
+| **Newake** *(paid)*, or **Powerr** *(free)* | Titles and the logo | Display |
+| **Rimma Sans**, **Free Fat Font**, **Genesys**, **ST-Cyberillic**, **SCHABO** | Special titles and graphic details | Accent roles (optional) |
+| *Instrument Serif* | Italics and map labels | Serif |
+
+Font files are **not bundled**: each font has its own license, so every project brings its own.
+
+### / Texture & motifs /
+
+- **Halftone and noise.** The guide's print filters (halftone at 50% opacity, a fine grain) become optional surfaces for decorative areas. They never cover text or controls.
+- **Graphic motifs → components.** The big masthead with its tiny eyebrow, the pink section heading with a hairline rule and a two-digit index (like the ones in this README), the window panel with a dark title bar, pill buttons, segmented pill legends, side-tab boxes, callouts and `/ SLASHED /` subheadings.
+
+### The principles, in short
+
+| | Principle | What it means |
+| --- | --- | --- |
+| 🧩 | **Generic, not game-specific** | Interface building blocks only. Combat trackers, star maps and character sheets live in your project, built on top of astrostyle. |
+| 🎛️ | **Design tokens** | Every color, size, space, radius, duration and layer index is a token: defined once in Sass, published as CSS custom properties and as a W3C Design Tokens JSON file. |
+| 🔻 | **ITCSS** | Styles flow from generic to specific (see the triangle below), and the browser enforces the order through native cascade layers. |
+| 📦 | **Universal box model & reset** | `border-box` everywhere, plus a minimal reset at zero specificity. |
+| 📱 | **Mobile first** | Narrow screens are the base. Bigger layouts are added with `min-width` only, and components react to their container, not the window. |
+| 🪶 | **Low specificity** | One class per selector at most. No IDs, no `!important`. Your CSS always wins. |
+| 🧱 | **Component-based** | Self-contained components with no outer margins, combined with layout objects. |
+| 🎨 | **Easy to customize** | Change a custom property at runtime, configure with Sass `@use … with (…)`, add variants and themes with public mixins, or build new components with the same tools. |
+| 🚫 | **No framework lock-in** | Plain HTML and CSS first, native elements (`<dialog>`, popover, `<details>`) where possible, and tiny vanilla JS modules only where HTML is not enough. |
+
+<p align="center">
+  <img src=".github/assets/itcss.svg" alt="The astrostyle inverted triangle: Settings and Tools emit no CSS; Generic, Elements, Objects, Components and Utilities are emitted as cascade layers in that order" width="90%">
+</p>
+
+---
+
+## `03` / Code conventions
+
+The house rules. Click a section to open it.
+
+<details>
+<summary><b>🔻 Sass &amp; ITCSS layers</b></summary>
+
+<br>
 
 - Dart Sass module system only: `@use` and `@forward`. No `@import`, no `@extend` across modules.
-- Folders follow the ITCSS layers:
+- One folder per ITCSS layer:
 
-  | Layer | Folder | Output | Class namespace |
+  | Layer | Folder | Outputs | Class namespace |
   | --- | --- | --- | --- |
-  | Settings | `scss/settings/` | none: configuration and token maps | — |
-  | Tools | `scss/tools/` | none: functions and mixins | — |
+  | Settings | `scss/settings/` | nothing: configuration and token maps | — |
+  | Tools | `scss/tools/` | nothing: functions and mixins | — |
   | Generic | `scss/generic/` | custom properties, box model, reset | — |
-  | Elements | `scss/elements/` | bare HTML element defaults | — |
+  | Elements | `scss/elements/` | defaults for bare HTML elements | — |
   | Objects | `scss/objects/` | layout patterns, no cosmetics | `ap-o-` |
-  | Components | `scss/components/<name>/` | designed UI pieces | `ap-c-` |
+  | Components | `scss/components/<name>/` | the designed UI pieces | `ap-c-` |
   | Utilities | `scss/utilities/` | single-purpose overrides | `ap-u-` |
 
-- A layer may depend only on earlier layers. A component never styles another component or an object.
-- Every configurable variable is declared `!default`. Map settings are deep-merged with defaults.
-- Raw values (colors, font sizes, radii, durations, z-indexes) live only in `scss/settings/`. Everything else uses `token()`, `space()`, `text()` and the other public functions.
+- A layer only depends on the layers above it. A component never styles another component or an object.
+- Every configurable variable is `!default`; map settings are deep-merged with the defaults.
+- Raw values (colors, font sizes, radii, durations, z-indexes) live **only** in `scss/settings/`. Everywhere else: `token()`, `space()`, `text()` and friends.
 
-### Selectors and naming
+</details>
+
+<details>
+<summary><b>🏷️ Selectors &amp; naming</b></summary>
+
+<br>
 
 - BEM with ITCSS namespaces: `.ap-c-button`, `.ap-c-button__icon`, `.ap-c-button--primary`, `.ap-o-stack`, `.ap-u-truncate`.
-- Responsive utilities use a breakpoint suffix: `.ap-u-hidden@md`.
-- Specificity budget: `(0,0,0)` in Generic and Elements (everything inside `:where()`), `(0,1,0)` everywhere else.
-- No IDs, no `!important`, no type-qualified classes (`button.ap-c-button`), no chains between components (`.ap-c-card .ap-c-button`).
-- States come from native and ARIA attributes first (`:disabled`, `[aria-invalid="true"]`, `[aria-expanded="true"]`, `[aria-current]`). `is-*` and `has-*` classes are used only when no attribute exists.
-- JavaScript hooks use `data-ap-*` attributes and are never used for styling. Themes use `data-ap-theme`.
-- Custom properties: `--ap-{token}` for global tokens, `--ap-{component}-{property}` for component tokens, `--_{name}` for private values inside a component.
+- Responsive utilities take a breakpoint suffix: `.ap-u-hidden@md`.
+- Specificity budget: `(0,0,0)` in Generic and Elements (everything wrapped in `:where()`), `(0,1,0)` everywhere else.
+- Never use IDs, `!important`, type-qualified classes (`button.ap-c-button`) or chains between components (`.ap-c-card .ap-c-button`).
+- States come from native and ARIA attributes first (`:disabled`, `[aria-invalid="true"]`, `[aria-expanded="true"]`, `[aria-current]`). `is-*` and `has-*` classes only when no attribute fits.
+- `data-ap-*` attributes are JavaScript hooks and are never styled. Themes use `data-ap-theme`.
+- Custom properties: `--ap-{token}` (global), `--ap-{component}-{property}` (component), `--_{name}` (private, inside a component).
 
-### Responsive
+</details>
+
+<details>
+<summary><b>📱 Responsive</b></summary>
+
+<br>
 
 - Mobile first: `min-width` media queries only, through `ap.mq()`; container queries through `ap.cq()`.
-- Breakpoints are expressed in `em`.
+- Breakpoints in `em`.
 - Logical properties (`inline-size`, `margin-block`, `padding-inline`) instead of physical ones.
 - Interactive controls are at least 40px tall at every size.
 
-### Components
+</details>
+
+<details>
+<summary><b>🧱 Components</b></summary>
+
+<br>
 
 - One folder per component: styles, component tokens, markup contract, docs page, tests and, if needed, a JavaScript module.
-- Every visual property reads a component token with a semantic fallback, so it can be customized without new selectors.
-- No outer margins and no fixed outer widths on component roots.
+- Every visual property reads a component token with a sensible fallback, so you can restyle it without writing new selectors.
+- No outer margins, no fixed outer widths.
 
-### JavaScript
+</details>
 
-- Native ES modules with no dependencies and no build step required by consumers.
+<details>
+<summary><b>⚙️ JavaScript</b></summary>
+
+<br>
+
+- Native ES modules, zero dependencies, no build step needed on your side.
 - One module per interactive component, exposing a `createX(element, options)` factory that returns a handle with `destroy()`.
-- Components communicate through DOM events prefixed with `ap:` (`ap:change`, `ap:open`, `ap:close`).
-- Pure logic (filtering, page ranges) is kept in separate functions and unit tested; the document and timers are passed in, not hard-coded.
+- Components talk through DOM events prefixed with `ap:` (`ap:change`, `ap:open`, `ap:close`).
+- Pure logic (filtering, page ranges) is kept in separate functions and unit tested; `document` and timers are passed in, never hard-coded.
 - JavaScript never sets visual styles inline, except for positioning.
-- Every named function has a short comment above it stating its purpose or contract.
+- Every named function gets a short comment above it saying what it is for.
 
-### Repository
+</details>
 
-- Documentation and code comments are in English.
-- Commit messages follow Conventional Commits (`feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`).
+<details>
+<summary><b>🗂️ Repository</b></summary>
+
+<br>
+
+- Docs and code comments are in English.
+- Commits follow Conventional Commits (`feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`).
 - Bun is the package manager.
 
-## Workflow
+</details>
 
-[Work in progress]
+---
 
-## License
+## `04` / Workflow
 
-MIT.
+> [!WARNING]
+> **[Work in progress]**: the contribution and release workflow will be documented here.
+
+---
+
+## `05` / License
+
+[MIT](https://opensource.org/license/mit). Take it, fork it, fly it.
+
+<img src=".github/assets/spectrum.svg" alt="" width="100%">

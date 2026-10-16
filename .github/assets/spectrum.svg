@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="28" viewBox="0 0 800 28" role="img" aria-label="ASTROPRISMA gradient: yellow, orange, magenta, indigo in four equal bands">
+  <rect x="0" width="200" height="28" fill="#ffbd5c"/>
+  <rect x="200" width="200" height="28" fill="#ff603e"/>
+  <rect x="400" width="200" height="28" fill="#d50059"/>
+  <rect x="600" width="200" height="28" fill="#54009d"/>
+</svg>
