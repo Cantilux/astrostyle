@@ -20,7 +20,8 @@
 
 // Emits `.ap-o-sidebar`, `.ap-o-sidebar--end` and its gap modifiers.
 @mixin emit {
-  @include o.register(sidebar, (gap, width, content-min));
+  // Width and content minimum are read by the children, so they must inherit: not registered.
+  @include o.register(sidebar, (gap));
 
   #{o.object(sidebar)} {
     display: flex;

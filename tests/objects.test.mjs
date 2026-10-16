@@ -16,19 +16,31 @@ function registeredProperties(source) {
   return found
 }
 
-test('every object property is registered as non-inheriting', () => {
+test('properties an object reads on itself are registered as non-inheriting', () => {
   const registered = registeredProperties(css)
   for (const name of [
     '--ap-stack-gap',
     '--ap-cluster-justify',
     '--ap-grid-min',
-    '--ap-sidebar-width',
-    '--ap-switcher-threshold',
+    '--ap-sidebar-gap',
+    '--ap-switcher-gap',
     '--ap-frame-ratio',
     '--ap-container-max',
   ]) {
     assert.equal(registered[name], 'false', name)
   }
+})
+
+test("properties read by an object's children are never registered as non-inheriting", () => {
+  const registered = registeredProperties(css)
+  postcss.parse(css).walkRules((rule) => {
+    if (!rule.selector.includes('>')) return
+    rule.walkDecls((decl) => {
+      for (const [, name] of decl.value.matchAll(/var\((--ap-[a-z-]+)/g)) {
+        assert.notEqual(registered[name], 'false', `${name} is read in "${rule.selector}"`)
+      }
+    })
+  })
 })
 
 test('objects read their properties with token fallbacks', () => {

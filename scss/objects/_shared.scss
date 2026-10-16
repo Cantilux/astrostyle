@@ -26,7 +26,8 @@
 }
 
 // Registers object properties as non-inheriting, so nested objects never pick up a parent's
-// setting; an unset property falls back to the default in `read()`.
+// setting; an unset property falls back to the default in `read()`. Only for properties the
+// object reads on itself: a property read by its children must inherit from the object.
 @mixin register($object, $names) {
   @each $name in $names {
     @property #{prop($object, $name)} {

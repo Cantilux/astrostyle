@@ -5,7 +5,8 @@
 
 // Emits `.ap-o-switcher` and its gap modifiers.
 @mixin emit {
-  @include o.register(switcher, (gap, threshold));
+  // The threshold is read by the children, so it must inherit: not registered.
+  @include o.register(switcher, (gap));
 
   #{o.object(switcher)} {
     display: flex;
