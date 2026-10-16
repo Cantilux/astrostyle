@@ -1,0 +1,70 @@
+<!-- title: Layouts -->
+<section class="ap-o-stack ap-o-stack--gap-sm">
+  <h1>Layouts</h1>
+  <p>Objects arrange things and never decorate them. Tune them with their custom properties (<code>--ap-stack-gap</code>, <code>--ap-grid-min</code>…) or with the generated modifiers. Drag the corner of the dashed boxes to see them adapt.</p>
+</section>
+
+<section class="ap-o-stack" aria-labelledby="stack">
+  <h2 class="docs-heading" id="stack">Stack <span class="docs-heading__index">01</span></h2>
+  <p><code>ap-o-stack</code>, gap modifiers <code>--gap-xxs</code> to <code>--gap-xxl</code>.</p>
+  <div class="ap-o-stack ap-o-stack--gap-sm">
+    <div class="docs-box">One</div><div class="docs-box">Two</div><div class="docs-box">Three</div>
+  </div>
+</section>
+
+<section class="ap-o-stack" aria-labelledby="cluster">
+  <h2 class="docs-heading" id="cluster">Cluster <span class="docs-heading__index">02</span></h2>
+  <p><code>ap-o-cluster</code>, plus <code>--start</code>, <code>--center</code>, <code>--end</code>, <code>--between</code>.</p>
+  <div class="docs-resize">
+    <div class="ap-o-cluster">
+      <span class="docs-box">Weapons</span><span class="docs-box">Cybertech</span><span class="docs-box">Hacks</span><span class="docs-box">Drones</span><span class="docs-box">Equipment</span>
+    </div>
+  </div>
+</section>
+
+<section class="ap-o-stack" aria-labelledby="grid">
+  <h2 class="docs-heading" id="grid">Grid <span class="docs-heading__index">03</span></h2>
+  <p><code>ap-o-grid</code>: as many columns as fit, each at least <code>--ap-grid-min</code> wide.</p>
+  <div class="docs-resize">
+    <div class="ap-o-grid" style="--ap-grid-min: 8rem">
+      <div class="docs-box">Alpha</div><div class="docs-box">Beta</div><div class="docs-box">Gamma</div><div class="docs-box">Delta</div><div class="docs-box">Epsilon</div><div class="docs-box">Zeta</div>
+    </div>
+  </div>
+</section>
+
+<section class="ap-o-stack" aria-labelledby="sidebar">
+  <h2 class="docs-heading" id="sidebar">Sidebar <span class="docs-heading__index">04</span></h2>
+  <p><code>ap-o-sidebar</code>: the first child keeps its width, the content takes the rest; they stack when the content would drop below half. <code>--end</code> puts the side on the right.</p>
+  <div class="docs-resize">
+    <div class="ap-o-sidebar" style="--ap-sidebar-width: 10rem">
+      <div class="docs-box">Side</div>
+      <div class="docs-box">Content takes all the remaining room and wraps under the side when the space runs out.</div>
+    </div>
+  </div>
+</section>
+
+<section class="ap-o-stack" aria-labelledby="switcher">
+  <h2 class="docs-heading" id="switcher">Switcher <span class="docs-heading__index">05</span></h2>
+  <p><code>ap-o-switcher</code>: a row that becomes a column all at once below <code>--ap-switcher-threshold</code>.</p>
+  <div class="docs-resize">
+    <div class="ap-o-switcher" style="--ap-switcher-threshold: 24rem">
+      <div class="docs-box">Scan</div><div class="docs-box">Jump</div><div class="docs-box">Dock</div>
+    </div>
+  </div>
+</section>
+
+<section class="ap-o-stack" aria-labelledby="frame">
+  <h2 class="docs-heading" id="frame">Frame <span class="docs-heading__index">06</span></h2>
+  <p><code>ap-o-frame</code> with <code>--square</code>, <code>--4-3</code>, <code>--3-2</code>, <code>--16-9</code>.</p>
+  <div class="ap-o-grid" style="--ap-grid-min: 9rem">
+    <figure><div class="ap-o-frame ap-o-frame--square docs-frame-fill"></div><figcaption>square</figcaption></figure>
+    <figure><div class="ap-o-frame ap-o-frame--4-3 docs-frame-fill"></div><figcaption>4-3</figcaption></figure>
+    <figure><div class="ap-o-frame ap-o-frame--3-2 docs-frame-fill"></div><figcaption>3-2</figcaption></figure>
+    <figure><div class="ap-o-frame ap-o-frame--16-9 docs-frame-fill"></div><figcaption>16-9</figcaption></figure>
+  </div>
+</section>
+
+<section class="ap-o-stack" aria-labelledby="container">
+  <h2 class="docs-heading" id="container">Container <span class="docs-heading__index">07</span></h2>
+  <p><code>ap-o-container</code> centers this whole page with side gutters; <code>--sm</code>, <code>--md</code>, <code>--lg</code> (default) and <code>--xl</code> set its maximum width.</p>
+</section>

@@ -1,0 +1,20 @@
+// Grid (ITCSS Objects): as many equal columns as fit, each at least a minimum width; one
+// column on narrow screens without any media query.
+@use '../tools/functions' as fn;
+@use 'shared' as o;
+
+// Emits `.ap-o-grid` and its gap modifiers.
+@mixin emit {
+  @include o.register(grid, (gap, min));
+
+  #{o.object(grid)} {
+    display: grid;
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(min(#{o.read(grid, min, fn.token('size-grid-min'))}, 100%), 1fr)
+    );
+    gap: o.read(grid, gap, fn.space(md));
+  }
+
+  @include o.gap-modifiers(grid);
+}

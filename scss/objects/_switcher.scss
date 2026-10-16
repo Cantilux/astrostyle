@@ -1,0 +1,23 @@
+// Switcher (ITCSS Objects): children side by side, all switching to a column at once when the
+// container is narrower than the threshold.
+@use '../tools/functions' as fn;
+@use 'shared' as o;
+
+// Emits `.ap-o-switcher` and its gap modifiers.
+@mixin emit {
+  // The threshold is read by the children, so it must inherit: not registered.
+  @include o.register(switcher, (gap));
+
+  #{o.object(switcher)} {
+    display: flex;
+    flex-wrap: wrap;
+    gap: o.read(switcher, gap, fn.space(md));
+  }
+
+  #{o.object(switcher)} > :where(*) {
+    flex-basis: calc((#{o.read(switcher, threshold, fn.token('size-switcher'))} - 100%) * 999);
+    flex-grow: 1;
+  }
+
+  @include o.gap-modifiers(switcher);
+}

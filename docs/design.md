@@ -65,7 +65,7 @@ Where (1) and (2) disagree, (1) wins.
 | Accent display | Rimma Sans, Free Fat Font, Genesys, ST-Cyberillic, SCHABO | Free, mixed terms | `--ap-font-accent-*` (opt-in) |
 | Italic | Instrument Serif | SIL OFL 1.1 | `--ap-font-serif` |
 
-Type roles and sizes come from the companion-app design rules (display 30, screen-title 24, panel-title 18, body 15, data 14, label 12, caption 12 px; weights and tracking as listed there). Sizes are written in px in the settings and emitted in rem, so they follow the user's browser font size; `ap.text()` multiplies them by `--ap-font-scale` at the use site, so changing the scale on any element takes effect there.
+Type roles and sizes come from the companion-app design rules (display 30, screen-title 24, panel-title 18, body 15, data 14, label 12, caption 12 px; weights and tracking as listed there). Each role also has a `case` (`uppercase` for display, screen-title, panel-title and label, as the guide's titles and the companion app's labels). The element-to-role map (`$element-roles`: h1 display, h2 screen-title, h3 panel-title, h4 data, h5–h6 label, small caption, …) is configurable. Sizes are written in px in the settings and emitted in rem, so they follow the user's browser font size; `ap.text()` multiplies them by `--ap-font-scale` at the use site, so changing the scale on any element takes effect there.
 
 ### 3.4 Texture
 
@@ -201,7 +201,7 @@ Precompiled alternative for non-Sass projects: `astrostyle/css` (full) or `astro
 ### 7.2 Token tiers
 
 1. **Palette** — §3.1 values; components never read them directly.
-2. **Semantic** — per theme: `bg`, `surface-1..3`, `inset`, `text`, `text-muted`, `text-subtle`, `text-disabled`, `border-subtle`, `border`, `border-strong`, `accent`, `accent-strong`, `accent-deep`, `on-accent`, `success`, `warning`, `danger`, `info`, `focus`.
+2. **Semantic** — per theme: `bg`, `surface-1..3`, `inset`, `text`, `text-muted`, `text-subtle`, `text-disabled`, `border-subtle`, `border`, `border-strong`, `accent`, `accent-strong`, `accent-deep`, `on-accent`, `success`, `warning`, `danger`, `info`, `focus`, `link`, `link-hover`. Links get their own pair because the guide pink reaches only 3.12:1 on the light background; `link` is Dark Pink there (4.55:1).
 3. **Component** — every visual property of a component reads `--ap-{component}-{property}` with a semantic fallback (§8.1).
 
 Token system rules:
@@ -267,6 +267,8 @@ $themes: (
 - Breakpoints (Sass map, overridable): `sm 36em`, `md 48em`, `lg 64em`, `xl 80em`, in `em` so they follow user font size.
 - Components adapt to their container, not the viewport: each component that changes layout declares `container-type: inline-size` on its root or expects a container from an object, and uses `ap.cq()`; the same component then works in a sidebar or a full page.
 - Objects are intrinsically responsive first (`flex-wrap`, `grid-template-columns: repeat(auto-fit, minmax(…))`), using queries only where intrinsic layout is not enough.
+- Objects are tuned with their own custom properties (`--ap-stack-gap`, `--ap-grid-min`, `--ap-sidebar-width`, …). Properties an object reads on itself are registered with `@property` as non-inheriting, so a nested object never picks up its parent's setting; properties read by its children (sidebar width and content minimum, switcher threshold) stay inheriting, otherwise the children could not see them. Modifiers are generated from the settings maps: `--gap-<space step>`, cluster `--start/--center/--end/--between`, container `--sm…--xl`, frame `--<ratio>` from `$ratios`, sidebar `--end`.
+- Body text is set on `<body>` when the scope is `:root`, never on the root element, so `rem` keeps the browser's base size.
 - Logical properties (`inline-size`, `margin-block`, `padding-inline`) everywhere.
 - Touch targets: interactive controls ≥ 40px (companion-app value) in every viewport; no hover-only affordances.
 - Fluid display type with `clamp()` for masthead and display roles only; body and controls keep fixed token sizes × `--ap-font-scale`.
@@ -441,7 +443,7 @@ Per-component CSS (`./css/*`) and JavaScript (`./js/*`) exports are added with t
 | Lint | Stylelint + `stylelint-config-standard-scss` + `stylelint-scss`: no raw colors, px font sizes, radii, durations or z-index outside `settings/`; `selector-max-specificity: 0,1,0`; `selector-max-id: 0`; `declaration-no-important`; `selector-no-qualifying-type`; `max-width` disallowed in media features; class namespaces per layer are checked on the compiled CSS by tests. Prettier formats JS, JSON and YAML only: it breaks Sass expressions and pads Markdown tables |
 | Tests | `node --test`: compile fixtures (default and customized configs) and assert CSS; specificity budget and layers of the compiled CSS; WCAG contrast of the themes from `tokens.json`; lint rules; package contract; later pure JS logic and DOM behavior with happy-dom or jsdom |
 | Package check | `bun run check:package` (CI, after build): `npm pack` file list and `@use 'pkg:astrostyle'` from a scratch consumer project |
-| Docs | Static HTML pages per component (built with Vite), published on GitHub Pages; they use only the public API |
+| Docs | <https://cantilux.github.io/astrostyle/>: static pages in `site/pages/` wrapped in `site/layout.html` by `scripts/build-docs.mjs` (no bundler); token sections are generated from `tokens.json`, the stylesheet `site/docs.scss` uses only the public API; `.github/workflows/pages.yml` deploys `_site/` from `master`. One page per component from roadmap step 4. The **Demo** page (`site/pages/demo.html`) is a sample screen built only with what astrostyle ships; every new component is added to it. `bun run dev` (`scripts/dev.mjs`) serves the site locally with readable CSS, rebuilds on changes in `scss/`, `site/` and `scripts/`, and reloads the pages through server-sent events or shows the Sass error in them |
 | Versioning | SemVer, `0.x` until 1.0.0; Changesets for the changelog; versions are bumped in a release PR with `bun run release:version` |
 | Publish | `.github/workflows/release.yml` on every push to `master`: when the package is not `private` and its version is not on npm, it runs lint, tests, build and the package check, publishes with npm trusted publishing (provenance included) and tags `vX.Y.Z`. The very first version is published by hand, because npm accepts a trusted publisher only for an existing package |
 

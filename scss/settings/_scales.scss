@@ -9,12 +9,31 @@ $space-values: map.merge(
   $space
 );
 
-// Control and icon sizes, emitted in rem. Controls never go below 40px.
+// Control, icon and layout sizes, emitted in rem. Controls never go below 40px.
 $size: () !default;
 $size-values: map.merge(
-  (control: 40px, control-lg: 48px, icon-sm: 16px, icon: 20px, icon-lg: 24px),
+  (
+    control: 40px,
+    control-lg: 48px,
+    icon-sm: 16px,
+    icon: 20px,
+    icon-lg: 24px,
+    container-sm: 640px,
+    container-md: 960px,
+    container-lg: 1152px,
+    container-xl: 1440px,
+    grid-min: 256px,
+    sidebar: 320px,
+    switcher: 480px,
+  ),
   $size
 );
+
+// Aspect ratios offered by the frame object.
+$ratios: () !default;
+
+// Values are CSS `aspect-ratio` strings.
+$ratios-values: map.merge(('square': '1', '4-3': '4 / 3', '3-2': '3 / 2', '16-9': '16 / 9'), $ratios);
 
 // Radii, border widths, pixel-cut size and focus ring geometry, emitted in px.
 $shape: () !default;

@@ -1,0 +1,18 @@
+// Links (ITCSS Elements): theme link colors, underlined, with a hover shade.
+@use '../settings/config';
+@use '../tools/functions' as fn;
+
+// Emits link defaults.
+@mixin emit {
+  :where(#{config.$scope}) :where(a) {
+    color: fn.token('link');
+    text-decoration-line: underline;
+    text-decoration-thickness: from-font;
+    text-underline-offset: 0.18em;
+    transition: color fn.token('duration-fast') fn.token('ease-out');
+  }
+
+  :where(#{config.$scope}) :where(a:hover) {
+    color: fn.token('link-hover');
+  }
+}

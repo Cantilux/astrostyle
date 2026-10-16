@@ -1,0 +1,24 @@
+// Visually hidden (ITCSS Utilities): content for screen readers only; the focusable variant
+// reappears while it, or something inside it, has focus.
+@use 'shared' as u;
+
+// Declarations that hide an element visually but keep it in the accessibility tree.
+@mixin _hide {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+// Emits `.ap-u-visually-hidden` and `.ap-u-visually-hidden-focusable`.
+@mixin emit {
+  #{u.utility(visually-hidden)} {
+    @include _hide;
+  }
+
+  #{u.utility(visually-hidden-focusable)}:where(:not(:focus, :focus-within)) {
+    @include _hide;
+  }
+}

@@ -1,0 +1,20 @@
+// Text utilities (ITCSS Utilities): one class per type role, and single-line truncation.
+@use 'sass:map';
+@use '../settings/typography';
+@use '../tools/mixins';
+@use 'shared' as u;
+
+// Emits `.ap-u-text-<role>` for every type role and `.ap-u-truncate`.
+@mixin emit {
+  @each $role, $spec in map.get(typography.$typography-values, roles) {
+    #{u.utility('text-#{$role}')} {
+      @include mixins.text($role);
+    }
+  }
+
+  #{u.utility(truncate)} {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

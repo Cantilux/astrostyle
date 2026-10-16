@@ -1,0 +1,36 @@
+// Display utilities (ITCSS Utilities), each with mobile-first responsive variants:
+// `.ap-u-hidden` everywhere, `.ap-u-hidden@md` from the md breakpoint up.
+@use '../settings/scales';
+@use '../tools/media';
+@use 'shared' as u;
+
+$_values: (
+  hidden: none,
+  block: block,
+  inline: inline,
+  inline-block: inline-block,
+  flex: flex,
+  inline-flex: inline-flex,
+  grid: grid,
+  contents: contents,
+);
+
+// Emits the display utilities for `$breakpoint` (all viewports when null).
+@mixin _display-set($breakpoint: null) {
+  @each $name, $value in $_values {
+    #{u.utility($name, $breakpoint)} {
+      display: $value;
+    }
+  }
+}
+
+// Emits the base display utilities and their responsive variants.
+@mixin emit {
+  @include _display-set;
+
+  @each $breakpoint, $width in scales.$breakpoints-values {
+    @include media.mq($breakpoint) {
+      @include _display-set($breakpoint);
+    }
+  }
+}

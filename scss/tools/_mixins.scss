@@ -16,6 +16,7 @@
   font-weight: fn.token('text-#{$role}-weight');
   line-height: fn.token('text-#{$role}-leading');
   letter-spacing: fn.token('text-#{$role}-tracking');
+  text-transform: fn.token('text-#{$role}-case');
 }
 
 // The single keyboard focus style, added without raising specificity.

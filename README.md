@@ -12,11 +12,12 @@
 <p align="center">
   <b>Buttons, inputs, pagination, panels and all the other bits a website needs,<br>
   dressed in the colors and attitude of the ASTROPRISMA tabletop RPG.</b><br>
-  <sub>SCSS core · plain CSS build · a pinch of vanilla JavaScript · no framework required</sub>
+  <sub>SCSS core · plain CSS build · a pinch of vanilla JavaScript · no framework required</sub><br><br>
+  📖 <a href="https://cantilux.github.io/astrostyle/"><b>Documentation and live examples</b></a>
 </p>
 
 > [!IMPORTANT]
-> **🛰️ Engines warming up.** The foundation is in place: design tokens, light and dark themes, the reset and the Sass toolbox. Components (buttons, inputs, pagination…) arrive over the next releases, following the [roadmap](https://github.com/Cantilux/astrostyle/issues). Until `1.0.0`, minor versions may still change the API.
+> **🛰️ Engines warming up.** The foundation is in place: design tokens, light and dark themes, the reset, element defaults, layout objects (stack, cluster, grid, sidebar, switcher, frame, container), utilities and the Sass toolbox. Components (buttons, inputs, pagination…) arrive over the next releases, following the [roadmap](https://github.com/Cantilux/astrostyle/issues). Until `1.0.0`, minor versions may still change the API.
 
 > [!NOTE]
 > astrostyle is an independent production by Enrico Cantile and is not affiliated with Crescent Chimera. It is published under the [ASTROPRISMA Third Party License](https://www.astroprisma.com/license).
@@ -318,7 +319,9 @@ bun install
 
 | Command | What it does |
 | --- | --- |
+| `bun run dev` | Serves the docs at <http://localhost:4321/demo.html> and rebuilds and reloads the page on every change in `scss/` or `site/`; Sass errors appear in the page |
 | `bun run build` | Compiles `scss/astrostyle.scss` into `dist/astrostyle.css` and `dist/astrostyle.min.css`, and exports `dist/tokens.json` |
+| `bun run docs:build` | Builds the documentation site into `_site/` (open `_site/index.html`) |
 | `bun run test` | Runs every `tests/**/*.test.mjs` with `node --test` |
 | `bun run lint` | Stylelint on `scss/` plus a Prettier check |
 | `bun run format` | Rewrites files with Prettier (Markdown is left as written) |

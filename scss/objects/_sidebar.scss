@@ -1,0 +1,49 @@
+// Sidebar (ITCSS Objects): a fixed-width side element next to fluid content, stacking when the
+// content would get narrower than its minimum. The first child is the sidebar; `--end` uses the
+// last one.
+@use '../tools/functions' as fn;
+@use 'shared' as o;
+
+// Declarations of the side element.
+@mixin _side {
+  flex-basis: o.read(sidebar, width, fn.token('size-sidebar'));
+  flex-grow: 1;
+  min-inline-size: auto;
+}
+
+// Declarations of the content element.
+@mixin _content {
+  flex-basis: 0;
+  flex-grow: 999;
+  min-inline-size: o.read(sidebar, content-min, 50%);
+}
+
+// Emits `.ap-o-sidebar`, `.ap-o-sidebar--end` and its gap modifiers.
+@mixin emit {
+  // Width and content minimum are read by the children, so they must inherit: not registered.
+  @include o.register(sidebar, (gap));
+
+  #{o.object(sidebar)} {
+    display: flex;
+    flex-wrap: wrap;
+    gap: o.read(sidebar, gap, fn.space(lg));
+  }
+
+  #{o.object(sidebar)} > :where(:first-child) {
+    @include _side;
+  }
+
+  #{o.object(sidebar)} > :where(:last-child) {
+    @include _content;
+  }
+
+  #{o.object(sidebar, end)} > :where(:first-child) {
+    @include _content;
+  }
+
+  #{o.object(sidebar, end)} > :where(:last-child) {
+    @include _side;
+  }
+
+  @include o.gap-modifiers(sidebar);
+}

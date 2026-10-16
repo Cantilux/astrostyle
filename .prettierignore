@@ -4,3 +4,5 @@ CHANGELOG.md
 .changeset/*.md
 *.md
 *.scss
+site/**/*.html
+_site/

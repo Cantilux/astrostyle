@@ -1,0 +1,47 @@
+// Helpers shared by the objects (ITCSS Objects, no CSS output until included).
+@use '../settings/config';
+@use '../settings/scales';
+@use '../tools/functions' as fn;
+@use '../tools/registry';
+
+// Selector of an object class, scoped without extra specificity.
+@function object($name, $modifier: null) {
+  $class: '.#{config.$prefix}-o-#{$name}';
+
+  @if $modifier {
+    $class: '#{$class}--#{$modifier}';
+  }
+
+  @return registry.scoped($class);
+}
+
+// Name of an object's custom property (`--ap-stack-gap`).
+@function prop($object, $name) {
+  @return --#{config.$prefix}-#{$object}-#{$name};
+}
+
+// `var()` of an object's custom property with a fallback.
+@function read($object, $name, $fallback) {
+  @return var(#{prop($object, $name)}, #{$fallback});
+}
+
+// Registers object properties as non-inheriting, so nested objects never pick up a parent's
+// setting; an unset property falls back to the default in `read()`. Only for properties the
+// object reads on itself: a property read by its children must inherit from the object.
+@mixin register($object, $names) {
+  @each $name in $names {
+    @property #{prop($object, $name)} {
+      syntax: '*';
+      inherits: false;
+    }
+  }
+}
+
+// One `--gap-<step>` modifier per spacing step.
+@mixin gap-modifiers($object) {
+  @each $step, $value in scales.$space-values {
+    #{object($object, 'gap-#{$step}')} {
+      #{prop($object, gap)}: fn.space($step);
+    }
+  }
+}

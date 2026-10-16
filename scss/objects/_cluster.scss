@@ -1,0 +1,26 @@
+// Cluster (ITCSS Objects): inline children that wrap, with a gap and alignment.
+@use '../tools/functions' as fn;
+@use 'shared' as o;
+
+$_justify: (start: flex-start, center: center, end: flex-end, between: space-between);
+
+// Emits `.ap-o-cluster`, its gap modifiers and its justification modifiers.
+@mixin emit {
+  @include o.register(cluster, (gap, justify, align));
+
+  #{o.object(cluster)} {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: o.read(cluster, align, center);
+    justify-content: o.read(cluster, justify, flex-start);
+    gap: o.read(cluster, gap, fn.space(sm));
+  }
+
+  @include o.gap-modifiers(cluster);
+
+  @each $name, $value in $_justify {
+    #{o.object(cluster, $name)} {
+      #{o.prop(cluster, justify)}: $value;
+    }
+  }
+}

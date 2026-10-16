@@ -1,0 +1,26 @@
+// Frame (ITCSS Objects): a box with a fixed aspect ratio whose media fill it.
+@use '../settings/scales';
+@use 'shared' as o;
+
+// Emits `.ap-o-frame` and one modifier per ratio in `$ratios`.
+@mixin emit {
+  @include o.register(frame, (ratio));
+
+  #{o.object(frame)} {
+    display: block;
+    overflow: hidden;
+    aspect-ratio: o.read(frame, ratio, '16 / 9');
+  }
+
+  #{o.object(frame)} > :where(img, video, iframe, canvas, svg) {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  @each $name, $ratio in scales.$ratios-values {
+    #{o.object(frame, $name)} {
+      #{o.prop(frame, ratio)}: #{$ratio};
+    }
+  }
+}
