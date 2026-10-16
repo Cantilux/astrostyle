@@ -7,6 +7,7 @@ import * as sass from 'sass'
 const root = fileURLToPath(new URL('..', import.meta.url))
 const entry = `${root}scss/astrostyle.scss`
 const tokensEntry = `${root}scripts/tokens.scss`
+const componentsEntry = `${root}scripts/component-tokens.scss`
 const distDir = `${root}dist`
 
 /** Output files produced from the bundle entry, one per Sass output style. */
@@ -37,15 +38,25 @@ export function compileTargets(entryPath, buildTargets = targets, compile = sass
   )
 }
 
-// Runs the tokens export entry and returns the parsed DTCG document it reports via `@debug`.
-export function exportTokens(entryPath = tokensEntry, compile = sass.compile) {
+// Runs a build-only Sass entry and returns the JSON document it reports via `@debug`.
+function exportJson(entryPath, compile) {
   let json = null
   compile(entryPath, {
-    loadPaths: [`${root}scss`],
+    loadPaths: [`${root}scss`, `${root}scripts`],
     logger: { debug: (message) => (json = message) },
   })
-  if (json === null) throw new Error(`${entryPath} reported no tokens`)
+  if (json === null) throw new Error(`${entryPath} reported nothing`)
   return JSON.parse(json)
+}
+
+// Returns the design tokens as a DTCG document (scripts/tokens.scss).
+export function exportTokens(entryPath = tokensEntry, compile = sass.compile) {
+  return exportJson(entryPath, compile)
+}
+
+// Returns the public tokens of every component with their defaults (scripts/component-tokens.scss).
+export function exportComponentTokens(entryPath = componentsEntry, compile = sass.compile) {
+  return exportJson(entryPath, compile)
 }
 
 // Recreates dist/ from scratch and writes the stylesheets and tokens.json into it.

@@ -17,5 +17,8 @@ $theme-default: 'light' !default;
 // site that already styles its own elements.
 $emit-elements: true !default;
 
+// Components to emit: `all`, or a list such as (button, input). Order does not matter.
+$components: all !default;
+
 // Replacement accent color. `null` keeps the Design Guide pink and its two darker shades.
 $accent: null !default;

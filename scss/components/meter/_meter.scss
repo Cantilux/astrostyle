@@ -1,0 +1,50 @@
+// Segmented meter (ITCSS Components): discrete pips filled up to a value, drawn with CSS only.
+// Set `--ap-meter-value` and `--ap-meter-max` on the element (with matching aria-value*).
+// Contract and tokens: scss/components/meter/README.md.
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+
+// Public tokens and their defaults (value and max are set per element).
+$tokens: (
+  value: 0,
+  max: 10,
+  fill: fn.token('accent'),
+  track: fn.token('surface-3'),
+  gap: fn.space(xxs),
+  height: fn.space(sm),
+);
+
+// Fill color of each status modifier.
+$statuses: (
+  success: fn.token('success'),
+  warning: fn.token('warning'),
+  danger: fn.token('danger'),
+);
+
+// Emits `.ap-c-meter` and its status modifiers.
+@mixin emit {
+  #{c.component(meter)} {
+    @include c.tokens(meter, $tokens);
+
+    --_segment: calc(100% / #{c.private(max)});
+    --_filled: calc(#{c.private(value)} / #{c.private(max)} * 100%);
+
+    display: block;
+    inline-size: 100%;
+    block-size: c.private(height);
+    background-image: linear-gradient(
+      90deg,
+      #{c.private(fill)} var(--_filled),
+      #{c.private(track)} var(--_filled)
+    );
+    mask-image: repeating-linear-gradient(
+      90deg,
+      currentcolor 0 calc(var(--_segment) - #{c.private(gap)}),
+      transparent calc(var(--_segment) - #{c.private(gap)}) var(--_segment)
+    );
+  }
+
+  @each $name, $color in $statuses {
+    @include c.modifier(meter, $name, (fill: $color));
+  }
+}

@@ -1,0 +1,124 @@
+// Button (ITCSS Components). Contract and tokens: scss/components/button/README.md.
+// Default look is secondary; modifiers set tokens only: --primary, --quiet, --danger (look),
+// --lg (size), --icon (square icon-only), --square and --cut (shape; pill by default).
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults.
+$tokens: (
+  bg: transparent,
+  fg: fn.token('text'),
+  border-color: fn.token('border-strong'),
+  hover-bg: color-mix(in oklab, #{fn.token('accent')} 12%, transparent),
+  hover-fg: fn.token('text'),
+  hover-border-color: fn.token('accent'),
+  pressed-bg: color-mix(in oklab, #{fn.token('accent')} 22%, transparent),
+  height: fn.token('size-control'),
+  padding-inline: fn.space(lg),
+  gap: fn.space(sm),
+  radius: fn.token('radius-pill'),
+  border-width: fn.token('border-width-hairline'),
+);
+
+// Token values of each look modifier.
+$looks: (
+  primary: (
+    bg: fn.token('accent'),
+    fg: fn.token('on-accent'),
+    border-color: fn.token('accent'),
+    hover-bg: color-mix(in oklab, #{fn.token('accent')} 82%, #{fn.token('palette-white')}),
+    hover-fg: fn.token('on-accent'),
+    hover-border-color: color-mix(in oklab, #{fn.token('accent')} 82%, #{fn.token('palette-white')}),
+    pressed-bg: fn.token('accent-strong'),
+  ),
+  quiet: (
+    border-color: transparent,
+    hover-bg: color-mix(in oklab, #{fn.token('text')} 8%, transparent),
+    hover-border-color: transparent,
+    pressed-bg: color-mix(in oklab, #{fn.token('text')} 14%, transparent),
+  ),
+  danger: (
+    bg: fn.token('danger'),
+    fg: fn.token('on-danger'),
+    border-color: fn.token('danger'),
+    hover-bg: color-mix(in oklab, #{fn.token('danger')} 82%, #{fn.token('palette-black')}),
+    hover-fg: fn.token('on-danger'),
+    hover-border-color: color-mix(in oklab, #{fn.token('danger')} 82%, #{fn.token('palette-black')}),
+    pressed-bg: color-mix(in oklab, #{fn.token('danger')} 70%, #{fn.token('palette-black')}),
+  ),
+);
+
+// Token values of the size, icon and shape modifiers.
+$modifiers: (
+  lg: (height: fn.token('size-control-lg'), padding-inline: fn.space(xl)),
+  icon: (padding-inline: 0),
+  square: (radius: fn.token('radius-control')),
+  cut: (radius: 0),
+);
+
+// Emits `.ap-c-button`, its elements, states and modifiers.
+@mixin emit {
+  #{c.component(button)} {
+    @include c.tokens(button, $tokens);
+    @include mixins.text(action);
+
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    gap: c.private(gap);
+    min-block-size: c.private(height);
+    min-inline-size: c.private(height);
+    padding-inline: c.private(padding-inline);
+    border: c.private(border-width) solid c.private(border-color);
+    border-radius: c.private(radius);
+    background-color: c.private(bg);
+    color: c.private(fg);
+    text-decoration-line: none;
+    white-space: nowrap;
+    user-select: none;
+
+    @include mixins.interactive;
+    @include mixins.focus-ring;
+
+    &:where(:hover):where(:not(:disabled, [aria-disabled='true'])) {
+      border-color: c.private(hover-border-color);
+      background-color: c.private(hover-bg);
+      color: c.private(hover-fg);
+    }
+
+    &:where(:active):where(:not(:disabled, [aria-disabled='true'])) {
+      transform: translateY(1px);
+    }
+
+    &:where([aria-pressed='true']) {
+      border-color: c.private(hover-border-color);
+      background-color: c.private(pressed-bg);
+    }
+
+    &:where(:disabled, [aria-disabled='true']) {
+      border-color: fn.token('border-subtle');
+      background-color: transparent;
+      color: fn.token('text-disabled');
+    }
+  }
+
+  #{c.component(button, icon)} {
+    flex-shrink: 0;
+    inline-size: fn.token('size-icon');
+    block-size: fn.token('size-icon');
+  }
+
+  @each $name, $look in $looks {
+    @include c.modifier(button, $name, $look);
+  }
+
+  @each $name, $values in $modifiers {
+    @include c.modifier(button, $name, $values);
+  }
+
+  #{c.component(button, null, cut)} {
+    @include mixins.cut-corners;
+  }
+}

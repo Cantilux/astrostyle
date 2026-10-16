@@ -1,5 +1,4 @@
 // Output entry point: declares the ITCSS cascade layers and emits the implemented layers.
-// Components arrive with roadmap step 4.
 @use 'sass:list';
 @use 'settings/config';
 @use 'generic/tokens';
@@ -23,6 +22,7 @@
 @use 'utilities/visually-hidden';
 @use 'utilities/text' as text-utilities;
 @use 'utilities/display';
+@use 'components';
 
 // ITCSS layers that output CSS, in cascade order.
 $_layers: (generic, elements, objects, components, utilities);
@@ -68,6 +68,11 @@ $_layers: (generic, elements, objects, components, utilities);
     @include sidebar.emit;
     @include switcher.emit;
     @include frame.emit;
+  }
+
+  /* stylelint-disable-next-line layer-name-pattern -- names come from the configurable $layer */
+  @layer #{config.$layer}.components {
+    @include components.emit;
   }
 
   /* stylelint-disable-next-line layer-name-pattern -- names come from the configurable $layer */

@@ -1,0 +1,21 @@
+// Build-only entry: reports the public tokens of every component and their defaults as JSON
+// through `@debug`, for the docs token tables. Outputs no CSS.
+@use 'sass:map';
+@use 'sass:meta';
+@use 'sass:string';
+@use 'components';
+@use 'json';
+
+$_document: ();
+
+@each $name, $tokens in components.$tokens {
+  $entry: ();
+
+  @each $key, $default in $tokens {
+    $entry: map.set($entry, $key, meta.inspect($default));
+  }
+
+  $_document: map.set($_document, $name, $entry);
+}
+
+@debug string.unquote(json.json($_document));

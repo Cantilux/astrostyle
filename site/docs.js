@@ -34,4 +34,10 @@ function initThemeToggle() {
   })
 }
 
+// Marks demo checkboxes with `data-indeterminate`: the state exists only as a DOM property.
+function initIndeterminate() {
+  for (const box of document.querySelectorAll('input[data-indeterminate]')) box.indeterminate = true
+}
+
 initThemeToggle()
+initIndeterminate()

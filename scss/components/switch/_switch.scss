@@ -1,0 +1,59 @@
+// Switch (ITCSS Components): a native checkbox with role="switch", drawn as a track and a thumb.
+// Contract and tokens: scss/components/switch/README.md.
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults.
+$tokens: (
+  block-size: fn.token('size-icon'),
+  track-bg: fn.token('surface-3'),
+  track-border-color: fn.token('border-strong'),
+  thumb-color: fn.token('text-muted'),
+  on-track-bg: fn.token('accent'),
+  on-thumb-color: fn.token('on-accent'),
+);
+
+// Emits `.ap-c-switch` and its states.
+@mixin emit {
+  #{c.component(switch)} {
+    @include c.tokens(switch, $tokens);
+
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    inline-size: calc(#{c.private(block-size)} * 1.9);
+    block-size: c.private(block-size);
+    padding: fn.space(xxs);
+    border: fn.token('border-width-hairline') solid c.private(track-border-color);
+    border-radius: fn.token('radius-pill');
+    background-color: c.private(track-bg);
+    appearance: none;
+
+    @include mixins.interactive;
+    @include mixins.focus-ring;
+
+    &::before {
+      aspect-ratio: 1;
+      block-size: 100%;
+      border-radius: fn.token('radius-pill');
+      background-color: c.private(thumb-color);
+      transition: translate fn.token('duration-fast') fn.token('ease-out');
+      content: '';
+    }
+
+    &:where(:checked) {
+      border-color: c.private(on-track-bg);
+      background-color: c.private(on-track-bg);
+    }
+
+    &:where(:checked)::before {
+      background-color: c.private(on-thumb-color);
+      translate: calc(#{c.private(block-size)} * 0.9) 0;
+    }
+
+    &:where(:disabled) {
+      opacity: 0.5;
+    }
+  }
+}

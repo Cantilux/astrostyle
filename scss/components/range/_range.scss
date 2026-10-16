@@ -1,0 +1,69 @@
+// Range (ITCSS Components): a native range input with a pill track and a round thumb, keeping a
+// 40px tall hit area. Contract and tokens: scss/components/range/README.md.
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults.
+$tokens: (
+  track-size: fn.space(sm),
+  track-bg: fn.token('surface-3'),
+  thumb-size: fn.token('size-icon'),
+  thumb-color: fn.token('accent'),
+  thumb-border-color: fn.token('bg'),
+);
+
+// Declarations of the track pseudo-elements.
+@mixin _track {
+  block-size: c.private(track-size);
+  border-radius: fn.token('radius-pill');
+  background-color: c.private(track-bg);
+}
+
+// Declarations of the thumb pseudo-elements.
+@mixin _thumb {
+  inline-size: c.private(thumb-size);
+  block-size: c.private(thumb-size);
+  border: fn.token('border-width-strong') solid c.private(thumb-border-color);
+  border-radius: fn.token('radius-pill');
+  background-color: c.private(thumb-color);
+  appearance: none;
+}
+
+// Emits `.ap-c-range` and its parts.
+@mixin emit {
+  #{c.component(range)} {
+    @include c.tokens(range, $tokens);
+
+    inline-size: 100%;
+    min-block-size: fn.token('size-control');
+    background-color: transparent;
+    cursor: pointer;
+    appearance: none;
+
+    @include mixins.focus-ring;
+
+    &::-webkit-slider-runnable-track {
+      @include _track;
+    }
+
+    &::-moz-range-track {
+      @include _track;
+    }
+
+    &::-webkit-slider-thumb {
+      @include _thumb;
+
+      margin-block-start: calc((#{c.private(track-size)} - #{c.private(thumb-size)}) / 2);
+    }
+
+    &::-moz-range-thumb {
+      @include _thumb;
+    }
+
+    &:where(:disabled) {
+      cursor: not-allowed;
+      #{c.public-token(range, thumb-color)}: #{fn.token('border-strong')};
+    }
+  }
+}

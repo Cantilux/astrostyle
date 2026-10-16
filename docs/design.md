@@ -65,7 +65,7 @@ Where (1) and (2) disagree, (1) wins.
 | Accent display | Rimma Sans, Free Fat Font, Genesys, ST-Cyberillic, SCHABO | Free, mixed terms | `--ap-font-accent-*` (opt-in) |
 | Italic | Instrument Serif | SIL OFL 1.1 | `--ap-font-serif` |
 
-Type roles and sizes come from the companion-app design rules (display 30, screen-title 24, panel-title 18, body 15, data 14, label 12, caption 12 px; weights and tracking as listed there). Each role also has a `case` (`uppercase` for display, screen-title, panel-title and label, as the guide's titles and the companion app's labels). The element-to-role map (`$element-roles`: h1 display, h2 screen-title, h3 panel-title, h4 data, h5–h6 label, small caption, …) is configurable. Sizes are written in px in the settings and emitted in rem, so they follow the user's browser font size; `ap.text()` multiplies them by `--ap-font-scale` at the use site, so changing the scale on any element takes effect there.
+Type roles and sizes come from the companion-app design rules (display 30, screen-title 24, panel-title 18, body 15, data 14, label 12, caption 12 px; weights and tracking as listed there). A seventh role, `action` (body family, 14px, medium, 0.08em, uppercase), is used by buttons: the label role's hairline weight is too thin for actions. Each role also has a `case` (`uppercase` for display, screen-title, panel-title and label, as the guide's titles and the companion app's labels). The element-to-role map (`$element-roles`: h1 display, h2 screen-title, h3 panel-title, h4 data, h5–h6 label, small caption, …) is configurable. Sizes are written in px in the settings and emitted in rem, so they follow the user's browser font size; `ap.text()` multiplies them by `--ap-font-scale` at the use site, so changing the scale on any element takes effect there.
 
 ### 3.4 Texture
 
@@ -201,7 +201,7 @@ Precompiled alternative for non-Sass projects: `astrostyle/css` (full) or `astro
 ### 7.2 Token tiers
 
 1. **Palette** — §3.1 values; components never read them directly.
-2. **Semantic** — per theme: `bg`, `surface-1..3`, `inset`, `text`, `text-muted`, `text-subtle`, `text-disabled`, `border-subtle`, `border`, `border-strong`, `accent`, `accent-strong`, `accent-deep`, `on-accent`, `success`, `warning`, `danger`, `info`, `focus`, `link`, `link-hover`. Links get their own pair because the guide pink reaches only 3.12:1 on the light background; `link` is Dark Pink there (4.55:1).
+2. **Semantic** — per theme: `bg`, `surface-1..3`, `inset`, `text`, `text-muted`, `text-subtle`, `text-disabled`, `border-subtle`, `border`, `border-strong`, `accent`, `accent-strong`, `accent-deep`, `on-accent`, `success`, `warning`, `danger`, `info`, `focus`, `link`, `link-hover`, `on-danger`, `danger-text`. `danger-text` is the danger hue mixed with the text color so error messages reach 4.5:1 on `bg` and `surface-1` in both themes. Links get their own pair because the guide pink reaches only 3.12:1 on the light background; `link` is Dark Pink there (4.55:1).
 3. **Component** — every visual property of a component reads `--ap-{component}-{property}` with a semantic fallback (§8.1).
 
 Token system rules:
@@ -280,6 +280,15 @@ $themes: (
 - Component roots have no outer margin and no fixed outer width; spacing and placement come from objects (`ap-o-stack`, `ap-o-cluster`) or the consumer.
 - Composition over variants: a "card with actions" is `ap-c-card` + `ap-o-cluster` + `ap-c-button`, not a new component.
 - Public contract per component (SemVer): class names, element names, modifiers, required attributes/roles, component tokens, JS options and events.
+- Implementation (`scss/components/<name>/_<name>.scss`, helpers in `scss/tools/_component.scss`):
+  - `$tokens` maps each public token to its default. The root declares `--_<token>: var(--ap-<component>-<token>, <default>)` for each one and every property reads `var(--_<token>)`, so a token set on the element, on a parent or in a modifier wins over the default.
+  - Modifiers only set public tokens (`.ap-c-button--primary { --ap-button-bg: … }`); a shape modifier may add the one property tokens cannot express (`--cut` adds its `clip-path`).
+  - Inside a rule: declarations first, then state mixins (`interactive`, `focus-ring`), then state rules, so states always come after the base declarations in the output.
+  - States: native pseudo-classes and ARIA attributes inside `:where()` (`:hover`, `:focus-visible`, `:disabled`, `[aria-pressed]`, `[aria-invalid]`, `:checked`, `:indeterminate`).
+  - Controls are native elements with a class (`input.ap-c-checkbox`, `input.ap-c-switch[role=switch]`, `input.ap-c-range`), so keyboard, forms and assistive technology behave as the browser intends.
+- `scss/components/_index.scss` fixes the emission order (`button` before `button-group`, which adjusts it) and applies `$components` (`all` or a list; unknown names fail compilation).
+- Each component folder has a `README.md` with markup, modifiers, states and accessibility rules; the docs pages render the token tables from `$tokens` through `scripts/component-tokens.scss`.
+- Shipped: button, button group, field, input (and textarea), checkbox, radio, switch, range, segmented meter.
 
 ## 8. Customization
 
@@ -433,7 +442,7 @@ Definition of done per component: SCSS partial; documented component tokens; HTM
 }
 ```
 
-Per-component CSS (`./css/*`) and JavaScript (`./js/*`) exports are added with the first components and the first JS module.
+JavaScript exports (`./js/*`) arrive with the first JS module. Plain-CSS consumers get the full bundle; Sass consumers pick components with `$components`. Per-component CSS files are deferred until the bundle size makes them worth it.
 
 | Concern | Choice |
 | --- | --- |

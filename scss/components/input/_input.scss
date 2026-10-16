@@ -1,0 +1,72 @@
+// Input (ITCSS Components): text-like inputs and textareas. Contract and tokens:
+// scss/components/input/README.md.
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults.
+$tokens: (
+  bg: fn.token('inset'),
+  fg: fn.token('text'),
+  border-color: fn.token('border'),
+  hover-border-color: fn.token('border-strong'),
+  focus-border-color: fn.token('focus'),
+  invalid-border-color: fn.token('danger'),
+  placeholder-color: fn.token('text-subtle'),
+  height: fn.token('size-control'),
+  padding-inline: fn.space(md),
+  radius: fn.token('radius-control'),
+);
+
+// Emits `.ap-c-input` and its states.
+@mixin emit {
+  #{c.component(input)} {
+    @include c.tokens(input, $tokens);
+    @include mixins.text(data);
+
+    inline-size: 100%;
+    min-inline-size: 0;
+    min-block-size: c.private(height);
+    padding-inline: c.private(padding-inline);
+    border: fn.token('border-width-hairline') solid c.private(border-color);
+    border-radius: c.private(radius);
+    background-color: c.private(bg);
+    color: c.private(fg);
+    transition: border-color fn.token('duration-fast') fn.token('ease-out');
+
+    &::placeholder {
+      color: c.private(placeholder-color);
+    }
+
+    &:where(:hover):where(:not(:disabled, :focus)) {
+      border-color: c.private(hover-border-color);
+    }
+
+    &:where(:focus-visible, :focus) {
+      border-color: c.private(focus-border-color);
+      outline: fn.token('focus-width') solid c.private(focus-border-color);
+      outline-offset: 0;
+    }
+
+    &:where([aria-invalid='true']) {
+      border-color: c.private(invalid-border-color);
+    }
+
+    &:where(:disabled) {
+      border-color: fn.token('border-subtle');
+      background-color: fn.token('surface-1');
+      color: fn.token('text-disabled');
+      cursor: not-allowed;
+    }
+
+    &:where([readonly]) {
+      border-style: dashed;
+    }
+
+    &:where(textarea) {
+      min-block-size: calc(#{c.private(height)} * 2.5);
+      padding-block: fn.space(sm);
+      resize: block;
+    }
+  }
+}

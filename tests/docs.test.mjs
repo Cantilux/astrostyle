@@ -3,8 +3,10 @@ import assert from 'node:assert/strict'
 import { readFileSync, readdirSync } from 'node:fs'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
-import { exportTokens } from '../scripts/build.mjs'
+import { exportComponentTokens, exportTokens } from '../scripts/build.mjs'
 import {
+  componentTokenValues,
+  componentTokensHtml,
   fill,
   navHtml,
   navigation,
@@ -45,6 +47,26 @@ test('type, spacing and shape sections cover every token of their group', () => 
     assert.ok(shapesHtml(tokens).includes(`--ap-elevation-${name}`))
 })
 
+test('component token tables list every public token with its default', () => {
+  const html = componentTokensHtml('button', { bg: 'transparent', 'hover-bg': 'color-mix(a < b)' })
+  assert.match(html, /<code>--ap-button-bg<\/code><\/td><td><code>transparent<\/code>/)
+  assert.match(html, /color-mix\(a &lt; b\)/)
+  const values = componentTokenValues(exportComponentTokens())
+  for (const name of [
+    'button',
+    'button-group',
+    'field',
+    'input',
+    'checkbox',
+    'radio',
+    'switch',
+    'range',
+    'meter',
+  ]) {
+    assert.ok(values[`tokens-${name}`], name)
+  }
+})
+
 test('the navigation marks only the current page', () => {
   const html = navHtml('layouts.html')
   assert.equal(html.match(/aria-current="page"/g).length, 1)
@@ -59,6 +81,7 @@ test('fill() rejects unknown placeholders', () => {
 test('every page in site/pages is in the navigation and renders without leftovers', () => {
   const layout = readFileSync(`${site}layout.html`, 'utf8')
   const values = {
+    ...componentTokenValues(exportComponentTokens()),
     version: '0.0.0',
     palette: '',
     themes: '',

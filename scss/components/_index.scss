@@ -1,0 +1,63 @@
+// Component registry (ITCSS Components): emission order, `$components` selection and the token
+// maps used by the docs.
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:meta';
+@use '../settings/config';
+@use 'button/button';
+@use 'button-group/button-group';
+@use 'field/field';
+@use 'input/input';
+@use 'checkbox/checkbox';
+@use 'radio/radio';
+@use 'switch/switch';
+@use 'range/range';
+@use 'meter/meter';
+
+// Emission order: a component that adjusts another one comes after it.
+$order: (button, button-group, field, input, checkbox, radio, switch, range, meter);
+
+// Public tokens of every component, keyed by component name.
+$tokens: (
+  button: button.$tokens,
+  button-group: button-group.$tokens,
+  field: field.$tokens,
+  input: input.$tokens,
+  checkbox: checkbox.$tokens,
+  radio: radio.$tokens,
+  switch: switch.$tokens,
+  range: range.$tokens,
+  meter: meter.$tokens,
+);
+
+@if config.$components != all {
+  @each $name in config.$components {
+    @if not list.index($order, $name) {
+      @error 'astrostyle: unknown component `#{$name}`. Known: #{$order}.';
+    }
+  }
+}
+
+// Components selected by `$components`, in emission order.
+@function selected() {
+  @if config.$components == all {
+    @return $order;
+  }
+
+  $names: ();
+
+  @each $name in $order {
+    @if list.index(config.$components, $name) {
+      $names: list.append($names, $name, $separator: comma);
+    }
+  }
+
+  @return $names;
+}
+
+// Emits the selected components.
+@mixin emit {
+  @each $name in selected() {
+    @include meta.apply(meta.get-mixin(emit, $name));
+  }
+}

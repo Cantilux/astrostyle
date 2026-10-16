@@ -1,0 +1,101 @@
+<!-- title: Forms -->
+<section class="ap-o-stack ap-o-stack--gap-sm">
+  <h1>Forms</h1>
+  <p>Native form controls with a class each: keyboard, validation and screen readers work as the browser intends. Wrap a control in <code>ap-c-field</code> for its label, hint and error.</p>
+</section>
+
+<section class="ap-o-stack" aria-labelledby="inputs">
+  <h2 class="docs-heading" id="inputs">Field and input <span class="docs-heading__index">01</span></h2>
+  <div class="ap-o-grid ap-o-grid--gap-lg">
+    <div class="ap-c-field">
+      <label class="ap-c-field__label" for="f-course">Course</label>
+      <input class="ap-c-input" id="f-course" placeholder="Sector 7G" aria-describedby="f-course-hint">
+      <p class="ap-c-field__hint" id="f-course-hint">Sector or coordinates.</p>
+    </div>
+    <div class="ap-c-field">
+      <label class="ap-c-field__label" for="f-callsign">Callsign</label>
+      <input class="ap-c-input" id="f-callsign" value="N1GHT" aria-invalid="true" aria-describedby="f-callsign-error">
+      <p class="ap-c-field__error" id="f-callsign-error">Five letters, no digits.</p>
+    </div>
+    <div class="ap-c-field">
+      <label class="ap-c-field__label" for="f-ship">Ship</label>
+      <input class="ap-c-input" id="f-ship" value="Night Heron" readonly>
+      <p class="ap-c-field__hint">Read-only.</p>
+    </div>
+    <div class="ap-c-field">
+      <label class="ap-c-field__label" for="f-beacon">Beacon</label>
+      <input class="ap-c-input" id="f-beacon" value="Offline" disabled>
+    </div>
+  </div>
+  <div class="ap-c-field">
+    <label class="ap-c-field__label" for="f-log">Log entry</label>
+    <textarea class="ap-c-input" id="f-log" placeholder="What happened out there?"></textarea>
+  </div>
+  <pre><code>&lt;div class="ap-c-field"&gt;
+  &lt;label class="ap-c-field__label" for="course"&gt;Course&lt;/label&gt;
+  &lt;input class="ap-c-input" id="course" aria-describedby="course-hint"&gt;
+  &lt;p class="ap-c-field__hint" id="course-hint"&gt;Sector or coordinates.&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+  <p class="docs-note">Errors: set <code>aria-invalid="true"</code> on the control and point <code>aria-describedby</code> at the <code>ap-c-field__error</code> text.</p>
+  {{tokens-field}}
+  {{tokens-input}}
+</section>
+
+<section class="ap-o-stack" aria-labelledby="choices">
+  <h2 class="docs-heading" id="choices">Checkbox, radio, switch <span class="docs-heading__index">02</span></h2>
+  <div class="ap-o-switcher ap-o-switcher--gap-lg">
+    <fieldset class="ap-o-stack ap-o-stack--gap-sm">
+      <legend>Checkbox</legend>
+      <label class="ap-o-cluster"><input class="ap-c-checkbox" type="checkbox" checked> Shields</label>
+      <label class="ap-o-cluster"><input class="ap-c-checkbox" type="checkbox"> Cloak</label>
+      <label class="ap-o-cluster"><input class="ap-c-checkbox" type="checkbox" data-indeterminate> Some systems</label>
+      <label class="ap-o-cluster"><input class="ap-c-checkbox" type="checkbox" aria-invalid="true"> Waiver signed</label>
+      <label class="ap-o-cluster"><input class="ap-c-checkbox" type="checkbox" checked disabled> Locked</label>
+    </fieldset>
+    <fieldset class="ap-o-stack ap-o-stack--gap-sm">
+      <legend>Radio</legend>
+      <label class="ap-o-cluster"><input class="ap-c-radio" type="radio" name="thrust" checked> Cruise</label>
+      <label class="ap-o-cluster"><input class="ap-c-radio" type="radio" name="thrust"> Overdrive</label>
+      <label class="ap-o-cluster"><input class="ap-c-radio" type="radio" name="thrust" disabled> Warp</label>
+    </fieldset>
+    <fieldset class="ap-o-stack ap-o-stack--gap-sm">
+      <legend>Switch</legend>
+      <label class="ap-o-cluster"><input class="ap-c-switch" type="checkbox" role="switch" checked> Life support</label>
+      <label class="ap-o-cluster"><input class="ap-c-switch" type="checkbox" role="switch"> Autopilot</label>
+      <label class="ap-o-cluster"><input class="ap-c-switch" type="checkbox" role="switch" disabled> Jump drive</label>
+    </fieldset>
+  </div>
+  <pre><code>&lt;label class="ap-o-cluster"&gt;&lt;input class="ap-c-checkbox" type="checkbox"&gt; Shields&lt;/label&gt;
+&lt;label class="ap-o-cluster"&gt;&lt;input class="ap-c-radio" type="radio" name="thrust"&gt; Cruise&lt;/label&gt;
+&lt;label class="ap-o-cluster"&gt;&lt;input class="ap-c-switch" type="checkbox" role="switch"&gt; Autopilot&lt;/label&gt;</code></pre>
+  {{tokens-checkbox}}
+  {{tokens-radio}}
+  {{tokens-switch}}
+</section>
+
+<section class="ap-o-stack" aria-labelledby="range">
+  <h2 class="docs-heading" id="range">Range <span class="docs-heading__index">03</span></h2>
+  <div class="ap-c-field">
+    <label class="ap-c-field__label" for="f-thrust">Thrust</label>
+    <input class="ap-c-range" id="f-thrust" type="range" min="0" max="10" value="6">
+  </div>
+  <div class="ap-c-field">
+    <label class="ap-c-field__label" for="f-locked">Locked</label>
+    <input class="ap-c-range" id="f-locked" type="range" value="30" disabled>
+  </div>
+  {{tokens-range}}
+</section>
+
+<section class="ap-o-stack" aria-labelledby="meter">
+  <h2 class="docs-heading" id="meter">Segmented meter <span class="docs-heading__index">04</span></h2>
+  <div class="ap-o-stack ap-o-stack--gap-md">
+    <div class="ap-o-stack ap-o-stack--gap-xs"><span class="ap-u-text-label" id="m-hull">Hull 3 / 8</span><div class="ap-c-meter ap-c-meter--danger" role="meter" aria-labelledby="m-hull" aria-valuemin="0" aria-valuemax="8" aria-valuenow="3" style="--ap-meter-value: 3; --ap-meter-max: 8"></div></div>
+    <div class="ap-o-stack ap-o-stack--gap-xs"><span class="ap-u-text-label" id="m-fuel">Fuel 12 / 20</span><div class="ap-c-meter" role="meter" aria-labelledby="m-fuel" aria-valuemin="0" aria-valuemax="20" aria-valuenow="12" style="--ap-meter-value: 12; --ap-meter-max: 20"></div></div>
+    <div class="ap-o-stack ap-o-stack--gap-xs"><span class="ap-u-text-label" id="m-shield">Shields 5 / 5</span><div class="ap-c-meter ap-c-meter--success" role="meter" aria-labelledby="m-shield" aria-valuemin="0" aria-valuemax="5" aria-valuenow="5" style="--ap-meter-value: 5; --ap-meter-max: 5"></div></div>
+  </div>
+  <pre><code>&lt;div class="ap-c-meter ap-c-meter--danger" role="meter" aria-label="Hull"
+     aria-valuemin="0" aria-valuemax="8" aria-valuenow="3"
+     style="--ap-meter-value: 3; --ap-meter-max: 8"&gt;&lt;/div&gt;</code></pre>
+  <p class="docs-note">Keep <code>aria-valuenow</code>/<code>aria-valuemax</code> in sync with the two custom properties. Modifiers: <code>--success</code>, <code>--warning</code>, <code>--danger</code>.</p>
+  {{tokens-meter}}
+</section>

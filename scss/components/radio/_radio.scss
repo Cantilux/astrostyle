@@ -1,0 +1,62 @@
+// Radio (ITCSS Components): a native radio restyled. Contract and tokens:
+// scss/components/radio/README.md.
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults.
+$tokens: (
+  size: fn.token('size-icon'),
+  bg: fn.token('inset'),
+  border-color: fn.token('border-strong'),
+  checked-color: fn.token('accent'),
+  invalid-border-color: fn.token('danger'),
+);
+
+// Emits `.ap-c-radio` and its states.
+@mixin emit {
+  #{c.component(radio)} {
+    @include c.tokens(radio, $tokens);
+
+    display: inline-grid;
+    flex-shrink: 0;
+    place-content: center;
+    inline-size: c.private(size);
+    block-size: c.private(size);
+    border: fn.token('border-width-strong') solid c.private(border-color);
+    border-radius: fn.token('radius-pill');
+    background-color: c.private(bg);
+    appearance: none;
+
+    @include mixins.interactive;
+    @include mixins.focus-ring;
+
+    &::before {
+      inline-size: calc(#{c.private(size)} * 0.45);
+      block-size: calc(#{c.private(size)} * 0.45);
+      border-radius: fn.token('radius-pill');
+      background-color: c.private(checked-color);
+      transform: scale(0);
+      transition: transform fn.token('duration-fast') fn.token('ease-out');
+      content: '';
+    }
+
+    &:where(:checked) {
+      border-color: c.private(checked-color);
+    }
+
+    &:where(:checked)::before {
+      transform: scale(1);
+    }
+
+    &:where([aria-invalid='true']) {
+      border-color: c.private(invalid-border-color);
+    }
+
+    &:where(:disabled) {
+      border-color: fn.token('border');
+      background-color: fn.token('surface-1');
+      #{c.public-token(radio, checked-color)}: #{fn.token('border-strong')};
+    }
+  }
+}
