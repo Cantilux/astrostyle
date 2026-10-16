@@ -1,6 +1,7 @@
 // Toasts: short messages in a live region at the edge of the screen, dismissed by the user or
 // after a timeout that pauses while the pointer or focus is on them.
 // Contract: scss/components/toast/README.md.
+import { element } from '../shared/dom.js'
 import { emptyQueue, enqueue, remove } from './queue.js'
 
 /** Default texts; every one can be replaced through `options.labels`. */
@@ -14,14 +15,6 @@ const tones = ['accent', 'success', 'warning', 'danger', 'info']
 
 const closeIcon =
   '<svg class="ap-c-toast__icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>'
-
-// Creates an element with a class and attributes in `doc`.
-function element(doc, tag, className, attributes = {}) {
-  const node = doc.createElement(tag)
-  if (className) node.className = className
-  for (const [name, value] of Object.entries(attributes)) node.setAttribute(name, value)
-  return node
-}
 
 // Creates a toaster and returns its handle. Options: `region` (an existing element to use;
 // otherwise one is appended to the body), `duration` (ms before a toast closes, 0 to keep it),

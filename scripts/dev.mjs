@@ -79,7 +79,7 @@ async function rebuild(reason) {
 }
 
 // Serves _site/ plus the dev client and the event stream.
-async function handle(request, response) {
+export async function handle(request, response) {
   if (request.url === '/__dev/events') {
     response.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache' })
     clients.add(response)
@@ -90,8 +90,9 @@ async function handle(request, response) {
     response.writeHead(200, { 'Content-Type': contentTypes['.js'] })
     return response.end(clientScript)
   }
-  const file = resolveRequest(request.url)
   try {
+    // Inside the try: a malformed URL (`/%`) makes decodeURIComponent throw.
+    const file = resolveRequest(request.url)
     if (!file) throw new Error('outside the site')
     let body = await readFile(file)
     const type = contentTypes[extname(file)] ?? 'application/octet-stream'

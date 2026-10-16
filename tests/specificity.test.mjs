@@ -45,3 +45,19 @@ for (const [name, css] of Object.entries(builds)) {
     }
   })
 }
+
+test('a scoped build keeps every child, state and pseudo selector on the scoped element', () => {
+  const css = builds['a scoped build']
+  const selectors = rules(css).flatMap((rule) => rule.selectors)
+  const scope = ':where(.astroprisma, .astroprisma *)'
+  for (const selector of selectors.filter((s) => /\.ap-[cou]-/.test(s))) {
+    assert.ok(selector.startsWith('.ap-') && selector.includes(scope), selector)
+  }
+  assert.ok(selectors.includes(`.ap-c-button-group${scope} > :where(*)`))
+  assert.ok(selectors.includes(`.ap-o-sidebar${scope} > :where(:first-child)`))
+  assert.ok(
+    selectors.includes(
+      `.ap-u-visually-hidden-focusable${scope}:where(:not(:focus, :focus-within))`,
+    ),
+  )
+})

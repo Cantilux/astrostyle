@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { GAP, clampPage, pageWindow } from '../js/pagination/range.js'
-import { nextEnabled, targetForKey } from '../js/tabs/navigation.js'
+import { targetForKey } from '../js/tabs/navigation.js'
 import { emptyQueue, enqueue, remove } from '../js/toast/queue.js'
 
 test('pageWindow lists every page when they fit', () => {
@@ -54,8 +54,9 @@ test('targetForKey wraps with the arrows of the orientation and skips disabled t
   assert.equal(targetForKey('Enter', 0, disabled), null)
 })
 
-test('nextEnabled stays put when every other tab is disabled', () => {
-  assert.equal(nextEnabled([false, true, true], 0, 1), 0)
+test('targetForKey stays put when every other tab is disabled, and gives up when all are', () => {
+  assert.equal(targetForKey('ArrowRight', 0, [false, true, true]), 0)
+  assert.equal(targetForKey('Home', 0, [true, true]), null)
 })
 
 test('the toast queue shows up to max and promotes waiting toasts in order', () => {

@@ -35,13 +35,18 @@ const enhancers = [
 // Enhances, under `root`, every `select[data-ap-combobox]` (free text with `data-ap-creatable`),
 // `nav[data-ap-pagination]` (`data-ap-page`, `data-ap-count`, optional `data-ap-href` template
 // with `{page}`) and `[data-ap-tabs]` (`data-ap-tabs="manual"` for manual activation). Returns
-// the handles; elements already enhanced (`data-ap-enhanced`) are skipped.
+// the handles; elements already enhanced (`data-ap-enhanced`) are skipped. An element that cannot
+// be enhanced (broken markup) is reported on the console and left as it is; the others go on.
 export function autoInit(root = document) {
   const handles = []
   for (const [selector, enhance] of enhancers) {
     for (const node of root.querySelectorAll(`${selector}:not([data-ap-enhanced])`)) {
-      node.setAttribute('data-ap-enhanced', '')
-      handles.push(enhance(node))
+      try {
+        handles.push(enhance(node))
+        node.setAttribute('data-ap-enhanced', '')
+      } catch (error) {
+        console.error('astrostyle autoInit:', error, node)
+      }
     }
   }
   return handles

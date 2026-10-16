@@ -305,7 +305,7 @@ The house rules. Click a section to open it.
 
 <br>
 
-- One folder per component in `scss/components/<name>/`: the styles, with a `$tokens` map of public tokens and defaults, and a `README.md` with the markup contract. Its docs page lives in `site/pages/`, its tests in `tests/`, its behavior (if any) in `js/<name>/`.
+- One folder per component in `scss/components/<name>/`: the styles, with a `$tokens` map of public tokens and defaults, and a `README.md` with the markup contract. Its docs page lives in `site/pages/`, its tests in `tests/`, its behavior (if any) in `js/<name>/`, with helpers shared by several modules in `js/shared/`.
 - Every visual property reads a component token with a sensible fallback, so you can restyle it without writing new selectors.
 - No outer margins, no fixed outer widths.
 
@@ -320,6 +320,7 @@ The house rules. Click a section to open it.
 - One module per interactive component, exposing a `createX(element, options, env)` factory that enhances native markup and returns a handle with `destroy()`; `env` injects the document and id generator for tests.
 - Components talk through DOM events prefixed with `ap:` (`ap:change`, `ap:open`, `ap:close`, `ap:page`).
 - Pure logic (filtering, page ranges) is kept in separate functions and unit tested; `document` and timers are passed in, never hard-coded.
+- `astrostyle/js` exports only the public API (`createX()`, `autoInit()`, default labels, `pageWindow()`); pure helpers stay inside their modules.
 - JavaScript never sets visual styles inline, except for positioning.
 - Every named function gets a short comment above it saying what it is for.
 

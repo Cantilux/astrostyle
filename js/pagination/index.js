@@ -1,5 +1,6 @@
 // Pagination: renders page links (or buttons) with previous and next steps into a <nav>, and
 // fires `ap:page` when the user picks a page. Contract: scss/components/pagination/README.md.
+import { element } from '../shared/dom.js'
 import { GAP, clampPage, pageWindow } from './range.js'
 
 /** Default texts; every one can be replaced through `options.labels`. */
@@ -14,14 +15,6 @@ export const defaultLabels = {
 const chevrons = {
   previous: '<path d="M15 6l-6 6 6 6"/>',
   next: '<path d="M9 6l6 6-6 6"/>',
-}
-
-// Creates an element with a class and attributes in `doc`.
-function element(doc, tag, className, attributes = {}) {
-  const node = doc.createElement(tag)
-  if (className) node.className = className
-  for (const [name, value] of Object.entries(attributes)) node.setAttribute(name, value)
-  return node
 }
 
 // Enhances `nav` with a pagination control and returns its handle. Options: `page`, `count`,

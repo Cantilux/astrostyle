@@ -286,3 +286,17 @@ test('autoInit enhances pagination and tabs from data attributes', () => {
   assert.equal(document.querySelector('[role="tablist"]').getAttribute('role'), 'tablist')
   assert.equal(autoInit(document).length, 0)
 })
+
+test('autoInit reports broken markup and still enhances the other elements', (t) => {
+  const errors = []
+  t.mock.method(console, 'error', (...args) => errors.push(args))
+  const broken =
+    '<div class="ap-c-tabs" data-ap-tabs><div class="ap-c-tabs__list"><button class="ap-c-tabs__tab">A</button></div></div>'
+  document.body.innerHTML =
+    broken + tabsMarkup.replace('class="ap-c-tabs" id="t"', 'class="ap-c-tabs" id="t" data-ap-tabs')
+  const handles = autoInit(document)
+  assert.equal(handles.length, 1)
+  assert.equal(errors.length, 1)
+  assert.equal(document.querySelector('#t [role="tablist"]').getAttribute('role'), 'tablist')
+  assert.equal(document.querySelector('[data-ap-tabs]').hasAttribute('data-ap-enhanced'), false)
+})

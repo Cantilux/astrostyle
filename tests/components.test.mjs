@@ -227,6 +227,8 @@ test('the toast region is fixed above the page and anchors to the end corner fro
     /@media \(min-width: 36em\) \{\s*\.ap-c-toast__region \{\s*inset-inline-start: auto;/,
   )
   assert.match(declarationsOf(css, '.ap-c-toast').animation, /^ap-toast-in /)
+  // An empty live region must stay in the accessibility tree, or the first toast is not read.
+  assert.doesNotMatch(css, /\.ap-c-toast__region:where\(:empty\)/)
   assert.deepEqual(declarationsOf(css, '.ap-c-toast--danger'), {
     '--ap-toast-tone': 'var(--ap-danger)',
     '--ap-toast-bar-width': 'var(--ap-space-xs)',
