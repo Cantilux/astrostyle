@@ -1,6 +1,6 @@
 {
   "name": "astrostyle",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A CSS/SCSS framework in the ASTROPRISMA style: tokens, layouts and generic components, with a pinch of vanilla JavaScript.",
   "keywords": [
     "css",
