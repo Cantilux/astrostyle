@@ -1,0 +1,208 @@
+// Docs site stylesheet: the framework with its defaults plus the docs chrome, written only with
+// the public API, as any consumer would.
+@use 'index' as ap;
+
+@include ap.emit;
+
+.docs-skip {
+  position: absolute;
+  inset-block-start: ap.space(sm);
+  inset-inline-start: ap.space(sm);
+  z-index: ap.token('z-tooltip');
+  padding: ap.space(sm) ap.space(md);
+  border-radius: ap.token('radius-pill');
+  background-color: ap.token('accent');
+  color: ap.token('on-accent');
+}
+
+.docs-header {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: ap.token('z-sticky');
+  border-block-end: ap.token('border-width-hairline') solid ap.token('border-subtle');
+  background-color: ap.token('bg');
+}
+
+.docs-header__bar {
+  padding-block: ap.space(md);
+}
+
+.docs-brand {
+  @include ap.text(panel-title);
+
+  color: ap.token('text');
+  text-decoration-line: none;
+}
+
+.docs-version {
+  @include ap.text(caption);
+
+  color: ap.token('text-muted');
+}
+
+.docs-nav-link {
+  @include ap.text(label);
+
+  color: ap.token('text-muted');
+  text-decoration-line: none;
+
+  &:where([aria-current='page']) {
+    color: ap.token('link');
+    text-decoration-line: underline;
+  }
+}
+
+.docs-toggle {
+  @include ap.text(label);
+  @include ap.interactive;
+  @include ap.focus-ring;
+
+  min-block-size: ap.token('size-control');
+  padding-inline: ap.space(lg);
+  border: ap.token('border-width-hairline') solid ap.token('border-strong');
+  border-radius: ap.token('radius-pill');
+
+  &:where(:hover) {
+    border-color: ap.token('accent');
+  }
+}
+
+.docs-main {
+  padding-block: ap.space(xl) ap.space(xxl);
+}
+
+.docs-footer {
+  margin-block-start: ap.space(xxl);
+  padding-block-start: ap.space(lg);
+  border-block-start: ap.token('border-width-hairline') solid ap.token('border-subtle');
+  color: ap.token('text-muted');
+}
+
+.docs-spectrum {
+  block-size: ap.space(sm);
+  margin-block-start: ap.space(lg);
+  background-image: ap.token('gradient');
+}
+
+// Masthead motif of the Design Guide: small tracked eyebrow over a large display word.
+.docs-masthead {
+  display: grid;
+  gap: ap.space(xs);
+}
+
+.docs-eyebrow {
+  @include ap.text(label);
+
+  color: ap.token('text-muted');
+}
+
+.docs-display {
+  @include ap.text(display);
+
+  font-size: clamp(2.25rem, 8vw, 4.5rem);
+  line-height: 0.95;
+}
+
+// Section heading motif: pink title, hairline rule, two-digit index.
+.docs-heading {
+  display: flex;
+  align-items: center;
+  gap: ap.space(md);
+  color: ap.token('link');
+
+  &::after {
+    flex: 1;
+    order: 1;
+    border-block-start: ap.token('border-width-hairline') solid currentcolor;
+    content: '';
+  }
+}
+
+.docs-heading__index {
+  order: 2;
+}
+
+.docs-card {
+  padding: ap.space(lg);
+  border: ap.token('border-width-hairline') solid ap.token('border-subtle');
+  border-radius: ap.token('radius-card');
+  background-color: ap.token('surface-1');
+  color: ap.token('text');
+
+  &:where(a) {
+    @include ap.interactive;
+    @include ap.focus-ring;
+
+    text-decoration-line: none;
+  }
+
+  &:where(a:hover) {
+    border-color: ap.token('accent');
+  }
+}
+
+.docs-box {
+  padding: ap.space(sm) ap.space(md);
+  border-radius: ap.token('radius-control');
+  background-color: ap.token('surface-2');
+
+  &:where(:nth-child(3n + 2)) {
+    background-color: ap.token('surface-3');
+  }
+}
+
+.docs-swatch {
+  display: grid;
+  grid-template-columns: ap.token('size-control-lg') 1fr;
+  align-items: center;
+  gap: ap.space(sm);
+}
+
+.docs-swatch__chip {
+  aspect-ratio: 1;
+  border: ap.token('border-width-hairline') solid ap.token('border');
+  border-radius: ap.token('radius-pill');
+  background-color: var(--swatch);
+}
+
+.docs-bar {
+  block-size: ap.space(md);
+  inline-size: var(--bar);
+  border-radius: ap.token('radius-pill');
+  background-color: ap.token('accent');
+}
+
+.docs-shape {
+  display: grid;
+  place-items: center;
+  block-size: 6rem;
+  border: ap.token('border-width-hairline') solid ap.token('border');
+  border-radius: var(--radius, 0);
+  background-color: ap.token('surface-1');
+  box-shadow: var(--shadow, none);
+}
+
+.docs-gradient {
+  block-size: ap.space(xl);
+  border-radius: ap.token('radius-control');
+  background-image: ap.token('gradient');
+}
+
+.docs-frame-fill {
+  background-image: ap.token('gradient');
+}
+
+.docs-resize {
+  overflow: auto;
+  resize: horizontal;
+  min-inline-size: 12rem;
+  max-inline-size: 100%;
+  padding: ap.space(sm);
+  border: ap.token('border-width-hairline') dashed ap.token('border-strong');
+  border-radius: ap.token('radius-control');
+}
+
+.docs-note {
+  color: ap.token('text-muted');
+}
+

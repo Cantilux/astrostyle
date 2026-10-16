@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en" data-ap-theme="light">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{title}} · astrostyle</title>
+    <meta name="description" content="astrostyle, a CSS framework in the ASTROPRISMA style.">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="docs.css">
+    <script src="docs.js" defer></script>
+  </head>
+  <body>
+    <a class="ap-u-visually-hidden-focusable docs-skip" href="#main">Skip to content</a>
+    <header class="docs-header">
+      <div class="ap-o-container ap-o-cluster ap-o-cluster--between ap-o-cluster--gap-md docs-header__bar">
+        <a class="docs-brand" href="index.html">astrostyle <span class="docs-version">v{{version}}</span></a>
+        <nav class="ap-o-cluster ap-o-cluster--gap-md" aria-label="Sections">{{nav}}</nav>
+        <button class="docs-toggle" type="button" data-docs-theme-toggle aria-pressed="false">Dark theme</button>
+      </div>
+    </header>
+    <main id="main" class="ap-o-container ap-o-stack ap-o-stack--gap-xxl docs-main">
+      {{content}}
+    </main>
+    <footer class="docs-footer">
+      <div class="ap-o-container ap-o-stack ap-o-stack--gap-sm">
+        <p><small>astrostyle is an independent production by Enrico Cantile and is not affiliated with Crescent Chimera. It is published under the <a href="https://www.astroprisma.com/license">ASTROPRISMA Third Party License</a>. ASTROPRISMA is copyright Camila Mera and Crescent Chimera.</small></p>
+        <p><small>Code released under the MIT license · <a href="https://github.com/Cantilux/astrostyle">GitHub</a> · <a href="https://www.npmjs.com/package/astrostyle">npm</a></small></p>
+      </div>
+      <div class="docs-spectrum" aria-hidden="true"></div>
+    </footer>
+  </body>
+</html>

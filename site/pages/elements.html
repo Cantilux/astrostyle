@@ -1,0 +1,84 @@
+<!-- title: Elements -->
+<section class="ap-o-stack ap-o-stack--gap-sm">
+  <h1>Elements</h1>
+  <p>Plain HTML without a single class. Every rule here has zero specificity, so your own styles always win. Turn the layer off with <code>$emit-elements: false</code>.</p>
+</section>
+
+<section class="ap-o-stack" aria-labelledby="headings">
+  <h2 class="docs-heading" id="headings">Headings <span class="docs-heading__index">01</span></h2>
+  <div class="ap-o-stack ap-o-stack--gap-sm">
+    <h1>Heading one, display</h1>
+    <h2>Heading two, screen title</h2>
+    <h3>Heading three, panel title</h3>
+    <h4>Heading four, data</h4>
+    <h5>Heading five, label</h5>
+    <h6>Heading six, label</h6>
+  </div>
+</section>
+
+<section class="ap-o-stack" aria-labelledby="text">
+  <h2 class="docs-heading" id="text">Text <span class="docs-heading__index">02</span></h2>
+  <p>The crew reached the <a href="#text">Medusa relay</a> with <strong>three hull points</strong> left and <em>a very bad feeling</em>. The navigator typed <code>scan --deep</code>, pressed <kbd>Enter</kbd> and <mark>marked the anomaly</mark> on the <abbr title="Star System Map">SSM</abbr>. <small>Log entry 0042, cycle 7.</small></p>
+  <blockquote><p>Never trust a quiet sector.</p></blockquote>
+  <pre><code>@use 'pkg:astrostyle' as ap with ($accent: #3fa7ff);
+@include ap.emit;</code></pre>
+  <hr>
+</section>
+
+<section class="ap-o-stack" aria-labelledby="lists">
+  <h2 class="docs-heading" id="lists">Lists <span class="docs-heading__index">03</span></h2>
+  <div class="ap-o-switcher ap-o-switcher--gap-lg">
+    <ul>
+      <li>Hull plating</li>
+      <li>Ion thrusters</li>
+      <li>Cargo hold</li>
+    </ul>
+    <ol>
+      <li>Plot the course</li>
+      <li>Charge the drive</li>
+      <li>Jump</li>
+    </ol>
+    <dl>
+      <dt>Sensor lock</dt>
+      <dd>Target acquired.</dd>
+      <dt>Hull</dt>
+      <dd>3 of 8.</dd>
+    </dl>
+  </div>
+</section>
+
+<section class="ap-o-stack" aria-labelledby="tables">
+  <h2 class="docs-heading" id="tables">Tables <span class="docs-heading__index">04</span></h2>
+  <div style="overflow-x: auto">
+    <table>
+      <caption>Crew manifest, cycle 7</caption>
+      <thead>
+        <tr><th scope="col">Name</th><th scope="col">Role</th><th scope="col">Credits</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Vega</td><td>Pilot</td><td>1,200</td></tr>
+        <tr><td>Okonkwo</td><td>Engineer</td><td>860</td></tr>
+        <tr><td>Hasegawa</td><td>Hacker</td><td>2,045</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="ap-o-stack" aria-labelledby="forms">
+  <h2 class="docs-heading" id="forms">Form groups <span class="docs-heading__index">05</span></h2>
+  <fieldset class="ap-o-stack ap-o-stack--gap-sm">
+    <legend>Jump settings</legend>
+    <label class="ap-o-cluster"><input type="checkbox" checked> Auto-pilot</label>
+    <label class="ap-o-cluster"><input type="radio" name="speed" checked> Cruise</label>
+    <label class="ap-o-cluster"><input type="radio" name="speed"> Overdrive</label>
+  </fieldset>
+  <p class="docs-note">Checkboxes and radios take the accent color. Text inputs, selects and buttons arrive as components.</p>
+</section>
+
+<section class="ap-o-stack" aria-labelledby="media">
+  <h2 class="docs-heading" id="media">Media <span class="docs-heading__index">06</span></h2>
+  <figure>
+    <div class="ap-o-frame ap-o-frame--16-9 docs-frame-fill" role="img" aria-label="Gradient placeholder"></div>
+    <figcaption>Figure captions use the caption role.</figcaption>
+  </figure>
+</section>
