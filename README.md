@@ -233,8 +233,43 @@ The house rules. Click a section to open it.
 
 ## `04` / Workflow
 
+How a change travels from an idea to `master`. The release half of the journey is still being built.
+
+### / Setup /
+
+```sh
+git clone https://github.com/Cantilux/astrostyle.git
+cd astrostyle
+bun install
+```
+
+| Command | What it does |
+| --- | --- |
+| `bun run build` | Compiles `scss/astrostyle.scss` into `dist/astrostyle.css` and `dist/astrostyle.min.css` |
+| `bun run test` | Runs every `tests/**/*.test.mjs` with `node --test` |
+| `bun run lint` | Stylelint on `scss/` plus a Prettier check |
+| `bun run format` | Rewrites files with Prettier (Markdown is left as written) |
+| `bun run changeset` | Records a change for the next release |
+
+### / Making a change /
+
+1. **Pick or open an issue.** The roadmap lives in issues [#2–#9](https://github.com/Cantilux/astrostyle/issues).
+2. **Branch from `master`.** `master` is protected: nobody pushes to it directly, maintainers included. Name the branch after the kind of change, e.g. `feat/button`, `fix/reset-svg`, `docs/tokens`.
+3. **Commit with Conventional Commits** (`feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`, `ci:`) and reference the issue (`Refs #5`).
+4. **Add a changeset** with `bun run changeset` when the change affects what users get (styles, tokens, classes, JavaScript). Pick the bump from the public contract:
+
+   | Bump | When |
+   | --- | --- |
+   | `patch` | Fixes that keep every token, class and option working as before |
+   | `minor` | New components, tokens, variants or options |
+   | `major` | Renamed or removed tokens, classes, mixins or options (while in `0.x`: `minor`) |
+
+5. **Open a Pull Request.** CI runs lint, tests and build; merging needs a green CI.
+
+### / Releasing /
+
 > [!WARNING]
-> **[Work in progress]**: the contribution and release workflow will be documented here.
+> **[Work in progress]**: publishing to npm arrives with roadmap step 2 ([#3](https://github.com/Cantilux/astrostyle/issues/3)). Until then the package is marked `private`.
 
 ---
 
