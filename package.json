@@ -34,11 +34,14 @@
     "./css/core.min": "./dist/core.min.css",
     "./css/*": "./dist/components/*.css",
     "./tokens.json": "./dist/tokens.json",
+    "./js": "./js/index.js",
+    "./js/*": "./js/*/index.js",
     "./scss/*": "./scss/*",
     "./package.json": "./package.json"
   },
   "files": [
     "scss",
+    "js",
     "dist",
     "LICENSE",
     "README.md",
@@ -64,6 +67,7 @@
   "devDependencies": {
     "@changesets/cli": "3.0.3",
     "@csstools/selector-specificity": "6.0.1",
+    "happy-dom": "20.14.5",
     "postcss": "8.5.30",
     "postcss-selector-parser": "7.1.6",
     "prettier": "3.9.10",

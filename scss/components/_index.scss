@@ -8,6 +8,8 @@
 @use 'button-group/button-group';
 @use 'field/field';
 @use 'input/input';
+@use 'select/select';
+@use 'combobox/combobox';
 @use 'checkbox/checkbox';
 @use 'radio/radio';
 @use 'switch/switch';
@@ -15,7 +17,7 @@
 @use 'meter/meter';
 
 // Emission order: a component that adjusts another one comes after it.
-$order: (button, button-group, field, input, checkbox, radio, switch, range, meter);
+$order: (button, button-group, field, input, select, combobox, checkbox, radio, switch, range, meter);
 
 // Public tokens of every component, keyed by component name.
 $tokens: (
@@ -23,6 +25,8 @@ $tokens: (
   button-group: button-group.$tokens,
   field: field.$tokens,
   input: input.$tokens,
+  select: select.$tokens,
+  combobox: combobox.$tokens,
   checkbox: checkbox.$tokens,
   radio: radio.$tokens,
   switch: switch.$tokens,

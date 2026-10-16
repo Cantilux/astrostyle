@@ -1,0 +1,105 @@
+// Combobox (ITCSS Components): the searchable select built by `createCombobox()` from a native
+// <select>. The input also carries `ap-c-input`, so this must come after the input.
+// Contract and tokens: scss/components/combobox/README.md.
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults.
+$tokens: (
+  popup-bg: fn.token('surface-1'),
+  popup-border-color: fn.token('border'),
+  popup-max-height: calc(#{fn.token('size-control')} * 6),
+  option-active-bg: color-mix(in oklab, #{fn.token('accent')} 16%, transparent),
+  option-selected-color: fn.token('link'),
+  toggle-color: fn.token('text-muted'),
+);
+
+// Emits `.ap-c-combobox` and its elements.
+@mixin emit {
+  #{c.component(combobox)} {
+    @include c.tokens(combobox, $tokens);
+
+    position: relative;
+    display: block;
+    min-inline-size: 0;
+  }
+
+  #{c.component(combobox, input)} {
+    padding-inline-end: fn.token('size-control');
+  }
+
+  #{c.component(combobox, toggle)} {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+    display: grid;
+    place-items: center;
+    inline-size: fn.token('size-control');
+    color: c.private(toggle-color);
+    cursor: pointer;
+
+    & > :where(svg) {
+      inline-size: 0.75rem;
+      transition: rotate fn.token('duration-fast') fn.token('ease-out');
+    }
+
+    &:where([aria-expanded='true']) > :where(svg) {
+      rotate: 180deg;
+    }
+
+    &:where(:disabled) {
+      color: fn.token('text-disabled');
+      cursor: not-allowed;
+    }
+  }
+
+  #{c.component(combobox, popup)} {
+    position: absolute;
+    inset-block-start: calc(100% + #{fn.space(xxs)});
+    inset-inline: 0;
+    z-index: fn.token('z-dropdown');
+    padding: fn.space(xxs);
+    border: fn.token('border-width-hairline') solid c.private(popup-border-color);
+    border-radius: fn.token('radius-control');
+    background-color: c.private(popup-bg);
+    box-shadow: fn.token('elevation-overlay');
+  }
+
+  #{c.component(combobox, listbox)} {
+    max-block-size: c.private(popup-max-height);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  #{c.component(combobox, option)} {
+    @include mixins.text(data);
+
+    display: flex;
+    align-items: center;
+    min-block-size: fn.token('size-control');
+    padding-inline: fn.space(md);
+    border-radius: fn.token('radius-control');
+    cursor: pointer;
+
+    &:where([data-active], :hover) {
+      background-color: c.private(option-active-bg);
+    }
+
+    &:where([aria-selected='true']) {
+      color: c.private(option-selected-color);
+    }
+
+    &:where([aria-disabled='true']) {
+      color: fn.token('text-disabled');
+      cursor: not-allowed;
+    }
+  }
+
+  #{c.component(combobox, empty)} {
+    @include mixins.text(caption);
+
+    padding: fn.space(sm) fn.space(md);
+    color: fn.token('text-muted');
+  }
+}

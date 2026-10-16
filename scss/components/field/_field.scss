@@ -18,6 +18,7 @@ $tokens: (
     @include c.tokens(field, $tokens);
 
     display: grid;
+    align-content: start;
     gap: c.private(gap);
     min-inline-size: 0;
   }

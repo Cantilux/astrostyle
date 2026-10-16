@@ -28,6 +28,9 @@ export const requiredFiles = [
   'CHANGELOG.md',
   'scss/_index.scss',
   'scss/astrostyle.scss',
+  'js/index.js',
+  'js/combobox/index.js',
+  'js/auto-init/index.js',
   'dist/astrostyle.css',
   'dist/astrostyle.min.css',
   'dist/tokens.json',
@@ -102,10 +105,13 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     'astrostyle/css/core',
     'astrostyle/css/core.min',
     'astrostyle/tokens.json',
+    'astrostyle/js',
+    'astrostyle/js/combobox',
+    'astrostyle/js/auto-init',
     ...components.flatMap((name) => [`astrostyle/css/${name}`, `astrostyle/css/${name}.min`]),
   ]
   for (const [specifier, file] of Object.entries(resolveAsConsumer(subpaths))) {
-    assert.ok(file.includes('/dist/'), `${specifier} resolved to ${file}`)
+    assert.ok(/\/(dist|js)\//.test(file), `${specifier} resolved to ${file}`)
   }
   console.log(`Package contents and ${subpaths.length} entry points resolve correctly.`)
 }
