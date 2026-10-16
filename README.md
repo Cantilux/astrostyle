@@ -19,7 +19,9 @@
 > **🛰️ We are still on the drawing board.** astrostyle is in its **design phase**: architecture and design rules are being defined, there is no usable code yet and nothing is on npm. Everything below describes where the ship is headed, and the course may change.
 
 > [!NOTE]
-> astrostyle is an unofficial, fan-made project. It is not affiliated with or endorsed by the authors of ASTROPRISMA.
+> astrostyle is an independent production by Enrico Cantile and is not affiliated with Crescent Chimera. It is published under the [ASTROPRISMA Third Party License](https://www.astroprisma.com/license).
+>
+> ASTROPRISMA is copyright Camila Mera and Crescent Chimera.
 
 ---
 
@@ -275,6 +277,8 @@ bun install
 
 ## `05` / License
 
-[MIT](https://opensource.org/license/mit). Take it, fork it, fly it.
+The astrostyle code is released under the [MIT license](LICENSE). Take it, fork it, fly it.
+
+The ASTROPRISMA look it reproduces (palette, typography choices and graphic motifs from the Creator Kit Design Guide) is used under the [ASTROPRISMA Third Party License](https://www.astroprisma.com/license). ASTROPRISMA is copyright Camila Mera and Crescent Chimera. astrostyle uses no ASTROPRISMA or Crescent Chimera logos.
 
 <img src=".github/assets/spectrum.svg" alt="" width="100%">
