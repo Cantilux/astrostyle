@@ -319,6 +319,7 @@ bun install
 
 | Command | What it does |
 | --- | --- |
+| `bun run dev` | Serves the docs at <http://localhost:4321/demo.html> and rebuilds and reloads the page on every change in `scss/` or `site/`; Sass errors appear in the page |
 | `bun run build` | Compiles `scss/astrostyle.scss` into `dist/astrostyle.css` and `dist/astrostyle.min.css`, and exports `dist/tokens.json` |
 | `bun run docs:build` | Builds the documentation site into `_site/` (open `_site/index.html`) |
 | `bun run test` | Runs every `tests/**/*.test.mjs` with `node --test` |
