@@ -1,4 +1,4 @@
-// Objects layer: cosmetic-free layout patterns (docs/design.md §6, §7.6).
+// Objects layer: cosmetic-free layout patterns.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import postcss from 'postcss'

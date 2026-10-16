@@ -1,0 +1,58 @@
+// Spinner (ITCSS Components): a turning ring for short waits, drawn with CSS only. `--spectrum`
+// paints the arc with the guide's four bands. Contract and tokens: scss/components/spinner/README.md.
+@use '../../settings/config';
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+
+// Public tokens and their defaults.
+$tokens: (
+  size: fn.token('size-icon'),
+  thickness: fn.token('border-width-strong'),
+  arc: conic-gradient(#{fn.token('accent')} 0 25%, #{fn.token('border-subtle')} 0),
+  duration: calc(#{fn.token('duration-slow')} * 3),
+);
+
+// The guide's four hard bands around the ring.
+$_spectrum: conic-gradient(
+  #{fn.token('palette-yellow')} 0 25%,
+  #{fn.token('palette-orange')} 0 50%,
+  #{fn.token('palette-magenta')} 0 75%,
+  #{fn.token('palette-indigo')} 0
+);
+
+// Token values of the size and look modifiers.
+$modifiers: (
+  sm: (size: fn.token('size-icon-sm')),
+  lg: (size: fn.token('size-control-lg'), thickness: fn.space(xs)),
+  spectrum: (arc: $_spectrum),
+);
+
+// Emits `.ap-c-spinner`, its modifiers and its keyframes.
+@mixin emit {
+  #{c.component(spinner)} {
+    @include c.tokens(spinner, $tokens);
+
+    display: inline-block;
+    flex-shrink: 0;
+    inline-size: c.private(size);
+    block-size: c.private(size);
+    border-radius: fn.token('radius-pill');
+    background-image: c.private(arc);
+    mask-image: radial-gradient(
+      farthest-side,
+      transparent calc(100% - #{c.private(thickness)}),
+      currentcolor calc(100% - #{c.private(thickness)})
+    );
+    animation: #{config.$prefix}-spinner-turn c.private(duration) linear infinite;
+  }
+
+  @each $name, $values in $modifiers {
+    @include c.modifier(spinner, $name, $values);
+  }
+
+  @keyframes #{config.$prefix}-spinner-turn {
+    to {
+      rotate: 1turn;
+    }
+  }
+}

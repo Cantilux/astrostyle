@@ -1,4 +1,4 @@
-// Elements layer: bare HTML element defaults (docs/design.md §6, §7.5).
+// Elements layer: bare HTML element defaults.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { compileConfigured } from './helpers/sass.mjs'

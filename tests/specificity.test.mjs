@@ -1,4 +1,4 @@
-// Specificity budget and cascade layers of the compiled CSS (docs/design.md §7.5).
+// Specificity budget and cascade layers of the compiled CSS.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { compileConfigured, compileEntry } from './helpers/sass.mjs'

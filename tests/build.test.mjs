@@ -1,4 +1,4 @@
-// Build outputs: stylesheets, license header and the DTCG tokens export (docs/design.md §11, §12).
+// Build outputs: stylesheets, license header and the DTCG tokens export.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import {

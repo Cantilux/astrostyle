@@ -62,6 +62,12 @@ test('component token tables list every public token with its default', () => {
     'switch',
     'range',
     'meter',
+    'breadcrumb',
+    'tag',
+    'callout',
+    'progress',
+    'spinner',
+    'empty-state',
   ]) {
     assert.ok(values[`tokens-${name}`], name)
   }

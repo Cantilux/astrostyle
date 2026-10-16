@@ -20,10 +20,14 @@ function luminance([r, g, b]) {
   return 0.2126 * linear(r) + 0.7152 * linear(g) + 0.0722 * linear(b)
 }
 
-// WCAG contrast ratio between two theme tokens.
+// sRGB components of a theme token, or of a palette color written `palette.<name>`.
+const colorOf = (theme, name) =>
+  components(name.startsWith('palette.') ? `{${name}}` : tokens.theme[theme][name].$value)
+
+// WCAG contrast ratio between two theme tokens (or `palette.<name>` colors).
 function contrast(theme, foreground, background) {
   const [l1, l2] = [foreground, background]
-    .map((name) => luminance(components(tokens.theme[theme][name].$value)))
+    .map((name) => luminance(colorOf(theme, name)))
     .sort((x, y) => y - x)
   return (l1 + 0.05) / (l2 + 0.05)
 }
@@ -40,6 +44,11 @@ const textPairs = [
   ['danger-text', 'bg'],
   ['danger-text', 'surface-1'],
   ['on-danger', 'danger'],
+  // Inks of the solid tags.
+  ['palette.black', 'success'],
+  ['palette.black', 'warning'],
+  ['palette.black', 'info'],
+  ['bg', 'text-muted'],
 ]
 
 for (const theme of ['light', 'dark']) {

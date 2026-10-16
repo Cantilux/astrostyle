@@ -1,5 +1,5 @@
 // astrostyle public Sass API: configuration variables, functions and mixins, plus `emit()`.
-// Using it outputs no CSS; `@include emit()` does. See docs/design.md §7.1.
+// Using it outputs no CSS; `@include emit()` does.
 @forward 'settings/config';
 @forward 'settings/palette' show $palette;
 @forward 'settings/typography' show $typography, $element-roles;

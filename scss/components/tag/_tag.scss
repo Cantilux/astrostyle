@@ -1,0 +1,59 @@
+// Tag (ITCSS Components): a small pill label for a status, a category or a count (badge). One
+// tone color drives the border and the tinted fill. Contract and tokens: scss/components/tag/README.md.
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults.
+$tokens: (
+  tone: fn.token('text-muted'),
+  ink: fn.token('bg'),
+  bg: color-mix(in oklab, #{c.private(tone)} 16%, transparent),
+  fg: fn.token('text'),
+  border-color: c.private(tone),
+  padding-block: fn.space(xxs),
+  padding-inline: fn.space(sm),
+  gap: fn.space(xs),
+  radius: fn.token('radius-pill'),
+);
+
+// Tone and ink (text color on a solid fill) of each tone modifier.
+$tones: (
+  accent: (tone: fn.token('accent'), ink: fn.token('on-accent')),
+  success: (tone: fn.token('success'), ink: fn.token('palette-black')),
+  warning: (tone: fn.token('warning'), ink: fn.token('palette-black')),
+  danger: (tone: fn.token('danger'), ink: fn.token('on-danger')),
+  info: (tone: fn.token('info'), ink: fn.token('palette-black')),
+);
+
+// Emits `.ap-c-tag`, its icon and its modifiers.
+@mixin emit {
+  #{c.component(tag)} {
+    @include c.tokens(tag, $tokens);
+    @include mixins.text(label);
+
+    display: inline-flex;
+    align-items: center;
+    gap: c.private(gap);
+    padding-block: c.private(padding-block);
+    padding-inline: c.private(padding-inline);
+    border: fn.token('border-width-hairline') solid c.private(border-color);
+    border-radius: c.private(radius);
+    background-color: c.private(bg);
+    color: c.private(fg);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  #{c.component(tag, icon)} {
+    flex-shrink: 0;
+    inline-size: fn.token('size-icon-sm');
+    block-size: fn.token('size-icon-sm');
+  }
+
+  @each $name, $values in $tones {
+    @include c.modifier(tag, $name, $values);
+  }
+
+  @include c.modifier(tag, solid, (bg: c.private(tone), fg: c.private(ink)));
+}

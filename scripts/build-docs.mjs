@@ -19,6 +19,8 @@ export const navigation = [
   ['utilities.html', 'Utilities'],
   ['buttons.html', 'Buttons'],
   ['forms.html', 'Forms'],
+  ['navigation.html', 'Navigation'],
+  ['feedback.html', 'Feedback'],
 ]
 
 /** Design Guide names of the palette tokens. */

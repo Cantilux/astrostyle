@@ -1,4 +1,4 @@
-// Components: emission, token contract, modifiers, selection and states (docs/design.md §7.7, §8).
+// Components: emission, token contract, modifiers, selection and states.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { compileConfigured, compileError } from './helpers/sass.mjs'
@@ -17,6 +17,12 @@ const components = [
   'switch',
   'range',
   'meter',
+  'breadcrumb',
+  'tag',
+  'callout',
+  'progress',
+  'spinner',
+  'empty-state',
 ]
 const controls = ['button', 'input', 'checkbox', 'radio', 'switch', 'range']
 
@@ -118,4 +124,71 @@ test('the meter fills discrete segments from value and max', () => {
   assert.deepEqual(declarationsOf(css, '.ap-c-meter--danger'), {
     '--ap-meter-fill': 'var(--ap-danger)',
   })
+})
+
+test('breadcrumb separators are generated content hidden from assistive technology', () => {
+  assert.deepEqual(
+    declarationsOf(css, '.ap-c-breadcrumb__item:where(:not(:first-child))::before'),
+    { color: 'var(--_separator-color)', content: 'var(--_separator)/""' },
+  )
+  assert.equal(
+    declarationsOf(css, '.ap-c-breadcrumb')['--_separator'],
+    'var(--ap-breadcrumb-separator, "/")',
+  )
+  assert.ok(declarationsOf(css, '.ap-c-breadcrumb__link:where([aria-current=page])'))
+})
+
+test('tag tones set the tone and its ink; --solid fills with them', () => {
+  assert.deepEqual(declarationsOf(css, '.ap-c-tag--danger'), {
+    '--ap-tag-tone': 'var(--ap-danger)',
+    '--ap-tag-ink': 'var(--ap-on-danger)',
+  })
+  assert.deepEqual(declarationsOf(css, '.ap-c-tag--solid'), {
+    '--ap-tag-bg': 'var(--_tone)',
+    '--ap-tag-fg': 'var(--_ink)',
+  })
+  assert.equal(
+    declarationsOf(css, '.ap-c-tag')['--_bg'],
+    'var(--ap-tag-bg, color-mix(in oklab, var(--_tone) 16%, transparent))',
+  )
+})
+
+test('callout tones add a start bar and tint the fill', () => {
+  assert.equal(
+    declarationsOf(css, '.ap-c-callout')['--_bar-width'],
+    'var(--ap-callout-bar-width, 0)',
+  )
+  assert.deepEqual(declarationsOf(css, '.ap-c-callout--warning'), {
+    '--ap-callout-tone': 'var(--ap-warning)',
+    '--ap-callout-bar-width': 'var(--ap-space-xs)',
+    '--ap-callout-bg': 'color-mix(in oklab, var(--ap-warning) 10%, var(--ap-surface-1))',
+  })
+})
+
+test('progress styles the native bar in every engine and sweeps when indeterminate', () => {
+  for (const part of ['::-webkit-progress-value', '::-moz-progress-bar']) {
+    assert.equal(declarationsOf(css, `.ap-c-progress${part}`)['background-color'], 'var(--_fill)')
+  }
+  assert.match(
+    declarationsOf(css, '.ap-c-progress:where(:indeterminate)').animation,
+    /^ap-progress-sweep var\(--_duration\) linear infinite$/,
+  )
+  assert.match(css, /@keyframes ap-progress-sweep/)
+})
+
+test('the spinner turns with prefixed keyframes and offers the guide spectrum', () => {
+  assert.match(declarationsOf(css, '.ap-c-spinner').animation, /^ap-spinner-turn /)
+  assert.match(css, /@keyframes ap-spinner-turn/)
+  assert.match(
+    declarationsOf(css, '.ap-c-spinner--spectrum')['--ap-spinner-arc'],
+    /yellow.*orange.*magenta.*indigo/,
+  )
+  assert.match(compileConfigured("$prefix: 'x'"), /@keyframes x-spinner-turn/)
+})
+
+test('the empty state centers its icon, title and text', () => {
+  assert.equal(declarationsOf(css, '.ap-c-empty-state')['justify-items'], 'center')
+  for (const part of ['icon', 'title', 'text']) {
+    assert.ok(declarationsOf(css, `.ap-c-empty-state__${part}`), part)
+  }
 })

@@ -11,10 +11,14 @@ function layerOf(node) {
   return null
 }
 
-// Every style rule of `css` with its layer, selectors and declarations.
+// Whether `rule` is a keyframe (`from`, `50%`) rather than a style rule.
+const isKeyframe = (rule) => rule.parent?.type === 'atrule' && /keyframes$/.test(rule.parent.name)
+
+// Every style rule of `css` with its layer, selectors and declarations; keyframes are skipped.
 export function rules(css) {
   const found = []
   postcss.parse(css).walkRules((rule) => {
+    if (isKeyframe(rule)) return
     const declarations = {}
     rule.walkDecls((decl) => {
       if (decl.parent === rule) declarations[decl.prop] = decl.value

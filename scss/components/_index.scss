@@ -15,9 +15,33 @@
 @use 'switch/switch';
 @use 'range/range';
 @use 'meter/meter';
+@use 'breadcrumb/breadcrumb';
+@use 'tag/tag';
+@use 'callout/callout';
+@use 'progress/progress';
+@use 'spinner/spinner';
+@use 'empty-state/empty-state';
 
 // Emission order: a component that adjusts another one comes after it.
-$order: (button, button-group, field, input, select, combobox, checkbox, radio, switch, range, meter);
+$order: (
+  button,
+  button-group,
+  field,
+  input,
+  select,
+  combobox,
+  checkbox,
+  radio,
+  switch,
+  range,
+  meter,
+  breadcrumb,
+  tag,
+  callout,
+  progress,
+  spinner,
+  empty-state,
+);
 
 // Public tokens of every component, keyed by component name.
 $tokens: (
@@ -32,6 +56,12 @@ $tokens: (
   switch: switch.$tokens,
   range: range.$tokens,
   meter: meter.$tokens,
+  breadcrumb: breadcrumb.$tokens,
+  tag: tag.$tokens,
+  callout: callout.$tokens,
+  progress: progress.$tokens,
+  spinner: spinner.$tokens,
+  empty-state: empty-state.$tokens,
 );
 
 // Fails compilation when `$names` (`all` or a list) contains an unknown component.

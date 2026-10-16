@@ -2,12 +2,25 @@
 @use 'sass:list';
 @use 'sass:math';
 @use 'sass:meta';
+@use 'sass:string';
 
 $_q: '"';
 
-// JSON string literal.
+// JSON string literal, with backslashes and double quotes escaped.
 @function _string($value) {
-  @return '#{$_q}#{$value}#{$_q}';
+  $text: '#{$value}';
+  $out: '';
+  @if $text == '' {
+    @return '#{$_q}#{$_q}';
+  }
+  @for $i from 1 through string.length($text) {
+    $char: string.slice($text, $i, $i);
+    @if $char == $_q or $char == '\\' {
+      $char: '\\#{$char}';
+    }
+    $out: $out + $char;
+  }
+  @return '#{$_q}#{$out}#{$_q}';
 }
 
 // Comma-joined JSON fragments.

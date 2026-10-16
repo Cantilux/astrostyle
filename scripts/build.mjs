@@ -16,7 +16,7 @@ export const targets = [
   { file: 'astrostyle.min.css', style: 'compressed' },
 ]
 
-/** Notices required by the ASTROPRISMA Third Party License (docs/design.md §11). */
+/** Notices required by the ASTROPRISMA Third Party License. */
 export const thirdPartyNotices = [
   'astrostyle is an independent production by Enrico Cantile and is not affiliated with Crescent Chimera. It is published under the ASTROPRISMA Third Party License.',
   'ASTROPRISMA is copyright Camila Mera and Crescent Chimera.',

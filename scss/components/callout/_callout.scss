@@ -1,0 +1,63 @@
+// Callout (ITCSS Components): the Design Guide's filled block for a note, a tip or a warning, with
+// an optional title. Tones add a bar on the start edge and tint the fill.
+// Contract and tokens: scss/components/callout/README.md.
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults.
+$tokens: (
+  tone: transparent,
+  bg: fn.token('surface-1'),
+  fg: fn.token('text'),
+  title-color: fn.token('text'),
+  bar-width: 0,
+  padding: fn.space(lg),
+  gap: fn.space(xs),
+  radius: fn.token('radius-card'),
+);
+
+// Tone of each tone modifier.
+$tones: (
+  accent: fn.token('accent'),
+  success: fn.token('success'),
+  warning: fn.token('warning'),
+  danger: fn.token('danger'),
+  info: fn.token('info'),
+);
+
+// Emits `.ap-c-callout`, its elements and its modifiers.
+@mixin emit {
+  #{c.component(callout)} {
+    @include c.tokens(callout, $tokens);
+    @include mixins.text(body);
+
+    display: grid;
+    align-content: start;
+    gap: c.private(gap);
+    min-inline-size: 0;
+    padding: c.private(padding);
+    border-inline-start: c.private(bar-width) solid c.private(tone);
+    border-radius: c.private(radius);
+    background-color: c.private(bg);
+    color: c.private(fg);
+  }
+
+  #{c.component(callout, title)} {
+    @include mixins.text(panel-title);
+
+    color: c.private(title-color);
+  }
+
+  @each $name, $tone in $tones {
+    @include c.modifier(
+      callout,
+      $name,
+      (
+        tone: $tone,
+        bar-width: fn.space(xs),
+        bg: color-mix(in oklab, #{$tone} 10%, #{fn.token('surface-1')}),
+      )
+    );
+  }
+}

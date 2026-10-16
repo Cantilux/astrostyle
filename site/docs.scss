@@ -206,21 +206,9 @@
   color: ap.token('text-muted');
 }
 
-
 // Demo page: a status value in the data role, scaled up.
 .demo-stat {
   @include ap.text(screen-title);
 
   font-variant-numeric: tabular-nums;
-}
-
-// Demo page: a status pill in a semantic color.
-.demo-tag {
-  @include ap.text(label);
-
-  padding: ap.space(xxs) ap.space(sm);
-  border: ap.token('border-width-hairline') solid var(--tag, #{ap.token('border')});
-  border-radius: ap.token('radius-pill');
-  color: ap.token('text');
-  background-color: color-mix(in oklab, var(--tag, transparent) 18%, transparent);
 }

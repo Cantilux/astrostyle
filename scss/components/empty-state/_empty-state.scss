@@ -1,0 +1,57 @@
+// Empty state (ITCSS Components): what a list, a panel or a search shows when it has nothing to
+// show, with an optional icon, a title, a short text and actions.
+// Contract and tokens: scss/components/empty-state/README.md.
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults.
+$tokens: (
+  gap: fn.space(md),
+  padding: fn.space(xl),
+  border-color: fn.token('border'),
+  radius: fn.token('radius-card'),
+  bg: transparent,
+  icon-size: fn.token('size-control-lg'),
+  icon-color: fn.token('text-subtle'),
+  title-color: fn.token('text'),
+  text-color: fn.token('text-muted'),
+  text-max: 48ch,
+);
+
+// Emits `.ap-c-empty-state` and its elements.
+@mixin emit {
+  #{c.component(empty-state)} {
+    @include c.tokens(empty-state, $tokens);
+
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    gap: c.private(gap);
+    min-inline-size: 0;
+    padding: c.private(padding);
+    border: fn.token('border-width-hairline') dashed c.private(border-color);
+    border-radius: c.private(radius);
+    background-color: c.private(bg);
+    text-align: center;
+  }
+
+  #{c.component(empty-state, icon)} {
+    inline-size: c.private(icon-size);
+    block-size: c.private(icon-size);
+    color: c.private(icon-color);
+  }
+
+  #{c.component(empty-state, title)} {
+    @include mixins.text(panel-title);
+
+    color: c.private(title-color);
+  }
+
+  #{c.component(empty-state, text)} {
+    @include mixins.text(body);
+
+    max-inline-size: c.private(text-max);
+    color: c.private(text-color);
+  }
+}

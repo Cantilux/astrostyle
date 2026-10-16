@@ -1,4 +1,4 @@
-// Public functions and mixins (docs/design.md §7.4, §7.6, §8.3).
+// Public functions and mixins.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { compileConfigured, compileError, compileFixture } from './helpers/sass.mjs'

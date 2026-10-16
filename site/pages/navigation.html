@@ -1,0 +1,32 @@
+<!-- title: Navigation -->
+<section class="ap-o-stack ap-o-stack--gap-sm">
+  <h1>Navigation</h1>
+  <p>Ways to move around a site. The breadcrumb is plain HTML and CSS; pagination and tabs arrive with their JavaScript modules.</p>
+</section>
+
+<section class="ap-o-stack" aria-labelledby="breadcrumb">
+  <h2 class="docs-heading" id="breadcrumb">Breadcrumb <span class="docs-heading__index">01</span></h2>
+  <nav class="ap-c-breadcrumb" aria-label="Breadcrumb">
+    <ol class="ap-c-breadcrumb__list">
+      <li class="ap-c-breadcrumb__item"><a class="ap-c-breadcrumb__link" href="#breadcrumb">Fleet</a></li>
+      <li class="ap-c-breadcrumb__item"><a class="ap-c-breadcrumb__link" href="#breadcrumb">Night Heron</a></li>
+      <li class="ap-c-breadcrumb__item"><a class="ap-c-breadcrumb__link" href="#breadcrumb">Systems</a></li>
+      <li class="ap-c-breadcrumb__item"><a class="ap-c-breadcrumb__link" aria-current="page">Jump drive</a></li>
+    </ol>
+  </nav>
+  <nav class="ap-c-breadcrumb" aria-label="Breadcrumb, custom separator" style="--ap-breadcrumb-separator: '›'">
+    <ol class="ap-c-breadcrumb__list">
+      <li class="ap-c-breadcrumb__item"><a class="ap-c-breadcrumb__link" href="#breadcrumb">Sectors</a></li>
+      <li class="ap-c-breadcrumb__item"><a class="ap-c-breadcrumb__link" href="#breadcrumb">7G</a></li>
+      <li class="ap-c-breadcrumb__item"><a class="ap-c-breadcrumb__link" aria-current="page">Medusa relay</a></li>
+    </ol>
+  </nav>
+  <pre><code>&lt;nav class="ap-c-breadcrumb" aria-label="Breadcrumb"&gt;
+  &lt;ol class="ap-c-breadcrumb__list"&gt;
+    &lt;li class="ap-c-breadcrumb__item"&gt;&lt;a class="ap-c-breadcrumb__link" href="/fleet"&gt;Fleet&lt;/a&gt;&lt;/li&gt;
+    &lt;li class="ap-c-breadcrumb__item"&gt;&lt;a class="ap-c-breadcrumb__link" aria-current="page"&gt;Night Heron&lt;/a&gt;&lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/nav&gt;</code></pre>
+  <p class="docs-note">The last item carries <code>aria-current="page"</code>. Separators are generated content that screen readers skip; change them with <code>--ap-breadcrumb-separator</code> (a CSS string). Long paths wrap.</p>
+  {{tokens-breadcrumb}}
+</section>

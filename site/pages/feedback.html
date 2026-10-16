@@ -1,0 +1,115 @@
+<!-- title: Feedback -->
+<section class="ap-o-stack ap-o-stack--gap-sm">
+  <h1>Feedback</h1>
+  <p>Tags, callouts, progress, spinners and empty states tell people what is going on. Every state color comes with words, never alone.</p>
+</section>
+
+<section class="ap-o-stack" aria-labelledby="tag">
+  <h2 class="docs-heading" id="tag">Tag <span class="docs-heading__index">01</span></h2>
+  <div class="ap-o-cluster ap-o-cluster--gap-sm">
+    <span class="ap-c-tag">Neutral</span>
+    <span class="ap-c-tag ap-c-tag--accent">Accent</span>
+    <span class="ap-c-tag ap-c-tag--success">Ready</span>
+    <span class="ap-c-tag ap-c-tag--warning">Repairing</span>
+    <span class="ap-c-tag ap-c-tag--danger">Wounded</span>
+    <span class="ap-c-tag ap-c-tag--info">In the net</span>
+  </div>
+  <div class="ap-o-cluster ap-o-cluster--gap-sm">
+    <span class="ap-c-tag ap-c-tag--solid">Solid</span>
+    <span class="ap-c-tag ap-c-tag--accent ap-c-tag--solid">New</span>
+    <span class="ap-c-tag ap-c-tag--success ap-c-tag--solid">Online</span>
+    <span class="ap-c-tag ap-c-tag--warning ap-c-tag--solid">Low fuel</span>
+    <span class="ap-c-tag ap-c-tag--danger ap-c-tag--solid" aria-label="3 unread messages">3</span>
+    <span class="ap-c-tag ap-c-tag--info ap-c-tag--solid">Synced</span>
+    <span class="ap-c-tag" style="--ap-tag-tone: var(--ap-palette-indigo)"><svg class="ap-c-tag__icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/></svg> Factions</span>
+  </div>
+  <pre><code>&lt;span class="ap-c-tag ap-c-tag--success"&gt;Ready&lt;/span&gt;
+&lt;span class="ap-c-tag ap-c-tag--danger ap-c-tag--solid" aria-label="3 unread messages"&gt;3&lt;/span&gt;
+&lt;span class="ap-c-tag" style="--ap-tag-tone: var(--ap-palette-indigo)"&gt;Factions&lt;/span&gt;</code></pre>
+  <p class="docs-note">Tones: <code>--accent</code>, <code>--success</code>, <code>--warning</code>, <code>--danger</code>, <code>--info</code>; add <code>--solid</code> to fill. A count works as a badge: give it a name that says what is counted.</p>
+  {{tokens-tag}}
+</section>
+
+<section class="ap-o-stack" aria-labelledby="callout">
+  <h2 class="docs-heading" id="callout">Callout <span class="docs-heading__index">02</span></h2>
+  <div class="ap-o-grid ap-o-grid--gap-md">
+    <aside class="ap-c-callout" aria-labelledby="c-plain">
+      <h3 class="ap-c-callout__title" id="c-plain">Ship's log</h3>
+      <p>The guide's plain off-white block, for side notes.</p>
+    </aside>
+    <aside class="ap-c-callout ap-c-callout--info" aria-labelledby="c-info">
+      <h3 class="ap-c-callout__title" id="c-info">Tip</h3>
+      <p>Hold the drive at 80% to save fuel.</p>
+    </aside>
+    <aside class="ap-c-callout ap-c-callout--success" aria-labelledby="c-success">
+      <h3 class="ap-c-callout__title" id="c-success">Docked</h3>
+      <p>All systems are back online.</p>
+    </aside>
+    <aside class="ap-c-callout ap-c-callout--warning" aria-labelledby="c-warning">
+      <h3 class="ap-c-callout__title" id="c-warning">Low fuel</h3>
+      <p>Two jumps left before the reserve.</p>
+    </aside>
+    <aside class="ap-c-callout ap-c-callout--danger" aria-labelledby="c-danger">
+      <h3 class="ap-c-callout__title" id="c-danger">Hull breach</h3>
+      <p>Seal deck 3 before the next jump.</p>
+      <div class="ap-o-cluster ap-o-cluster--gap-sm"><button class="ap-c-button ap-c-button--danger" type="button">Seal deck</button></div>
+    </aside>
+    <aside class="ap-c-callout ap-c-callout--accent" aria-labelledby="c-accent">
+      <h3 class="ap-c-callout__title" id="c-accent">New contract</h3>
+      <p>A courier job is waiting at the Corsair dock.</p>
+    </aside>
+  </div>
+  <pre><code>&lt;aside class="ap-c-callout ap-c-callout--warning" aria-labelledby="fuel"&gt;
+  &lt;h3 class="ap-c-callout__title" id="fuel"&gt;Low fuel&lt;/h3&gt;
+  &lt;p&gt;Two jumps left before the reserve.&lt;/p&gt;
+&lt;/aside&gt;</code></pre>
+  {{tokens-callout}}
+</section>
+
+<section class="ap-o-stack" aria-labelledby="progress">
+  <h2 class="docs-heading" id="progress">Progress <span class="docs-heading__index">03</span></h2>
+  <div class="ap-o-stack ap-o-stack--gap-md">
+    <div class="ap-c-field"><label class="ap-c-field__label" for="p-scan">Sector scan, 40%</label><progress class="ap-c-progress" id="p-scan" max="100" value="40">40%</progress></div>
+    <div class="ap-c-field"><label class="ap-c-field__label" for="p-repair">Repairs, 85%</label><progress class="ap-c-progress ap-c-progress--success" id="p-repair" max="100" value="85">85%</progress></div>
+    <div class="ap-c-field"><label class="ap-c-field__label" for="p-heat">Reactor heat, 70%</label><progress class="ap-c-progress ap-c-progress--warning" id="p-heat" max="100" value="70">70%</progress></div>
+    <div class="ap-c-field"><label class="ap-c-field__label" for="p-hull">Hull integrity, 20%</label><progress class="ap-c-progress ap-c-progress--danger" id="p-hull" max="100" value="20">20%</progress></div>
+    <div class="ap-c-field"><label class="ap-c-field__label" for="p-charts">Downloading charts</label><progress class="ap-c-progress" id="p-charts"></progress></div>
+  </div>
+  <pre><code>&lt;progress class="ap-c-progress" max="100" value="40"&gt;40%&lt;/progress&gt;
+&lt;progress class="ap-c-progress" aria-label="Downloading charts"&gt;&lt;/progress&gt;  &lt;!-- indeterminate --&gt;</code></pre>
+  <p class="docs-note">A native <code>&lt;progress&gt;</code>: without a <code>value</code> it is indeterminate. For discrete levels use the <a href="forms.html#meter">segmented meter</a>.</p>
+  {{tokens-progress}}
+</section>
+
+<section class="ap-o-stack" aria-labelledby="spinner">
+  <h2 class="docs-heading" id="spinner">Spinner <span class="docs-heading__index">04</span></h2>
+  <div class="ap-o-cluster ap-o-cluster--gap-lg">
+    <span class="ap-c-spinner ap-c-spinner--sm" aria-hidden="true"></span>
+    <span class="ap-c-spinner" aria-hidden="true"></span>
+    <span class="ap-c-spinner ap-c-spinner--lg" aria-hidden="true"></span>
+    <span class="ap-c-spinner ap-c-spinner--lg ap-c-spinner--spectrum" aria-hidden="true"></span>
+    <span class="ap-o-cluster ap-o-cluster--gap-sm" role="status"><span class="ap-c-spinner" aria-hidden="true"></span> Plotting course…</span>
+    <button class="ap-c-button" type="button" disabled><span class="ap-c-spinner ap-c-spinner--sm" aria-hidden="true"></span> Saving</button>
+  </div>
+  <pre><code>&lt;span class="ap-o-cluster ap-o-cluster--gap-sm" role="status"&gt;
+  &lt;span class="ap-c-spinner" aria-hidden="true"&gt;&lt;/span&gt; Plotting course…
+&lt;/span&gt;</code></pre>
+  <p class="docs-note">The ring is decorative: the text in the <code>role="status"</code> region says what is happening. Modifiers: <code>--sm</code>, <code>--lg</code>, <code>--spectrum</code>.</p>
+  {{tokens-spinner}}
+</section>
+
+<section class="ap-o-stack" aria-labelledby="empty">
+  <h2 class="docs-heading" id="empty">Empty state <span class="docs-heading__index">05</span></h2>
+  <section class="ap-c-empty-state" aria-labelledby="e-inbox">
+    <svg class="ap-c-empty-state__icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13h4l2 3h4l2-3h4M5 5h14l1 8v6H4v-6z"/></svg>
+    <h3 class="ap-c-empty-state__title" id="e-inbox">No transmissions</h3>
+    <p class="ap-c-empty-state__text">Nobody has hailed the ship in this cycle. Open a channel to call the nearest station.</p>
+    <div class="ap-o-cluster ap-o-cluster--gap-sm"><button class="ap-c-button ap-c-button--primary" type="button">Open a channel</button><button class="ap-c-button ap-c-button--quiet" type="button">Scan again</button></div>
+  </section>
+  <pre><code>&lt;section class="ap-c-empty-state" aria-labelledby="inbox-empty"&gt;
+  &lt;svg class="ap-c-empty-state__icon" aria-hidden="true"&gt;…&lt;/svg&gt;
+  &lt;h3 class="ap-c-empty-state__title" id="inbox-empty"&gt;No transmissions&lt;/h3&gt;
+  &lt;p class="ap-c-empty-state__text"&gt;Nobody has hailed the ship in this cycle.&lt;/p&gt;
+&lt;/section&gt;</code></pre>
+  {{tokens-empty-state}}
+</section>

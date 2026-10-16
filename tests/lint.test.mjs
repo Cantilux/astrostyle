@@ -1,4 +1,4 @@
-// The Stylelint configuration enforces the design rules (docs/design.md §7.5, §7.6, §12).
+// The Stylelint configuration enforces the code conventions.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'

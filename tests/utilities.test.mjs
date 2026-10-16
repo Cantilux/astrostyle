@@ -1,4 +1,4 @@
-// Utilities layer and class namespaces per layer (docs/design.md §6, §7.5).
+// Utilities layer and class namespaces per layer.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import postcss from 'postcss'

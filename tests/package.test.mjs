@@ -1,4 +1,4 @@
-// Package contract checks used by scripts/check-package.mjs (docs/design.md §12).
+// Package contract checks used by scripts/check-package.mjs.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { packageProblems, requiredFiles } from '../scripts/check-package.mjs'

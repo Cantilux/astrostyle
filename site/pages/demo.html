@@ -1,13 +1,20 @@
 <!-- title: Demo -->
 <section class="ap-o-stack ap-o-stack--gap-sm">
+  <nav class="ap-c-breadcrumb" aria-label="Breadcrumb">
+    <ol class="ap-c-breadcrumb__list">
+      <li class="ap-c-breadcrumb__item"><a class="ap-c-breadcrumb__link" href="#crew">Fleet</a></li>
+      <li class="ap-c-breadcrumb__item"><a class="ap-c-breadcrumb__link" href="#status">Night Heron</a></li>
+      <li class="ap-c-breadcrumb__item"><a class="ap-c-breadcrumb__link" aria-current="page">Console</a></li>
+    </ol>
+  </nav>
   <div class="docs-masthead">
     <p class="docs-eyebrow">Ship console / live demo</p>
     <h1 class="docs-display">Night Heron</h1>
   </div>
-  <p class="docs-note">A sample screen built only with what astrostyle ships today: tokens, themes, element defaults, layout objects, utilities and the first components. Every new component lands here first, so this page shows how far the framework has come. Switch the theme from the header.</p>
+  <p class="docs-note">A sample screen built only with what astrostyle ships today: tokens, themes, element defaults, layout objects, utilities and the components. Every new component lands here first, so this page shows how far the framework has come. Switch the theme from the header.</p>
   <div class="ap-o-cluster">
     <button class="ap-c-button ap-c-button--primary ap-c-button--lg" type="button">Jump</button>
-    <button class="ap-c-button ap-c-button--lg" type="button">Scan sector</button>
+    <button class="ap-c-button ap-c-button--lg" type="button" disabled><span class="ap-c-spinner ap-c-spinner--sm" aria-hidden="true"></span> Scanning</button>
     <button class="ap-c-button ap-c-button--quiet ap-c-button--lg" type="button">Hail</button>
     <button class="ap-c-button ap-c-button--danger ap-c-button--lg ap-c-button--cut" type="button">Abort</button>
   </div>
@@ -17,10 +24,10 @@
   <aside class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="crew">
     <h2 class="docs-heading" id="crew">Crew <span class="docs-heading__index">01</span></h2>
     <ul class="ap-o-stack ap-o-stack--gap-sm">
-      <li class="docs-card ap-o-stack ap-o-stack--gap-xxs"><span class="ap-u-text-label">Pilot</span><strong>Vega</strong><span class="ap-o-cluster ap-o-cluster--gap-xs"><span class="demo-tag" style="--tag: var(--ap-success)">Ready</span></span></li>
-      <li class="docs-card ap-o-stack ap-o-stack--gap-xxs"><span class="ap-u-text-label">Engineer</span><strong>Okonkwo</strong><span class="ap-o-cluster ap-o-cluster--gap-xs"><span class="demo-tag" style="--tag: var(--ap-warning)">Repairing</span></span></li>
-      <li class="docs-card ap-o-stack ap-o-stack--gap-xxs"><span class="ap-u-text-label">Hacker</span><strong>Hasegawa</strong><span class="ap-o-cluster ap-o-cluster--gap-xs"><span class="demo-tag" style="--tag: var(--ap-info)">In the net</span></span></li>
-      <li class="docs-card ap-o-stack ap-o-stack--gap-xxs"><span class="ap-u-text-label">Gunner</span><strong>Marlowe</strong><span class="ap-o-cluster ap-o-cluster--gap-xs"><span class="demo-tag" style="--tag: var(--ap-danger)">Wounded</span></span></li>
+      <li class="docs-card ap-o-stack ap-o-stack--gap-xxs"><span class="ap-u-text-label">Pilot</span><strong>Vega</strong><span class="ap-o-cluster ap-o-cluster--gap-xs"><span class="ap-c-tag ap-c-tag--success">Ready</span></span></li>
+      <li class="docs-card ap-o-stack ap-o-stack--gap-xxs"><span class="ap-u-text-label">Engineer</span><strong>Okonkwo</strong><span class="ap-o-cluster ap-o-cluster--gap-xs"><span class="ap-c-tag ap-c-tag--warning">Repairing</span></span></li>
+      <li class="docs-card ap-o-stack ap-o-stack--gap-xxs"><span class="ap-u-text-label">Hacker</span><strong>Hasegawa</strong><span class="ap-o-cluster ap-o-cluster--gap-xs"><span class="ap-c-tag ap-c-tag--info">In the net</span></span></li>
+      <li class="docs-card ap-o-stack ap-o-stack--gap-xxs"><span class="ap-u-text-label">Gunner</span><strong>Marlowe</strong><span class="ap-o-cluster ap-o-cluster--gap-xs"><span class="ap-c-tag ap-c-tag--danger">Wounded</span></span></li>
     </ul>
   </aside>
 
@@ -31,8 +38,14 @@
         <div class="docs-card ap-o-stack ap-o-stack--gap-xs"><span class="ap-u-text-label" id="d-hull">Hull</span><span class="demo-stat">3 / 8</span><div class="ap-c-meter ap-c-meter--danger" role="meter" aria-labelledby="d-hull" aria-valuemin="0" aria-valuemax="8" aria-valuenow="3" style="--ap-meter-value: 3; --ap-meter-max: 8"></div></div>
         <div class="docs-card ap-o-stack ap-o-stack--gap-xs"><span class="ap-u-text-label" id="d-fuel">Fuel</span><span class="demo-stat">62%</span><div class="ap-c-meter" role="meter" aria-labelledby="d-fuel" aria-valuemin="0" aria-valuemax="10" aria-valuenow="6" style="--ap-meter-value: 6; --ap-meter-max: 10"></div></div>
         <div class="docs-card ap-o-stack ap-o-stack--gap-xxs"><span class="ap-u-text-label">Credits</span><span class="demo-stat">2,045</span></div>
-        <div class="docs-card ap-o-stack ap-o-stack--gap-xxs"><span class="ap-u-text-label">Jump drive</span><span class="demo-stat">Ready</span></div>
+        <div class="docs-card ap-o-stack ap-o-stack--gap-xs"><span class="ap-u-text-label">Jump drive</span><span class="demo-stat">Cooling</span><span class="ap-o-cluster ap-o-cluster--gap-xs"><span class="ap-c-tag ap-c-tag--warning ap-c-tag--solid">2 cycles</span></span></div>
       </div>
+      <aside class="ap-c-callout ap-c-callout--danger" aria-labelledby="d-breach">
+        <h3 class="ap-c-callout__title" id="d-breach">Hull breach on deck 3</h3>
+        <p>Seal it before the next jump, or the drive will not engage.</p>
+        <div class="ap-o-cluster ap-o-cluster--gap-sm"><button class="ap-c-button ap-c-button--danger" type="button">Seal deck</button><button class="ap-c-button ap-c-button--quiet" type="button">Show damage</button></div>
+      </aside>
+      <div class="ap-c-field"><label class="ap-c-field__label" for="d-scan">Sector scan</label><progress class="ap-c-progress" id="d-scan"></progress></div>
       <div class="docs-gradient" role="img" aria-label="Spectrum band"></div>
     </section>
 
@@ -107,6 +120,12 @@
         <li>Lost <strong>two hull points</strong> to <em>a very polite ambush</em>.</li>
       </ol>
       <blockquote><p>Never trust a quiet sector.</p></blockquote>
+      <section class="ap-c-empty-state" aria-labelledby="d-inbox">
+        <svg class="ap-c-empty-state__icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13h4l2 3h4l2-3h4M5 5h14l1 8v6H4v-6z"/></svg>
+        <h3 class="ap-c-empty-state__title" id="d-inbox">No transmissions</h3>
+        <p class="ap-c-empty-state__text">Nobody has hailed the ship in this cycle.</p>
+        <div class="ap-o-cluster"><button class="ap-c-button ap-c-button--primary" type="button">Open a channel</button></div>
+      </section>
       <p class="ap-u-truncate docs-note">Last transmission: static, a few words, then a long string of coordinates that do not fit on one line at all.</p>
     </section>
   </div>
