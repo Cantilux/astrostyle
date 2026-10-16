@@ -1,0 +1,22 @@
+// Container (ITCSS Objects): centered content with a maximum width and side gutters.
+@use '../settings/scales';
+@use '../tools/functions' as fn;
+@use 'shared' as o;
+
+// Emits `.ap-o-container` and its `--sm` … `--xl` widths.
+@mixin emit {
+  @include o.register(container, (max, gutter));
+
+  #{o.object(container)} {
+    inline-size: 100%;
+    max-inline-size: o.read(container, max, fn.token('size-container-lg'));
+    margin-inline: auto;
+    padding-inline: o.read(container, gutter, fn.space(lg));
+  }
+
+  @each $size in (sm, md, lg, xl) {
+    #{o.object(container, $size)} {
+      #{o.prop(container, max)}: fn.token('size-container-#{$size}');
+    }
+  }
+}

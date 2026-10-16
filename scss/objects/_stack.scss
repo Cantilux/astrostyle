@@ -1,0 +1,16 @@
+// Stack (ITCSS Objects): children in a column with a uniform gap.
+@use '../tools/functions' as fn;
+@use 'shared' as o;
+
+// Emits `.ap-o-stack` and its gap modifiers.
+@mixin emit {
+  @include o.register(stack, (gap));
+
+  #{o.object(stack)} {
+    display: flex;
+    flex-direction: column;
+    gap: o.read(stack, gap, fn.space(md));
+  }
+
+  @include o.gap-modifiers(stack);
+}
