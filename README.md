@@ -17,7 +17,7 @@
 </p>
 
 > [!IMPORTANT]
-> **🛰️ Engines warming up.** The foundation is in place: design tokens, light and dark themes, the reset, element defaults, layout objects (stack, cluster, grid, sidebar, switcher, frame, container), utilities, the Sass toolbox and the first components: buttons, button groups, fields, inputs, selects, a searchable combobox (the first vanilla JavaScript module), checkboxes, radios, switches, ranges, segmented meters, breadcrumbs, tags, callouts, progress bars, spinners and empty states. More components (pagination, tabs, toasts, dialogs…) arrive over the next releases, following the [roadmap](https://github.com/Cantilux/astrostyle/issues). Until `1.0.0`, minor versions may still change the API.
+> **🛰️ Engines warming up.** The foundation is in place: design tokens, light and dark themes, the reset, element defaults, layout objects (stack, cluster, grid, sidebar, switcher, frame, container), utilities, the Sass toolbox and the first components: buttons, button groups, fields, inputs, selects, a searchable combobox, checkboxes, radios, switches, ranges, segmented meters, breadcrumbs, pagination, tabs, tags, callouts, progress bars, spinners, empty states and toasts. More components (cards, windows, dialogs, menus…) arrive over the next releases, following the [roadmap](https://github.com/Cantilux/astrostyle/issues). Until `1.0.0`, minor versions may still change the API.
 
 > [!NOTE]
 > astrostyle is an independent production by Enrico Cantile and is not affiliated with Crescent Chimera. It is published under the [ASTROPRISMA Third Party License](https://www.astroprisma.com/license).
@@ -84,14 +84,20 @@ A few components get optional behavior from small, dependency-free ES modules. W
 ```js
 import { autoInit } from 'astrostyle/js'
 
-autoInit(document)   // turns every select[data-ap-combobox] into a searchable combobox
+autoInit(document)   // select[data-ap-combobox] → searchable combobox,
+                     // nav[data-ap-pagination] → pagination, [data-ap-tabs] → tabs
 ```
 
 ```js
 import { createCombobox } from 'astrostyle/js/combobox'
+import { createToaster } from 'astrostyle/js/toast'
 
-const ship = createCombobox(document.querySelector('#ship'), { creatable: true })
-ship.element.addEventListener('ap:change', (event) => console.log(event.detail))
+const select = document.querySelector('#ship')
+createCombobox(select, { creatable: true })
+select.addEventListener('ap:change', (event) => console.log(event.detail))
+
+const toaster = createToaster()
+toaster.show({ title: 'Docked', message: 'All systems online.', tone: 'success' })
 ```
 
 ### / First flight /
@@ -312,7 +318,7 @@ The house rules. Click a section to open it.
 
 - Native ES modules, zero dependencies, no build step needed on your side.
 - One module per interactive component, exposing a `createX(element, options, env)` factory that enhances native markup and returns a handle with `destroy()`; `env` injects the document and id generator for tests.
-- Components talk through DOM events prefixed with `ap:` (`ap:change`, `ap:open`, `ap:close`).
+- Components talk through DOM events prefixed with `ap:` (`ap:change`, `ap:open`, `ap:close`, `ap:page`).
 - Pure logic (filtering, page ranges) is kept in separate functions and unit tested; `document` and timers are passed in, never hard-coded.
 - JavaScript never sets visual styles inline, except for positioning.
 - Every named function gets a short comment above it saying what it is for.

@@ -1,7 +1,7 @@
 <!-- title: Feedback -->
 <section class="ap-o-stack ap-o-stack--gap-sm">
   <h1>Feedback</h1>
-  <p>Tags, callouts, progress, spinners and empty states tell people what is going on. Every state color comes with words, never alone.</p>
+  <p>Tags, callouts, progress, spinners, empty states and toasts tell people what is going on. Every state color comes with words, never alone.</p>
 </section>
 
 <section class="ap-o-stack" aria-labelledby="tag">
@@ -112,4 +112,22 @@
   &lt;p class="ap-c-empty-state__text"&gt;Nobody has hailed the ship in this cycle.&lt;/p&gt;
 &lt;/section&gt;</code></pre>
   {{tokens-empty-state}}
+</section>
+
+<section class="ap-o-stack" aria-labelledby="toast">
+  <h2 class="docs-heading" id="toast">Toast <span class="docs-heading__index">06</span></h2>
+  <div class="ap-o-cluster ap-o-cluster--gap-sm">
+    <button class="ap-c-button" type="button" data-docs-toast data-tone="success" data-title="Docked" data-message="All systems are back online.">Success</button>
+    <button class="ap-c-button" type="button" data-docs-toast data-tone="info" data-message="Charts updated for sector 7G.">Info, no title</button>
+    <button class="ap-c-button" type="button" data-docs-toast data-tone="warning" data-title="Low fuel" data-message="Two jumps left before the reserve." data-action="Refuel">With an action</button>
+    <button class="ap-c-button ap-c-button--danger" type="button" data-docs-toast data-tone="danger" data-title="Hull breach" data-message="Seal deck 3 before the next jump." data-urgent data-duration="0">Urgent, stays open</button>
+  </div>
+  <pre><code>import { createToaster } from 'astrostyle/js/toast'
+
+const toaster = createToaster()
+toaster.show({ title: 'Docked', message: 'All systems are back online.', tone: 'success' })
+toaster.show({ message: 'Cargo sold.', action: { label: 'Undo', onClick: undoSale } })
+toaster.show({ title: 'Hull breach', message: 'Seal deck 3.', tone: 'danger', urgent: true, duration: 0 })</code></pre>
+  <p class="docs-note">Toasts close after five seconds; hovering or focusing one stops the clock. Up to three are shown at once, the rest wait. <code>urgent</code> toasts use <code>role="alert"</code>; the others are read politely. Never put the only way to do something in a toast.</p>
+  {{tokens-toast}}
 </section>

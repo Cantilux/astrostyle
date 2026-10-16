@@ -1,0 +1,136 @@
+// Toast (ITCSS Components): short messages stacked in a fixed region at the bottom edge, built by
+// `createToaster()`. The region spans the screen on narrow viewports and sits at the end corner
+// from `sm` up. Contract and tokens: scss/components/toast/README.md.
+@use '../../settings/config';
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/media';
+@use '../../tools/mixins';
+
+// Public tokens and their defaults (offset, gap and width are read on `.ap-c-toast__region`).
+$tokens: (
+  tone: transparent,
+  bg: fn.token('surface-1'),
+  fg: fn.token('text'),
+  border-color: fn.token('border'),
+  bar-width: 0,
+  radius: fn.token('radius-control'),
+  shadow: fn.token('elevation-overlay'),
+  padding: fn.space(md),
+  gap: fn.space(sm),
+  offset: fn.space(lg),
+  width: 24rem,
+  duration: fn.token('duration-base'),
+);
+
+// Tone of each tone modifier.
+$tones: (
+  accent: fn.token('accent'),
+  success: fn.token('success'),
+  warning: fn.token('warning'),
+  danger: fn.token('danger'),
+  info: fn.token('info'),
+);
+
+// Emits `.ap-c-toast`, its region and elements, its modifiers and keyframes.
+@mixin emit {
+  #{c.component(toast, region)} {
+    @include c.tokens(toast, $tokens);
+
+    position: fixed;
+    inset-block-end: c.private(offset);
+    inset-inline: c.private(offset);
+    z-index: fn.token('z-toast');
+    display: grid;
+    gap: c.private(gap);
+    pointer-events: none;
+
+    &:where(:empty) {
+      display: none;
+    }
+
+    @include media.mq(sm) {
+      inset-inline-start: auto;
+      inline-size: c.private(width);
+    }
+  }
+
+  #{c.component(toast)} {
+    @include c.tokens(toast, $tokens);
+    @include mixins.text(body);
+
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: fn.space(xs);
+    padding: c.private(padding);
+    padding-inline-end: fn.space(xxs);
+    border: fn.token('border-width-hairline') solid c.private(border-color);
+    border-inline-start: c.private(bar-width) solid c.private(tone);
+    border-radius: c.private(radius);
+    background-color: c.private(bg);
+    box-shadow: c.private(shadow);
+    color: c.private(fg);
+    pointer-events: auto;
+    animation: #{config.$prefix}-toast-in c.private(duration) fn.token('ease-out');
+
+    &:where(:has(.#{config.$prefix}-c-toast__action)) {
+      grid-template-columns: 1fr auto auto;
+    }
+  }
+
+  #{c.component(toast, body)} {
+    display: grid;
+    gap: fn.space(xxs);
+    align-self: center;
+    min-inline-size: 0;
+  }
+
+  #{c.component(toast, title)} {
+    @include mixins.text(data);
+
+    font-weight: fn.token('weight-bold');
+  }
+
+  #{c.component(toast, message)} {
+    color: fn.token('text-muted');
+  }
+
+  #{c.component(toast, action)} {
+    align-self: center;
+  }
+
+  #{c.component(toast, close)} {
+    display: grid;
+    place-items: center;
+    inline-size: fn.token('size-control');
+    block-size: fn.token('size-control');
+    margin-block: calc(#{fn.space(sm)} * -1);
+    border-radius: fn.token('radius-pill');
+    color: fn.token('text-muted');
+
+    @include mixins.interactive;
+    @include mixins.focus-ring;
+
+    &:where(:hover) {
+      background-color: color-mix(in oklab, #{fn.token('text')} 8%, transparent);
+      color: fn.token('text');
+    }
+  }
+
+  #{c.component(toast, icon)} {
+    inline-size: fn.token('size-icon');
+    block-size: fn.token('size-icon');
+  }
+
+  @each $name, $tone in $tones {
+    @include c.modifier(toast, $name, (tone: $tone, bar-width: fn.space(xs)));
+  }
+
+  @keyframes #{config.$prefix}-toast-in {
+    from {
+      opacity: 0;
+      translate: 0 #{fn.space(sm)};
+    }
+  }
+}

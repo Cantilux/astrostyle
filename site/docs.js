@@ -1,6 +1,6 @@
 // Docs-only behavior: the light/dark theme switch (remembered per browser when storage works),
-// demo states, and the astrostyle behaviors through autoInit().
-import { autoInit } from './js/index.js'
+// demo states, and the astrostyle behaviors through autoInit() and createToaster().
+import { autoInit, createToaster } from './js/index.js'
 
 const storageKey = 'astrostyle-docs-theme'
 
@@ -42,6 +42,39 @@ function initIndeterminate() {
   for (const box of document.querySelectorAll('input[data-indeterminate]')) box.indeterminate = true
 }
 
+// Buttons with `data-docs-toast` show a toast described by their data attributes.
+function initToastButtons() {
+  const buttons = document.querySelectorAll('[data-docs-toast]')
+  if (buttons.length === 0) return
+  const toaster = createToaster()
+  for (const button of buttons) {
+    button.addEventListener('click', () => {
+      const { tone, title, message, action, duration } = button.dataset
+      toaster.show({
+        tone,
+        title,
+        message,
+        urgent: button.hasAttribute('data-urgent'),
+        duration: duration === undefined ? undefined : Number(duration),
+        action: action ? { label: action } : undefined,
+      })
+    })
+  }
+}
+
+// Writes the page picked in a button pagination into the element named by
+// `data-docs-page-output`.
+function initPageOutputs() {
+  for (const nav of document.querySelectorAll('[data-docs-page-output]')) {
+    const output = document.getElementById(nav.dataset.docsPageOutput)
+    nav.addEventListener('ap:page', (event) => {
+      output.textContent = `ap:page → page ${event.detail.page} (was ${event.detail.previous})`
+    })
+  }
+}
+
 initThemeToggle()
 initIndeterminate()
 autoInit(document)
+initToastButtons()
+initPageOutputs()

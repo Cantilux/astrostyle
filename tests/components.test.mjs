@@ -23,6 +23,9 @@ const components = [
   'progress',
   'spinner',
   'empty-state',
+  'pagination',
+  'tabs',
+  'toast',
 ]
 const controls = ['button', 'input', 'checkbox', 'radio', 'switch', 'range']
 
@@ -191,4 +194,41 @@ test('the empty state centers its icon, title and text', () => {
   for (const part of ['icon', 'title', 'text']) {
     assert.ok(declarationsOf(css, `.ap-c-empty-state__${part}`), part)
   }
+})
+
+test('pagination marks the current page with the accent fill', () => {
+  assert.deepEqual(declarationsOf(css, '.ap-c-pagination__link:where([aria-current=page])'), {
+    'background-color': 'var(--_current-bg)',
+    color: 'var(--_current-fg)',
+    cursor: 'default',
+  })
+  assert.equal(declarationsOf(css, '.ap-c-pagination__link')['min-block-size'], 'var(--_size)')
+})
+
+test('the selected tab draws the indicator; vertical lists move it to the start edge', () => {
+  assert.match(
+    declarationsOf(css, '.ap-c-tabs__tab:where([aria-selected=true])')['box-shadow'],
+    /var\(--_indicator-color\)$/,
+  )
+  assert.ok(
+    declarationsOf(
+      css,
+      '.ap-c-tabs__tab:where([aria-orientation=vertical] > [aria-selected=true])',
+    ),
+  )
+})
+
+test('the toast region is fixed above the page and anchors to the end corner from sm up', () => {
+  const region = declarationsOf(css, '.ap-c-toast__region')
+  assert.equal(region.position, 'fixed')
+  assert.equal(region['z-index'], 'var(--ap-z-toast)')
+  assert.match(
+    css,
+    /@media \(min-width: 36em\) \{\s*\.ap-c-toast__region \{\s*inset-inline-start: auto;/,
+  )
+  assert.match(declarationsOf(css, '.ap-c-toast').animation, /^ap-toast-in /)
+  assert.deepEqual(declarationsOf(css, '.ap-c-toast--danger'), {
+    '--ap-toast-tone': 'var(--ap-danger)',
+    '--ap-toast-bar-width': 'var(--ap-space-xs)',
+  })
 })

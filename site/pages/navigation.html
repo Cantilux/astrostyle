@@ -1,7 +1,7 @@
 <!-- title: Navigation -->
 <section class="ap-o-stack ap-o-stack--gap-sm">
   <h1>Navigation</h1>
-  <p>Ways to move around a site. The breadcrumb is plain HTML and CSS; pagination and tabs arrive with their JavaScript modules.</p>
+  <p>Ways to move around a site. The breadcrumb is plain HTML and CSS; pagination and tabs get their behavior from small JavaScript modules, wired here by <code>autoInit()</code>.</p>
 </section>
 
 <section class="ap-o-stack" aria-labelledby="breadcrumb">
@@ -29,4 +29,61 @@
 &lt;/nav&gt;</code></pre>
   <p class="docs-note">The last item carries <code>aria-current="page"</code>. Separators are generated content that screen readers skip; change them with <code>--ap-breadcrumb-separator</code> (a CSS string). Long paths wrap.</p>
   {{tokens-breadcrumb}}
+</section>
+
+<section class="ap-o-stack" aria-labelledby="pagination">
+  <h2 class="docs-heading" id="pagination">Pagination <span class="docs-heading__index">02</span></h2>
+  <nav data-ap-pagination data-ap-page="5" data-ap-count="12" aria-label="Log pages, buttons" data-docs-page-output="p-buttons-output"></nav>
+  <p class="docs-note" id="p-buttons-output" aria-live="polite">Buttons: pick a page, <code>ap:page</code> reports it here.</p>
+  <nav data-ap-pagination data-ap-page="1" data-ap-count="4" data-ap-href="#pagination" aria-label="Log pages, links"></nav>
+  <p class="docs-note">Links (<code>data-ap-href</code>): they navigate like any link; at either end the step is disabled.</p>
+  <pre><code>&lt;!-- links: the server renders each page --&gt;
+&lt;nav data-ap-pagination data-ap-page="2" data-ap-count="12" data-ap-href="?page={page}" aria-label="Log pages"&gt;&lt;/nav&gt;
+
+&lt;script type="module"&gt;
+  import { autoInit, createPagination } from 'astrostyle/js'
+  autoInit(document)
+
+  // buttons: load the page yourself
+  const pages = createPagination(nav, { page: 1, count: 12 })
+  nav.addEventListener('ap:page', (event) =&gt; loadPage(event.detail.page))
+&lt;/script&gt;</code></pre>
+  <p class="docs-note">The window keeps the same number of items while you page, so the control never jumps. Options: <code>siblings</code>, <code>boundaries</code>, <code>labels</code>. Cancel <code>ap:page</code> on links to route on the client.</p>
+  {{tokens-pagination}}
+</section>
+
+<section class="ap-o-stack" aria-labelledby="tabs">
+  <h2 class="docs-heading" id="tabs">Tabs <span class="docs-heading__index">03</span></h2>
+  <div class="ap-c-tabs" data-ap-tabs>
+    <div class="ap-c-tabs__list" aria-label="Ship sections">
+      <button class="ap-c-tabs__tab" type="button">Crew</button>
+      <button class="ap-c-tabs__tab" type="button" aria-selected="true">Cargo</button>
+      <button class="ap-c-tabs__tab" type="button">Systems</button>
+      <button class="ap-c-tabs__tab" type="button" disabled>Vault</button>
+    </div>
+    <div class="ap-c-tabs__panel"><p>Vega, Okonkwo, Hasegawa and Marlowe are aboard.</p></div>
+    <div class="ap-c-tabs__panel"><p>Twelve plasma cells, one Medusa spike, two drone frames.</p></div>
+    <div class="ap-c-tabs__panel"><p>Shields and life support online; cloak offline.</p></div>
+    <div class="ap-c-tabs__panel"><p>Locked.</p></div>
+  </div>
+  <div class="ap-c-tabs" data-ap-tabs="manual">
+    <div class="ap-c-tabs__list" aria-label="Log, manual activation">
+      <button class="ap-c-tabs__tab" type="button">Today</button>
+      <button class="ap-c-tabs__tab" type="button">This cycle</button>
+      <button class="ap-c-tabs__tab" type="button">Archive</button>
+    </div>
+    <div class="ap-c-tabs__panel"><p>Left the Corsair dock at 07:40.</p></div>
+    <div class="ap-c-tabs__panel"><p>Three jumps, one ambush.</p></div>
+    <div class="ap-c-tabs__panel"><p>Forty-two cycles of records.</p></div>
+  </div>
+  <pre><code>&lt;div class="ap-c-tabs" data-ap-tabs&gt;
+  &lt;div class="ap-c-tabs__list" aria-label="Ship sections"&gt;
+    &lt;button class="ap-c-tabs__tab" type="button"&gt;Crew&lt;/button&gt;
+    &lt;button class="ap-c-tabs__tab" type="button" aria-selected="true"&gt;Cargo&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;section class="ap-c-tabs__panel"&gt;…&lt;/section&gt;
+  &lt;section class="ap-c-tabs__panel"&gt;…&lt;/section&gt;
+&lt;/div&gt;</code></pre>
+  <p class="docs-note">Keyboard: <kbd>←</kbd>/<kbd>→</kbd> move between tabs (skipping disabled ones), <kbd>Home</kbd>/<kbd>End</kbd> jump to the ends, <kbd>Tab</kbd> goes to the panel. The second set uses manual activation (<code>data-ap-tabs="manual"</code>): arrows move focus, <kbd>Enter</kbd> selects. Without JavaScript every panel is shown.</p>
+  {{tokens-tabs}}
 </section>
