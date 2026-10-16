@@ -12,8 +12,13 @@
 <p align="center">
   <b>Buttons, inputs, pagination, panels and all the other bits a website needs,<br>
   dressed in the colors and attitude of the ASTROPRISMA tabletop RPG.</b><br>
-  <sub>SCSS core · plain CSS build · a pinch of vanilla JavaScript · no framework required</sub><br><br>
-  📖 <a href="https://cantilux.github.io/astrostyle/"><b>Documentation and live examples</b></a>
+  <sub>SCSS core · plain CSS build · a pinch of vanilla JavaScript · no framework required</sub>
+</p>
+
+<p align="center">
+  <a href="https://cantilux.github.io/astrostyle/">
+    <img src=".github/assets/documentation.svg" alt="Documentation and live examples — visit the astrostyle website" width="100%">
+  </a>
 </p>
 
 > [!IMPORTANT]
