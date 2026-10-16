@@ -12,7 +12,8 @@
 <p align="center">
   <b>Buttons, inputs, pagination, panels and all the other bits a website needs,<br>
   dressed in the colors and attitude of the ASTROPRISMA tabletop RPG.</b><br>
-  <sub>SCSS core · plain CSS build · a pinch of vanilla JavaScript · no framework required</sub>
+  <sub>SCSS core · plain CSS build · a pinch of vanilla JavaScript · no framework required</sub><br><br>
+  📖 <a href="https://cantilux.github.io/astrostyle/"><b>Documentation and live examples</b></a>
 </p>
 
 > [!IMPORTANT]
@@ -319,6 +320,7 @@ bun install
 | Command | What it does |
 | --- | --- |
 | `bun run build` | Compiles `scss/astrostyle.scss` into `dist/astrostyle.css` and `dist/astrostyle.min.css`, and exports `dist/tokens.json` |
+| `bun run docs:build` | Builds the documentation site into `_site/` (open `_site/index.html`) |
 | `bun run test` | Runs every `tests/**/*.test.mjs` with `node --test` |
 | `bun run lint` | Stylelint on `scss/` plus a Prettier check |
 | `bun run format` | Rewrites files with Prettier (Markdown is left as written) |
