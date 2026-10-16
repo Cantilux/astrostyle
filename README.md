@@ -22,12 +22,20 @@
 </p>
 
 > [!IMPORTANT]
-> **🛰️ Engines warming up.** The foundation is in place: design tokens, light and dark themes, the reset, element defaults, layout objects (stack, cluster, grid, sidebar, switcher, frame, container), utilities, the Sass toolbox and the first components: buttons, button groups, fields, inputs, selects, a searchable combobox, checkboxes, radios, switches, ranges, segmented meters, breadcrumbs, pagination, tabs, tags, callouts, progress bars, spinners, empty states and toasts. More components (cards, windows, dialogs, menus…) arrive over the next releases, following the [roadmap](https://github.com/Cantilux/astrostyle/issues). Until `1.0.0`, minor versions may still change the API.
+> **🛰️ Engines warming up.**
+>
+> **In place:** design tokens, light and dark themes, the reset, element defaults, layout objects (stack, cluster, grid, sidebar, switcher, frame, container), utilities and the Sass toolbox.
+>
+> **Components:** buttons, button groups, fields, inputs, selects, a searchable combobox, checkboxes, radios, switches, ranges, segmented meters, breadcrumbs, pagination, tabs, tags, callouts, progress bars, spinners, empty states and toasts.
+>
+> **Next:** cards, windows, dialogs, menus… over the next releases, following the [roadmap](https://github.com/Cantilux/astrostyle/issues). Until `1.0.0`, minor versions may still change the API.
 
 > [!NOTE]
 > astrostyle is an independent production by Enrico Cantile and is not affiliated with Crescent Chimera. It is published under the [ASTROPRISMA Third Party License](https://www.astroprisma.com/license).
 >
 > ASTROPRISMA is copyright Camila Mera and Crescent Chimera.
+
+<br>
 
 ## ![01 / Installation](.github/assets/section-installation.svg)
 
@@ -35,6 +43,8 @@
 npm install astrostyle
 # or: bun add astrostyle · pnpm add astrostyle · yarn add astrostyle
 ```
+
+<br>
 
 ### / With Sass (recommended) /
 
@@ -53,6 +63,8 @@ import * as sass from 'sass'
 
 sass.compile('style.scss', { importers: [new sass.NodePackageImporter()] })
 ```
+
+<br>
 
 ### / Plain CSS /
 
@@ -82,6 +94,8 @@ import 'astrostyle/css/input'
 
 Every file declares the cascade layer order, so the load order of the files does not matter. `button-group` adjusts `button`, so load both.
 
+<br>
+
 ### / JavaScript /
 
 A few components get optional behavior from small, dependency-free ES modules. Without JavaScript they still work as native HTML.
@@ -105,6 +119,8 @@ const toaster = createToaster()
 toaster.show({ title: 'Docked', message: 'All systems online.', tone: 'success' })
 ```
 
+<br>
+
 ### / First flight /
 
 ```html
@@ -116,6 +132,8 @@ toaster.show({ title: 'Docked', message: 'All systems online.', tone: 'success' 
 ```
 
 Every token is a CSS custom property (`--ap-accent`, `--ap-space-md`, `--ap-text-body-size`…), so your own CSS can use them right away. The full list, in the W3C Design Tokens format, ships as `astrostyle/tokens.json`.
+
+<br>
 
 ### / Make it yours /
 
@@ -144,11 +162,17 @@ At runtime, any token can be overridden with plain CSS. astrostyle lives in casc
 :root { --ap-radius-card: 8px; --ap-font-scale: 1.1; }
 ```
 
+<br>
+
 ## ![02 / Design philosophy](.github/assets/section-design-philosophy.svg)
+
+<br>
 
 ### The Design Guide is the captain
 
 Everything starts from the **ASTROPRISMA Design Guide** (`06_Design Guide [PDF]`), included in the official ASTROPRISMA Creator Kit. When astrostyle and the guide disagree, **the guide wins**. The framework turns its print rules into screen-ready tokens and components.
+
+<br>
 
 ### / Colors /
 
@@ -206,15 +230,21 @@ Every value below comes straight from the guide's vector artwork (sRGB).
   </tr>
 </table>
 
+<br>
+
 ### / Gradient /
 
 <img src=".github/assets/spectrum.svg" alt="The ASTROPRISMA gradient: yellow, orange, magenta, indigo" width="100%">
 
 Four colors, four equal bands, always in this order. **Hard edges only**: the gradient is never a soft blend.
 
+<br>
+
 ### / Light & dark /
 
 The guide uses both pairings: black on white and white on black. astrostyle ships **two complete themes**. You pick one with `data-ap-theme`; the framework never guesses from operating-system settings.
+
+<br>
 
 ### / Typography /
 
@@ -227,10 +257,14 @@ The guide uses both pairings: black on white and white on black. astrostyle ship
 
 Font files are **not bundled**: each font has its own license, so every project brings its own.
 
+<br>
+
 ### / Texture & motifs /
 
 - **Halftone and noise.** The guide's print filters (halftone at 50% opacity, a fine grain) become optional surfaces for decorative areas. They never cover text or controls.
 - **Graphic motifs → components.** The big masthead with its tiny eyebrow, the pink section heading with a hairline rule and a two-digit index (like the ones in this README), the window panel with a dark title bar, pill buttons, segmented pill legends, side-tab boxes, callouts and `/ SLASHED /` subheadings.
+
+<br>
 
 ### The principles, in short
 
@@ -249,6 +283,8 @@ Font files are **not bundled**: each font has its own license, so every project 
 <p align="center">
   <img src=".github/assets/itcss.svg" alt="The astrostyle inverted triangle: Settings and Tools emit no CSS; Generic, Elements, Objects, Components and Utilities are emitted as cascade layers in that order" width="90%">
 </p>
+
+<br>
 
 ## ![03 / Code conventions](.github/assets/section-code-conventions.svg)
 
@@ -341,9 +377,13 @@ The house rules. Click a section to open it.
 
 </details>
 
+<br>
+
 ## ![04 / Workflow](.github/assets/section-workflow.svg)
 
 How a change travels from an idea to `master`, and from `master` to npm.
+
+<br>
 
 ### / Setup /
 
@@ -365,6 +405,8 @@ bun install
 | `bun run changeset` | Records a change for the next release |
 | `bun run release:version` | Applies pending changesets: new version and changelog entry |
 
+<br>
+
 ### / Making a change /
 
 1. **Pick or open an issue.** The roadmap lives in issues [#2–#9](https://github.com/Cantilux/astrostyle/issues).
@@ -380,6 +422,8 @@ bun install
 
 5. **Open a Pull Request.** CI runs lint, tests, the build, the package check and the docs build; merging needs a green CI.
 
+<br>
+
 ### / Releasing /
 
 Releases are cut from a pull request, never from a laptop.
@@ -389,6 +433,8 @@ Releases are cut from a pull request, never from a laptop.
 3. The **Release** workflow sees a version npm does not have yet, runs lint, tests, build and the package check, publishes it with npm trusted publishing (with provenance) and tags it `vX.Y.Z`.
 
 Run `bun run check:package` to see exactly what npm would receive.
+
+<br>
 
 ## ![05 / License](.github/assets/section-license.svg)
 
