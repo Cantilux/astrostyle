@@ -15,13 +15,6 @@
   <sub>SCSS core · plain CSS build · a pinch of vanilla JavaScript · no framework required</sub>
 </p>
 
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset=".github/assets/compatible-with-astroprisma-white.png">
-    <img src=".github/assets/compatible-with-astroprisma-black.png" alt="Compatible with ASTROPRISMA" width="140">
-  </picture>
-</p>
-
 > [!IMPORTANT]
 > **🛰️ Engines warming up.** The foundation is in place: design tokens, light and dark themes, the reset and the Sass toolbox. Components (buttons, inputs, pagination…) arrive over the next releases, following the [roadmap](https://github.com/Cantilux/astrostyle/issues). Until `1.0.0`, minor versions may still change the API.
 
@@ -364,6 +357,13 @@ Run `bun run check:package` to see exactly what npm would receive.
 
 The astrostyle code is released under the [MIT license](LICENSE). Take it, fork it, fly it.
 
-The ASTROPRISMA look it reproduces (palette, typography choices and graphic motifs from the Creator Kit Design Guide) is used under the [ASTROPRISMA Third Party License](https://www.astroprisma.com/license). ASTROPRISMA is copyright Camila Mera and Crescent Chimera. astrostyle uses no ASTROPRISMA or Crescent Chimera logos.
+The ASTROPRISMA look it reproduces (palette, typography choices and graphic motifs from the Creator Kit Design Guide) is used under the [ASTROPRISMA Third Party License](https://www.astroprisma.com/license). ASTROPRISMA is copyright Camila Mera and Crescent Chimera. Apart from the "Compatible with ASTROPRISMA" logo below, which the license allows, astrostyle uses no ASTROPRISMA or Crescent Chimera logos.
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset=".github/assets/compatible-with-astroprisma-white.png">
+    <img src=".github/assets/compatible-with-astroprisma-black.png" alt="Compatible with ASTROPRISMA" width="140">
+  </picture>
+</p>
 
 <img src=".github/assets/spectrum.svg" alt="" width="100%">
