@@ -1,9 +1,9 @@
 <p align="center">
-  <img src=".github/assets/banner.svg" alt="astrostyle: a CSS framework in the ASTROPRISMA style, currently in its design phase" width="100%">
+  <img src=".github/assets/banner.svg" alt="astrostyle: a CSS framework in the ASTROPRISMA style, currently in development" width="100%">
 </p>
 
 <p align="center">
-  <img alt="Status: design phase" src="https://img.shields.io/badge/status-design_phase-ef476e?style=flat-square&labelColor=130d1c">
+  <img alt="Status: in development" src="https://img.shields.io/badge/status-in_development-ef476e?style=flat-square&labelColor=130d1c">
   <img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-ffbd5c?style=flat-square&labelColor=130d1c">
   <img alt="Dependencies: none" src="https://img.shields.io/badge/dependencies-none-6abd45?style=flat-square&labelColor=130d1c">
   <img alt="Built with Sass" src="https://img.shields.io/badge/built_with-Sass-5fc3b0?style=flat-square&labelColor=130d1c">
@@ -23,7 +23,7 @@
 </p>
 
 > [!IMPORTANT]
-> **🛰️ We are still on the drawing board.** astrostyle is in its **design phase**: architecture and design rules are being defined, there is no usable code yet and nothing is on npm. Everything below describes where the ship is headed, and the course may change.
+> **🛰️ Engines warming up.** The foundation is in place: design tokens, light and dark themes, the reset and the Sass toolbox. Components (buttons, inputs, pagination…) arrive over the next releases, following the [roadmap](https://github.com/Cantilux/astrostyle/issues). The first npm release, `0.1.0`, is being prepared: until it lands, `npm install astrostyle` will not work yet.
 
 > [!NOTE]
 > astrostyle is an independent production by Enrico Cantile and is not affiliated with Crescent Chimera. It is published under the [ASTROPRISMA Third Party License](https://www.astroprisma.com/license).
@@ -34,8 +34,79 @@
 
 ## `01` / Installation
 
-> [!WARNING]
-> **[Work in progress]**: installation instructions will land here with the first release.
+```sh
+npm install astrostyle
+# or: bun add astrostyle · pnpm add astrostyle · yarn add astrostyle
+```
+
+### / With Sass (recommended) /
+
+The Sass entry point gives you the whole toolbox and lets you configure everything at build time. Dart Sass 1.71 or newer is required.
+
+```scss
+@use 'pkg:astrostyle' as ap;   // or 'astrostyle' with Vite and other bundlers
+
+@include ap.emit;               // outputs tokens, themes and the reset, inside cascade layers
+```
+
+The `pkg:` URL needs Sass's Node package importer:
+
+```js
+import * as sass from 'sass'
+
+sass.compile('style.scss', { importers: [new sass.NodePackageImporter()] })
+```
+
+### / Plain CSS /
+
+No Sass? Use the precompiled stylesheet with the default configuration:
+
+```html
+<link rel="stylesheet" href="node_modules/astrostyle/dist/astrostyle.css">
+```
+
+```js
+import 'astrostyle/css'        // bundlers: readable build
+import 'astrostyle/css/min'    // bundlers: minified build
+```
+
+### / First flight /
+
+```html
+<html data-ap-theme="dark">     <!-- light is the default; pick a theme explicitly -->
+  <body>
+    <p style="color: var(--ap-accent)">Hello, spacefarer.</p>
+  </body>
+</html>
+```
+
+Every token is a CSS custom property (`--ap-accent`, `--ap-space-md`, `--ap-text-body-size`…), so your own CSS can use them right away. The full list, in the W3C Design Tokens format, ships as `astrostyle/tokens.json`.
+
+### / Make it yours /
+
+```scss
+@use 'pkg:astrostyle' as ap with (
+  $accent: #3fa7ff,                      // new accent, shades and ink derived for you
+  $theme-default: 'dark',
+  $scope: '.my-app',                     // keep everything inside one element
+  $themes: (dark: (bg: #0c0812)),        // change one token of one theme
+);
+
+@include ap.emit;
+
+.my-widget {
+  padding: ap.space(md);                 // tokens, checked at compile time
+  border-radius: ap.token(radius-card);
+  @include ap.text(label);               // a whole type role in one line
+  @include ap.mq(md) { display: grid; }  // mobile-first media query
+}
+```
+
+At runtime, any token can be overridden with plain CSS. astrostyle lives in cascade layers, so your styles always win:
+
+```css
+:root { --ap-radius-card: 8px; --ap-font-scale: 1.1; }
+```
 
 ---
 
@@ -254,11 +325,13 @@ bun install
 
 | Command | What it does |
 | --- | --- |
-| `bun run build` | Compiles `scss/astrostyle.scss` into `dist/astrostyle.css` and `dist/astrostyle.min.css` |
+| `bun run build` | Compiles `scss/astrostyle.scss` into `dist/astrostyle.css` and `dist/astrostyle.min.css`, and exports `dist/tokens.json` |
 | `bun run test` | Runs every `tests/**/*.test.mjs` with `node --test` |
 | `bun run lint` | Stylelint on `scss/` plus a Prettier check |
 | `bun run format` | Rewrites files with Prettier (Markdown is left as written) |
+| `bun run check:package` | Checks what npm would publish and that `@use 'pkg:astrostyle'` resolves (after a build) |
 | `bun run changeset` | Records a change for the next release |
+| `bun run release:version` | Applies pending changesets: new version and changelog entry |
 
 ### / Making a change /
 
@@ -277,8 +350,13 @@ bun install
 
 ### / Releasing /
 
-> [!WARNING]
-> **[Work in progress]**: publishing to npm arrives with roadmap step 2 ([#3](https://github.com/Cantilux/astrostyle/issues/3)). Until then the package is marked `private`.
+Releases are cut from a pull request, never from a laptop.
+
+1. On a `chore/release-x.y.z` branch, run `bun run release:version`. Changesets turns the pending changesets into the new version and the `CHANGELOG.md` entry.
+2. Open the PR and merge it once CI is green.
+3. The **Release** workflow sees a version npm does not have yet, runs lint, tests, build and the package check, publishes it with npm trusted publishing (with provenance) and tags it `vX.Y.Z`.
+
+Run `bun run check:package` to see exactly what npm would receive.
 
 ---
 
