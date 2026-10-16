@@ -13,5 +13,9 @@ $layer: 'astrostyle' !default;
 // Theme applied on `$scope` without a `data-ap-theme` attribute.
 $theme-default: 'light' !default;
 
+// Emit the Elements layer (styles for bare HTML elements). Turn it off to embed astrostyle in a
+// site that already styles its own elements.
+$emit-elements: true !default;
+
 // Replacement accent color. `null` keeps the Design Guide pink and its two darker shades.
 $accent: null !default;

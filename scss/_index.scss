@@ -2,8 +2,9 @@
 // Using it outputs no CSS; `@include emit()` does. See docs/design.md §7.1.
 @forward 'settings/config';
 @forward 'settings/palette' show $palette;
-@forward 'settings/typography' show $typography;
-@forward 'settings/scales' show $space, $size, $shape, $elevation, $motion, $z-index, $breakpoints;
+@forward 'settings/typography' show $typography, $element-roles;
+@forward 'settings/scales' show $space, $size, $shape, $elevation, $motion, $z-index, $breakpoints,
+  $ratios;
 @forward 'settings/themes' show $themes;
 @forward 'tools/functions';
 @forward 'tools/mixins';

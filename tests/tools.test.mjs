@@ -48,6 +48,7 @@ test('text() applies a whole type role and scales the size at the use site', () 
     'font-weight': 'var(--ap-text-label-weight)',
     'line-height': 'var(--ap-text-label-leading)',
     'letter-spacing': 'var(--ap-text-label-tracking)',
+    'text-transform': 'var(--ap-text-label-case)',
   })
   assert.match(
     compileError("@use 'index' as ap;\n.a { @include ap.text(huge); }"),

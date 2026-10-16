@@ -85,6 +85,7 @@
         'text-#{$role}-weight': css-var('weight-#{map.get($spec, weight)}'),
         'text-#{$role}-leading': map.get($spec, leading),
         'text-#{$role}-tracking': map.get($spec, tracking),
+        'text-#{$role}-case': map.get($spec, case) or none,
       )
     );
   }
@@ -190,6 +191,16 @@
   }
 
   @error 'astrostyle: invalid theme value #{meta.inspect($value)}.';
+}
+
+// Selector list that matches `$selector` inside the scope or on the scope root itself, without
+// adding specificity. With the default ':root' scope it is `$selector` unchanged.
+@function scoped($selector) {
+  @if config.$scope == ':root' {
+    @return $selector;
+  }
+
+  @return ':where(#{config.$scope}) #{$selector}, #{$selector}:where(#{config.$scope})';
 }
 
 // Selector of an explicit theme: the scope root or any descendant carrying `data-ap-theme`.

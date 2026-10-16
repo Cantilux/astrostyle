@@ -1,0 +1,37 @@
+// Form elements (ITCSS Elements): groups, legends, placeholders and disabled controls. Designed
+// controls (inputs, selects, buttons) are components.
+@use 'sass:map';
+@use '../settings/config';
+@use '../settings/typography';
+@use '../tools/functions' as fn;
+@use '../tools/mixins';
+
+// Emits form element defaults.
+@mixin emit {
+  $s: config.$scope;
+
+  :where(#{$s}) :where(fieldset) {
+    padding: fn.space(md);
+    border: fn.token('border-width-hairline') solid fn.token('border');
+    border-radius: fn.token('radius-control');
+  }
+
+  :where(#{$s}) :where(legend) {
+    @include mixins.text(map.get(typography.$element-roles-values, legend));
+
+    padding-inline: fn.space(xs);
+  }
+
+  :where(#{$s}) :where(textarea) {
+    resize: block;
+  }
+
+  :where(#{$s}) ::placeholder {
+    color: fn.token('text-subtle');
+    opacity: 1;
+  }
+
+  :where(#{$s}) :where(input, button, select, textarea):where(:disabled) {
+    cursor: not-allowed;
+  }
+}

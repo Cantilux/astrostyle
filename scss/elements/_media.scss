@@ -1,0 +1,16 @@
+// Media (ITCSS Elements): figure captions.
+@use 'sass:map';
+@use '../settings/config';
+@use '../settings/typography';
+@use '../tools/functions' as fn;
+@use '../tools/mixins';
+
+// Emits media element defaults.
+@mixin emit {
+  :where(#{config.$scope}) :where(figcaption) {
+    @include mixins.text(map.get(typography.$element-roles-values, figcaption));
+
+    margin-block-start: fn.space(xs);
+    color: fn.token('text-muted');
+  }
+}

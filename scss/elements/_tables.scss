@@ -1,0 +1,41 @@
+// Tables (ITCSS Elements): collapsed borders, label-style headers, tabular numbers.
+@use 'sass:map';
+@use '../settings/config';
+@use '../settings/typography';
+@use '../tools/functions' as fn;
+@use '../tools/mixins';
+
+// Emits table defaults.
+@mixin emit {
+  $s: config.$scope;
+  $roles: typography.$element-roles-values;
+
+  :where(#{$s}) :where(table) {
+    inline-size: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+  }
+
+  :where(#{$s}) :where(caption) {
+    @include mixins.text(map.get($roles, caption));
+
+    padding-block: fn.space(xs);
+    color: fn.token('text-muted');
+    caption-side: bottom;
+    text-align: start;
+  }
+
+  :where(#{$s}) :where(th, td) {
+    padding: fn.space(sm) fn.space(md);
+    border-block-end: fn.token('border-width-hairline') solid fn.token('border-subtle');
+    text-align: start;
+    vertical-align: top;
+  }
+
+  :where(#{$s}) :where(th) {
+    @include mixins.text(map.get($roles, th));
+
+    border-block-end-color: fn.token('border-strong');
+    color: fn.token('text-muted');
+  }
+}

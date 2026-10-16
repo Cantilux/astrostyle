@@ -1,0 +1,78 @@
+// Inline and block text (ITCSS Elements): emphasis per the Design Guide (Medium for bold,
+// Instrument Serif for italics), small print, code, marks, quotes and rules.
+@use 'sass:map';
+@use '../settings/config';
+@use '../settings/typography';
+@use '../tools/functions' as fn;
+@use '../tools/mixins';
+
+// Emits text-level element defaults.
+@mixin emit {
+  $s: config.$scope;
+
+  :where(#{$s}) :where(p) {
+    text-wrap: pretty;
+  }
+
+  :where(#{$s}) :where(strong, b) {
+    font-weight: fn.token('weight-medium');
+  }
+
+  :where(#{$s}) :where(em, i, cite) {
+    font-family: fn.token('font-serif');
+    font-style: italic;
+  }
+
+  :where(#{$s}) :where(small) {
+    @include mixins.text(map.get(typography.$element-roles-values, small));
+  }
+
+  :where(#{$s}) :where(code, kbd, samp, pre) {
+    font-family: fn.token('font-body');
+  }
+
+  :where(#{$s}) :where(code, kbd, samp) {
+    padding: 0.1em 0.35em;
+    border-radius: fn.token('radius-control');
+    background-color: fn.token('surface-1');
+  }
+
+  :where(#{$s}) :where(kbd) {
+    border: fn.token('border-width-hairline') solid fn.token('border');
+    border-block-end-width: fn.token('border-width-strong');
+  }
+
+  :where(#{$s}) :where(pre) {
+    overflow-x: auto;
+    padding: fn.space(md);
+    border-radius: fn.token('radius-control');
+    background-color: fn.token('surface-1');
+  }
+
+  :where(#{$s}) :where(pre code) {
+    padding: 0;
+    background-color: transparent;
+  }
+
+  :where(#{$s}) :where(mark) {
+    background-color: color-mix(in oklab, #{fn.token('accent')} 35%, transparent);
+    color: inherit;
+  }
+
+  :where(#{$s}) :where(blockquote) {
+    padding-inline-start: fn.space(md);
+    border-inline-start: fn.token('border-width-strong') solid fn.token('accent');
+    font-family: fn.token('font-serif');
+    font-style: italic;
+  }
+
+  :where(#{$s}) :where(hr) {
+    block-size: 0;
+    border-block-start: fn.token('border-width-hairline') solid fn.token('border');
+  }
+
+  :where(#{$s}) :where(abbr[title]) {
+    text-decoration: underline dotted;
+    cursor: help;
+  }
+}

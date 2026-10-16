@@ -1,0 +1,43 @@
+// Page defaults (ITCSS Elements): theme colors on the scope root and on every themed region,
+// body text, focus ring and text selection. Zero specificity.
+@use '../settings/config';
+@use '../tools/functions' as fn;
+@use '../tools/mixins';
+
+// Body text goes on <body> for a page-wide scope, so the root font size (and rem) stays untouched.
+@function _text-root() {
+  @if config.$scope == ':root' {
+    @return ':where(body)';
+  }
+
+  @return ':where(#{config.$scope})';
+}
+
+// Emits the page defaults.
+@mixin emit {
+  $s: config.$scope;
+
+  :where(#{$s}),
+  :where(#{$s}) :where([data-#{config.$prefix}-theme]) {
+    background-color: fn.token('bg');
+    color: fn.token('text');
+    accent-color: fn.token('accent');
+  }
+
+  #{_text-root()} {
+    @include mixins.text(body);
+
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizelegibility;
+  }
+
+  :where(#{$s}) :where(:focus-visible) {
+    outline: fn.token('focus-width') solid fn.token('focus');
+    outline-offset: fn.token('focus-offset');
+  }
+
+  :where(#{$s}) ::selection {
+    background-color: fn.token('accent');
+    color: fn.token('on-accent');
+  }
+}

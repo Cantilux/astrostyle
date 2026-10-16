@@ -1,9 +1,28 @@
 // Output entry point: declares the ITCSS cascade layers and emits the implemented layers.
+// Components arrive with roadmap step 4.
 @use 'sass:list';
 @use 'settings/config';
 @use 'generic/tokens';
 @use 'generic/box-sizing';
 @use 'generic/reset';
+@use 'elements/page';
+@use 'elements/headings';
+@use 'elements/text';
+@use 'elements/links';
+@use 'elements/lists';
+@use 'elements/tables';
+@use 'elements/forms';
+@use 'elements/media';
+@use 'objects/container';
+@use 'objects/stack';
+@use 'objects/cluster';
+@use 'objects/grid';
+@use 'objects/sidebar';
+@use 'objects/switcher';
+@use 'objects/frame';
+@use 'utilities/visually-hidden';
+@use 'utilities/text' as text-utilities;
+@use 'utilities/display';
 
 // ITCSS layers that output CSS, in cascade order.
 $_layers: (generic, elements, objects, components, utilities);
@@ -24,5 +43,37 @@ $_layers: (generic, elements, objects, components, utilities);
     @include tokens.emit;
     @include box-sizing.emit;
     @include reset.emit;
+  }
+
+  @if config.$emit-elements {
+    /* stylelint-disable-next-line layer-name-pattern -- names come from the configurable $layer */
+    @layer #{config.$layer}.elements {
+      @include page.emit;
+      @include headings.emit;
+      @include text.emit;
+      @include links.emit;
+      @include lists.emit;
+      @include tables.emit;
+      @include forms.emit;
+      @include media.emit;
+    }
+  }
+
+  /* stylelint-disable-next-line layer-name-pattern -- names come from the configurable $layer */
+  @layer #{config.$layer}.objects {
+    @include container.emit;
+    @include stack.emit;
+    @include cluster.emit;
+    @include grid.emit;
+    @include sidebar.emit;
+    @include switcher.emit;
+    @include frame.emit;
+  }
+
+  /* stylelint-disable-next-line layer-name-pattern -- names come from the configurable $layer */
+  @layer #{config.$layer}.utilities {
+    @include visually-hidden.emit;
+    @include text-utilities.emit;
+    @include display.emit;
   }
 }

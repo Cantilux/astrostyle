@@ -1,0 +1,25 @@
+// Lists (ITCSS Elements): content lists without classes get their indentation back; markers
+// take the accent. Lists with classes (menus, navigation) stay reset.
+@use '../settings/config';
+@use '../tools/functions' as fn;
+
+// Emits list defaults.
+@mixin emit {
+  $s: config.$scope;
+
+  :where(#{$s}) :where(ul:not([class]), ol:not([class])) {
+    padding-inline-start: fn.space(xl);
+  }
+
+  :where(#{$s}) :where(ul:not([class]), ol:not([class])) ::marker {
+    color: fn.token('accent');
+  }
+
+  :where(#{$s}) :where(dt) {
+    font-weight: fn.token('weight-medium');
+  }
+
+  :where(#{$s}) :where(dd) {
+    margin-inline-start: fn.space(lg);
+  }
+}

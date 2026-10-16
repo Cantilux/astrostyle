@@ -1,0 +1,16 @@
+// Headings (ITCSS Elements): each level takes the type role set in `$element-roles`.
+@use 'sass:map';
+@use '../settings/config';
+@use '../settings/typography';
+@use '../tools/mixins';
+
+// Emits h1–h6 with their type roles and balanced wrapping.
+@mixin emit {
+  @each $level in (h1, h2, h3, h4, h5, h6) {
+    :where(#{config.$scope}) :where(#{$level}) {
+      @include mixins.text(map.get(typography.$element-roles-values, $level));
+
+      text-wrap: balance;
+    }
+  }
+}
