@@ -12,6 +12,7 @@ const outDir = `${root}_site`
 /** Navigation entries in display order: page file and label. */
 export const navigation = [
   ['index.html', 'Home'],
+  ['demo.html', 'Demo'],
   ['foundations.html', 'Foundations'],
   ['elements.html', 'Elements'],
   ['layouts.html', 'Layouts'],
@@ -133,8 +134,9 @@ export function renderPage(layout, fragment, file, values) {
   return fill(layout, { ...values, title, content, nav: navHtml(file) })
 }
 
-// Builds the whole site from scratch.
-async function buildDocs() {
+// Builds the whole site from scratch and returns the page count; `style` is the Sass output
+// style of docs.css (`expanded` for local development).
+export async function buildDocs({ style = 'compressed' } = {}) {
   const { version } = JSON.parse(await readFile(`${root}package.json`, 'utf8'))
   const tokens = exportTokens()
   const values = {
@@ -148,7 +150,7 @@ async function buildDocs() {
   const layout = await readFile(`${siteDir}/layout.html`, 'utf8')
   const css = sass.compile(`${siteDir}/docs.scss`, {
     loadPaths: [`${root}scss`],
-    style: 'compressed',
+    style,
   }).css
 
   await rm(outDir, { recursive: true, force: true })
@@ -164,7 +166,9 @@ async function buildDocs() {
     copyFile(`${siteDir}/assets/favicon.svg`, `${outDir}/assets/favicon.svg`),
     writeFile(`${outDir}/.nojekyll`, ''),
   ])
-  console.log(`Built ${pages.length} docs pages in _site/`)
+  return pages.length
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) await buildDocs()
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  console.log(`Built ${await buildDocs()} docs pages in _site/`)
+}

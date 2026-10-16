@@ -1,0 +1,86 @@
+<!-- title: Demo -->
+<section class="ap-o-stack ap-o-stack--gap-sm">
+  <div class="docs-masthead">
+    <p class="docs-eyebrow">Ship console / live demo</p>
+    <h1 class="docs-display">Night Heron</h1>
+  </div>
+  <p class="docs-note">A sample screen built only with what astrostyle ships today: tokens, themes, element defaults, layout objects and utilities. Every new component lands here first, so this page shows how far the framework has come. Switch the theme from the header.</p>
+</section>
+
+<div class="ap-o-sidebar ap-o-sidebar--gap-xl" style="--ap-sidebar-width: 15rem">
+  <aside class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="crew">
+    <h2 class="docs-heading" id="crew">Crew <span class="docs-heading__index">01</span></h2>
+    <ul class="ap-o-stack ap-o-stack--gap-sm">
+      <li class="docs-card ap-o-stack ap-o-stack--gap-xxs"><span class="ap-u-text-label">Pilot</span><strong>Vega</strong><span class="ap-o-cluster ap-o-cluster--gap-xs"><span class="demo-tag" style="--tag: var(--ap-success)">Ready</span></span></li>
+      <li class="docs-card ap-o-stack ap-o-stack--gap-xxs"><span class="ap-u-text-label">Engineer</span><strong>Okonkwo</strong><span class="ap-o-cluster ap-o-cluster--gap-xs"><span class="demo-tag" style="--tag: var(--ap-warning)">Repairing</span></span></li>
+      <li class="docs-card ap-o-stack ap-o-stack--gap-xxs"><span class="ap-u-text-label">Hacker</span><strong>Hasegawa</strong><span class="ap-o-cluster ap-o-cluster--gap-xs"><span class="demo-tag" style="--tag: var(--ap-info)">In the net</span></span></li>
+      <li class="docs-card ap-o-stack ap-o-stack--gap-xxs"><span class="ap-u-text-label">Gunner</span><strong>Marlowe</strong><span class="ap-o-cluster ap-o-cluster--gap-xs"><span class="demo-tag" style="--tag: var(--ap-danger)">Wounded</span></span></li>
+    </ul>
+  </aside>
+
+  <div class="ap-o-stack ap-o-stack--gap-xl">
+    <section class="ap-o-stack" aria-labelledby="status">
+      <h2 class="docs-heading" id="status">Status <span class="docs-heading__index">02</span></h2>
+      <div class="ap-o-grid ap-o-grid--gap-sm" style="--ap-grid-min: 9rem">
+        <div class="docs-card ap-o-stack ap-o-stack--gap-xxs"><span class="ap-u-text-label">Hull</span><span class="demo-stat">3 / 8</span></div>
+        <div class="docs-card ap-o-stack ap-o-stack--gap-xxs"><span class="ap-u-text-label">Fuel</span><span class="demo-stat">62%</span></div>
+        <div class="docs-card ap-o-stack ap-o-stack--gap-xxs"><span class="ap-u-text-label">Credits</span><span class="demo-stat">2,045</span></div>
+        <div class="docs-card ap-o-stack ap-o-stack--gap-xxs"><span class="ap-u-text-label">Jump drive</span><span class="demo-stat">Ready</span></div>
+      </div>
+      <div class="docs-gradient" role="img" aria-label="Spectrum band"></div>
+    </section>
+
+    <div class="ap-o-switcher ap-o-switcher--gap-xl" style="--ap-switcher-threshold: 40rem">
+      <section class="ap-o-stack" aria-labelledby="sensors">
+        <h2 class="docs-heading" id="sensors">Sensors <span class="docs-heading__index">03</span></h2>
+        <figure>
+          <div class="ap-o-frame ap-o-frame--4-3 docs-frame-fill" role="img" aria-label="Sensor view placeholder"></div>
+          <figcaption>Sector 7G, long-range scan.</figcaption>
+        </figure>
+      </section>
+
+      <section class="ap-o-stack" aria-labelledby="systems">
+        <h2 class="docs-heading" id="systems">Systems <span class="docs-heading__index">04</span></h2>
+        <fieldset class="ap-o-stack ap-o-stack--gap-sm">
+          <legend>Online</legend>
+          <label class="ap-o-cluster"><input type="checkbox" checked> Shields</label>
+          <label class="ap-o-cluster"><input type="checkbox" checked> Life support</label>
+          <label class="ap-o-cluster"><input type="checkbox"> Cloak</label>
+        </fieldset>
+        <fieldset class="ap-o-stack ap-o-stack--gap-sm">
+          <legend>Thrust</legend>
+          <label class="ap-o-cluster"><input type="radio" name="thrust" checked> Cruise</label>
+          <label class="ap-o-cluster"><input type="radio" name="thrust"> Overdrive</label>
+        </fieldset>
+      </section>
+    </div>
+
+    <section class="ap-o-stack" aria-labelledby="cargo">
+      <h2 class="docs-heading" id="cargo">Cargo <span class="docs-heading__index">05</span></h2>
+      <div style="overflow-x: auto">
+        <table>
+          <caption>Manifest, cycle 7</caption>
+          <thead>
+            <tr><th scope="col">Item</th><th scope="col">Category</th><th scope="col">Qty</th><th scope="col">Value</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Plasma cells</td><td>Equipment</td><td>12</td><td>480</td></tr>
+            <tr><td>Medusa spike</td><td>Hacks</td><td>1</td><td>1,150</td></tr>
+            <tr><td>Drone frame</td><td>Drones</td><td>2</td><td>900</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="ap-o-stack" aria-labelledby="log">
+      <h2 class="docs-heading" id="log">Mission log <span class="docs-heading__index">06</span></h2>
+      <ol>
+        <li>Left the Corsair dock at <code>07:40</code>.</li>
+        <li>Picked up a distress beacon near the <a href="#log">Wire relay</a>.</li>
+        <li>Lost <strong>two hull points</strong> to <em>a very polite ambush</em>.</li>
+      </ol>
+      <blockquote><p>Never trust a quiet sector.</p></blockquote>
+      <p class="ap-u-truncate docs-note">Last transmission: static, a few words, then a long string of coordinates that do not fit on one line at all.</p>
+    </section>
+  </div>
+</div>
