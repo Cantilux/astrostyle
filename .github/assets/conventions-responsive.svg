@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="624" viewBox="0 0 1040 624" role="img" aria-labelledby="title desc">
+  <title id="title">astrostyle code conventions: Responsive</title>
+  <desc id="desc">4 rules for Responsive. A complete text version is available in the README below this image.</desc>
+  <defs>
+    <pattern id="halftone" width="8" height="8" patternUnits="userSpaceOnUse">
+      <circle cx="4" cy="4" r="1" fill="#130d1c" fill-opacity=".06"/>
+    </pattern>
+  </defs>
+  <rect width="1040" height="624" rx="18" fill="#f0eee8"/>
+  <rect width="1040" height="624" rx="18" fill="url(#halftone)"/>
+  <g font-family="'Feature Mono', 'SFMono-Regular', Menlo, Consolas, monospace" fill="#130d1c">
+    <text x="40" y="48" font-size="22" font-weight="700" letter-spacing="2">RESPONSIVE</text>
+    <text x="1000" y="48" text-anchor="end" font-size="13" letter-spacing="2">CONVENTIONS / 03</text>
+    <line x1="40" y1="72" x2="1000" y2="72" stroke="#130d1c" stroke-width="2"/>
+    <g transform="translate(0 96)" data-rule="1">
+      <polygon points="40,0 366,0 346,112 40,112" fill="#54009d"/>
+      <text x="60" y="24" fill="#f0eee8" font-size="13" letter-spacing="2">01</text>
+      <text x="60" y="58" fill="#f0eee8" font-size="18" font-weight="700" letter-spacing="1">MEDIA &amp;</text>
+      <text x="60" y="82" fill="#f0eee8" font-size="18" font-weight="700" letter-spacing="1">CONTAINERS</text>
+      <text font-size="16">
+        <tspan x="400" y="50.0">Mobile first: min-width media queries only, through</tspan>
+        <tspan x="400" y="74.0">ap.mq(); container queries through ap.cq().</tspan>
+      </text>
+    </g>
+    <g transform="translate(0 224)" data-rule="2">
+      <polygon points="40,0 366,0 346,112 40,112" fill="#d50059"/>
+      <text x="60" y="24" fill="#f0eee8" font-size="13" letter-spacing="2">02</text>
+      <text x="60" y="70" fill="#f0eee8" font-size="18" font-weight="700" letter-spacing="1">BREAKPOINT UNITS</text>
+      <text font-size="16">
+        <tspan x="400" y="62.0">Breakpoints in em.</tspan>
+      </text>
+    </g>
+    <g transform="translate(0 352)" data-rule="3">
+      <polygon points="40,0 366,0 346,112 40,112" fill="#ef476e"/>
+      <text x="60" y="24" fill="#130d1c" font-size="13" letter-spacing="2">03</text>
+      <text x="60" y="58" fill="#130d1c" font-size="18" font-weight="700" letter-spacing="1">LOGICAL</text>
+      <text x="60" y="82" fill="#130d1c" font-size="18" font-weight="700" letter-spacing="1">PROPERTIES</text>
+      <text font-size="16">
+        <tspan x="400" y="50.0">Logical properties (inline-size, margin-block,</tspan>
+        <tspan x="400" y="74.0">padding-inline) instead of physical ones.</tspan>
+      </text>
+    </g>
+    <g transform="translate(0 480)" data-rule="4">
+      <polygon points="40,0 366,0 346,112 40,112" fill="#ff603e"/>
+      <text x="60" y="24" fill="#130d1c" font-size="13" letter-spacing="2">04</text>
+      <text x="60" y="70" fill="#130d1c" font-size="18" font-weight="700" letter-spacing="1">CONTROL SIZE</text>
+      <text font-size="16">
+        <tspan x="400" y="62.0">Interactive controls are at least 40px tall at every size.</tspan>
+      </text>
+    </g>
+  </g>
+</svg>
