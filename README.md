@@ -269,6 +269,13 @@ Font files are **not bundled**: each font has its own license, so every project 
 
 ### The principles, in short
 
+<p align="center">
+  <img src=".github/assets/principles.svg" alt="The nine astrostyle principles and their meaning; full text in the expandable section below" width="100%">
+</p>
+
+<details>
+<summary>Text version of the principles</summary>
+
 | | Principle | What it means |
 | --- | --- | --- |
 | 🧩 | **Generic, not game-specific** | Interface building blocks only. Combat trackers, star maps and character sheets live in your project, built on top of astrostyle. |
@@ -281,6 +288,8 @@ Font files are **not bundled**: each font has its own license, so every project 
 | 🎨 | **Easy to customize** | Change a custom property at runtime, configure with Sass `@use … with (…)`, add variants and themes with public mixins, or build new components with the same tools. |
 | 🚫 | **No framework lock-in** | Plain HTML and CSS first, native elements (`<dialog>`, popover, `<details>`) where possible, and tiny vanilla JS modules only where HTML is not enough. |
 
+</details>
+
 <p align="center">
   <img src=".github/assets/itcss.svg" alt="The astrostyle inverted triangle: Settings and Tools emit no CSS; Generic, Elements, Objects, Components and Utilities are emitted as cascade layers in that order" width="90%">
 </p>
@@ -289,12 +298,16 @@ Font files are **not bundled**: each font has its own license, so every project 
 
 ## ![03 / Code conventions](.github/assets/section-code-conventions.svg)
 
-The house rules. Click a section to open it.
+The house rules, illustrated. Each image has an expandable text version below it.
+
+### / Sass & ITCSS layers /
+
+<p align="center">
+  <img src=".github/assets/conventions-sass.svg" alt="Sass &amp; ITCSS layers: 5 code conventions; full text in the expandable section below" width="100%">
+</p>
 
 <details>
-<summary><b>🔻 Sass &amp; ITCSS layers</b></summary>
-
-<br>
+<summary>Text version of Sass &amp; ITCSS layers</summary>
 
 - Dart Sass module system only: `@use` and `@forward`. No `@import`, no `@extend` across modules.
 - One folder per ITCSS layer:
@@ -315,10 +328,14 @@ The house rules. Click a section to open it.
 
 </details>
 
-<details>
-<summary><b>🏷️ Selectors &amp; naming</b></summary>
+### / Selectors & naming /
 
-<br>
+<p align="center">
+  <img src=".github/assets/conventions-selectors.svg" alt="Selectors &amp; naming: 7 code conventions; full text in the expandable section below" width="100%">
+</p>
+
+<details>
+<summary>Text version of Selectors &amp; naming</summary>
 
 - BEM with ITCSS namespaces: `.ap-c-button`, `.ap-c-button__icon`, `.ap-c-button--primary`, `.ap-o-stack`, `.ap-u-truncate`.
 - Responsive utilities take a breakpoint suffix: `.ap-u-hidden@md`.
@@ -330,10 +347,14 @@ The house rules. Click a section to open it.
 
 </details>
 
-<details>
-<summary><b>📱 Responsive</b></summary>
+### / Responsive /
 
-<br>
+<p align="center">
+  <img src=".github/assets/conventions-responsive.svg" alt="Responsive: 4 code conventions; full text in the expandable section below" width="100%">
+</p>
+
+<details>
+<summary>Text version of Responsive</summary>
 
 - Mobile first: `min-width` media queries only, through `ap.mq()`; container queries through `ap.cq()`.
 - Breakpoints in `em`.
@@ -342,10 +363,14 @@ The house rules. Click a section to open it.
 
 </details>
 
-<details>
-<summary><b>🧱 Components</b></summary>
+### / Components /
 
-<br>
+<p align="center">
+  <img src=".github/assets/conventions-components.svg" alt="Components: 3 code conventions; full text in the expandable section below" width="100%">
+</p>
+
+<details>
+<summary>Text version of Components</summary>
 
 - One folder per component in `scss/components/<name>/`: the styles, with a `$tokens` map of public tokens and defaults, and a `README.md` with the markup contract. Its docs page lives in `site/pages/`, its tests in `tests/`, its behavior (if any) in `js/<name>/`, with helpers shared by several modules in `js/shared/`.
 - Every visual property reads a component token with a sensible fallback, so you can restyle it without writing new selectors.
@@ -353,10 +378,14 @@ The house rules. Click a section to open it.
 
 </details>
 
-<details>
-<summary><b>⚙️ JavaScript</b></summary>
+### / JavaScript /
 
-<br>
+<p align="center">
+  <img src=".github/assets/conventions-javascript.svg" alt="JavaScript: 7 code conventions; full text in the expandable section below" width="100%">
+</p>
+
+<details>
+<summary>Text version of JavaScript</summary>
 
 - Native ES modules, zero dependencies, no build step needed on your side.
 - One module per interactive component, exposing a `createX(element, options, env)` factory that enhances native markup and returns a handle with `destroy()`; `env` injects the document and id generator for tests.
@@ -368,10 +397,14 @@ The house rules. Click a section to open it.
 
 </details>
 
-<details>
-<summary><b>🗂️ Repository</b></summary>
+### / Repository /
 
-<br>
+<p align="center">
+  <img src=".github/assets/conventions-repository.svg" alt="Repository: 3 code conventions; full text in the expandable section below" width="100%">
+</p>
+
+<details>
+<summary>Text version of Repository</summary>
 
 - Docs and code comments are in English.
 - Commits follow Conventional Commits (`feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`).
