@@ -7,7 +7,7 @@
       <li class="ap-c-breadcrumb__item"><a class="ap-c-breadcrumb__link" aria-current="page">Console</a></li>
     </ol>
   </nav>
-  <header class="ap-c-masthead">
+  <header class="ap-c-masthead ap-c-surface ap-c-surface--halftone ap-c-surface--noise" style="--ap-surface-pattern-opacity: 0.6">
     <p class="ap-c-masthead__eyebrow">Ship console / live demo</p>
     <h1 class="ap-c-masthead__title">Night Heron</h1>
   </header>
@@ -15,7 +15,15 @@
   <div class="ap-o-cluster">
     <button class="ap-c-button ap-c-button--primary ap-c-button--lg" type="button">Jump</button>
     <button class="ap-c-button ap-c-button--lg" type="button" disabled><span class="ap-c-spinner ap-c-spinner--sm" aria-hidden="true"></span> Scanning</button>
-    <button class="ap-c-button ap-c-button--quiet ap-c-button--lg" type="button">Hail</button>
+    <button class="ap-c-button ap-c-button--quiet ap-c-button--lg" type="button" aria-describedby="d-hail-tip" data-ap-tooltip="d-hail-tip">Hail</button>
+    <span class="ap-c-tooltip" id="d-hail-tip" role="tooltip" popover="manual">Open a channel to nearby ships</span>
+    <button class="ap-c-button ap-c-button--quiet ap-c-button--lg" type="button" data-ap-menu="d-more">More</button>
+    <div class="ap-c-menu" id="d-more" popover>
+      <button class="ap-c-menu__item" type="button">Rename ship</button>
+      <button class="ap-c-menu__item" type="button">Refuel</button>
+      <div class="ap-c-menu__separator" role="separator"></div>
+      <button class="ap-c-menu__item ap-c-menu__item--danger" type="button">Scrap</button>
+    </div>
     <button class="ap-c-button ap-c-button--danger ap-c-button--lg ap-c-button--cut" type="button">Abort</button>
   </div>
 </section>
@@ -70,7 +78,7 @@
             <span class="ap-c-window__index">7G</span>
           </div>
           <figure class="ap-c-window__body">
-            <div class="ap-o-frame ap-o-frame--4-3 docs-frame-fill" role="img" aria-label="Sensor view placeholder"></div>
+            <div class="ap-o-frame ap-o-frame--4-3 docs-frame-fill ap-c-surface ap-c-surface--crt" role="img" aria-label="Sensor view placeholder"></div>
             <figcaption>Sector 7G, three contacts.</figcaption>
           </figure>
         </section>

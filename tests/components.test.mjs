@@ -42,6 +42,9 @@ const components = [
   'divider',
   'kbd',
   'skeleton',
+  'tooltip',
+  'menu',
+  'surface',
 ]
 const controls = ['button', 'input', 'checkbox', 'radio', 'switch', 'range']
 
@@ -391,5 +394,44 @@ test('the skeleton pulses with prefixed keyframes and offers block and circle sh
   assert.equal(
     declarationsOf(css, '.ap-c-skeleton--circle')['--ap-skeleton-radius'],
     'var(--ap-radius-pill)',
+  )
+})
+
+test('tooltip and menu popovers drop the default centering and lay out only when open', () => {
+  for (const name of ['tooltip', 'menu']) {
+    const root = declarationsOf(css, `.ap-c-${name}`)
+    assert.deepEqual([root.position, root.inset, root.margin], ['fixed', 'auto', '0'], name)
+    assert.equal(root.display, undefined, name)
+  }
+  assert.equal(
+    declarationsOf(css, '.ap-c-tooltip')['--_bg'],
+    'var(--ap-tooltip-bg, var(--ap-text))',
+  )
+  assert.equal(declarationsOf(css, '.ap-c-menu:where(:popover-open)').display, 'grid')
+  assert.equal(declarationsOf(css, '.ap-c-menu__item')['min-block-size'], 'var(--ap-size-control)')
+})
+
+test('surface textures sit behind the content and are switched on by modifiers', () => {
+  const layer = declarationsOf(css, '.ap-c-surface::before')
+  assert.equal(layer['z-index'], 'calc(var(--ap-z-base) - 1)')
+  assert.equal(layer['pointer-events'], 'none')
+  assert.equal(declarationsOf(css, '.ap-c-surface').isolation, 'isolate')
+  assert.match(
+    declarationsOf(css, '.ap-c-surface--halftone')['--ap-surface-pattern'],
+    /^radial-gradient/,
+  )
+  assert.match(
+    declarationsOf(css, '.ap-c-surface--crt')['--ap-surface-pattern'],
+    /^repeating-linear-gradient/,
+  )
+  assert.match(declarationsOf(css, '.ap-c-surface--noise')['--ap-surface-grain'], /feTurbulence/)
+})
+
+test('surface() paints a texture on any rule and rejects unknown kinds', () => {
+  const out = compileConfigured('', '.x { @include ap.surface(crt); }')
+  assert.match(declarationsOf(out, '.x')['background-image'], /^repeating-linear-gradient/)
+  assert.match(
+    compileError("@use 'index' as ap; .x { @include ap.surface(glitter); }"),
+    /unknown surface `glitter`/,
   )
 })

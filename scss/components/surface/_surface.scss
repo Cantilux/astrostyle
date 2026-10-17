@@ -1,0 +1,68 @@
+// Surface (ITCSS Components): a decorative area with the Design Guide's print textures painted
+// behind its content: halftone dots or CRT scanlines, plus an optional noise grain.
+// Contract and tokens: scss/components/surface/README.md.
+@use 'sass:map';
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/surfaces';
+
+// Public tokens and their defaults. `pattern` is the halftone or scanline layer, `grain` the noise
+// layer; both are off until a modifier turns them on.
+$tokens: (
+  pattern: none,
+  pattern-size: auto,
+  pattern-opacity: 1,
+  grain: none,
+  grain-size: auto,
+  grain-opacity: 1,
+);
+
+// Emits `.ap-c-surface`, its texture layers and its modifiers.
+@mixin emit {
+  #{c.component(surface)} {
+    @include c.tokens(surface, $tokens);
+
+    position: relative;
+    isolation: isolate;
+
+    &::before,
+    &::after {
+      position: absolute;
+      inset: 0;
+      z-index: calc(#{fn.token('z-base')} - 1);
+      border-radius: inherit;
+      content: '';
+      pointer-events: none;
+    }
+
+    &::before {
+      background-image: c.private(pattern);
+      background-size: c.private(pattern-size);
+      opacity: c.private(pattern-opacity);
+    }
+
+    &::after {
+      background-image: c.private(grain);
+      background-size: c.private(grain-size);
+      opacity: c.private(grain-opacity);
+    }
+  }
+
+  @each $kind in (halftone, crt) {
+    $layer: surfaces.layer($kind);
+
+    @include c.modifier(
+      surface,
+      $kind,
+      (pattern: map.get($layer, image), pattern-size: map.get($layer, size))
+    );
+  }
+
+  $noise: surfaces.layer(noise);
+
+  @include c.modifier(
+    surface,
+    noise,
+    (grain: map.get($noise, image), grain-size: map.get($noise, size))
+  );
+}

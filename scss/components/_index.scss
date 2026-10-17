@@ -41,6 +41,9 @@
 @use 'divider/divider';
 @use 'kbd/kbd';
 @use 'skeleton/skeleton';
+@use 'tooltip/tooltip';
+@use 'menu/menu';
+@use 'surface/surface';
 
 // Emission order: a component that adjusts another one comes after it.
 $order: (
@@ -80,6 +83,9 @@ $order: (
   divider,
   kbd,
   skeleton,
+  tooltip,
+  menu,
+  surface,
 );
 
 // Public tokens of every component, keyed by component name.
@@ -120,6 +126,9 @@ $tokens: (
   divider: divider.$tokens,
   kbd: kbd.$tokens,
   skeleton: skeleton.$tokens,
+  tooltip: tooltip.$tokens,
+  menu: menu.$tokens,
+  surface: surface.$tokens,
 );
 
 // Fails compilation when `$names` (`all` or a list) contains an unknown component.

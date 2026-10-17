@@ -84,9 +84,20 @@ function initDialogOutputs() {
   }
 }
 
+// Writes the action picked in a menu into the element named by `data-docs-menu-output`.
+function initMenuOutputs() {
+  for (const menu of document.querySelectorAll('[data-docs-menu-output]')) {
+    const output = document.getElementById(menu.dataset.docsMenuOutput)
+    menu.addEventListener('ap:select', (event) => {
+      output.textContent = `ap:select → "${event.detail.value || event.detail.item.textContent}"`
+    })
+  }
+}
+
 initThemeToggle()
 initIndeterminate()
 autoInit(document)
 initToastButtons()
 initPageOutputs()
 initDialogOutputs()
+initMenuOutputs()

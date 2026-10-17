@@ -1,6 +1,6 @@
 // Tabs: turns a list of buttons and the panels after it into a WAI-ARIA tablist with a roving
 // tabindex, arrow keys, Home and End. Contract: scss/components/tabs/README.md.
-import { nextId } from '../shared/dom.js'
+import { nextId, snapshotAttributes } from '../shared/dom.js'
 import { targetForKey } from './navigation.js'
 
 /** Attributes the module sets, restored by destroy(). */
@@ -14,18 +14,6 @@ const managed = [
   'tabindex',
   'hidden',
 ]
-
-// Saves the managed attributes of `nodes` and returns a function that puts them back.
-function snapshot(nodes) {
-  const saved = nodes.map((node) => managed.map((name) => [name, node.getAttribute(name)]))
-  return () =>
-    nodes.forEach((node, index) => {
-      for (const [name, value] of saved[index]) {
-        if (value === null) node.removeAttribute(name)
-        else node.setAttribute(name, value)
-      }
-    })
-}
 
 // Whether a tab cannot be chosen.
 const isDisabled = (tab) => tab.disabled || tab.getAttribute('aria-disabled') === 'true'
@@ -48,7 +36,7 @@ export function createTabs(root, options = {}, env = {}) {
   if (tabs.length === 0 || tabs.length !== panels.length) {
     throw new Error(`createTabs: ${tabs.length} tabs for ${panels.length} panels`)
   }
-  const restore = snapshot([list, ...tabs, ...panels])
+  const restore = snapshotAttributes([list, ...tabs, ...panels], managed)
 
   const marked = tabs.findIndex((tab) => tab.getAttribute('aria-selected') === 'true')
   const firstEnabled = tabs.findIndex((tab) => !isDisabled(tab))

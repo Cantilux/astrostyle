@@ -1,12 +1,14 @@
-// Pagination, tabs, toast and dialog behavior in a DOM (happy-dom).
+// Pagination, tabs, toast, dialog, menu and tooltip behavior in a DOM (happy-dom).
 import assert from 'node:assert/strict'
 import { afterEach, beforeEach, test } from 'node:test'
 import { Window } from 'happy-dom'
 import { autoInit } from '../js/auto-init/index.js'
 import { createDialog } from '../js/dialog/index.js'
+import { createMenu } from '../js/menu/index.js'
 import { createPagination } from '../js/pagination/index.js'
 import { createTabs } from '../js/tabs/index.js'
 import { createToaster } from '../js/toast/index.js'
+import { createTooltip } from '../js/tooltip/index.js'
 
 let window
 let document
@@ -373,4 +375,156 @@ test('autoInit enhances dialogs; data-ap-dialog="static" ignores backdrop clicks
   dialog.dispatchEvent(new window.MouseEvent('click', { bubbles: true, clientX: 1, clientY: 1 }))
   assert.equal(handle.isOpen(), true)
   assert.ok(dialog.hasAttribute('data-ap-enhanced'))
+})
+
+// happy-dom has no Popover API: a minimal stand-in that tracks the state and fires `toggle`.
+function stubPopover() {
+  const proto = window.HTMLElement.prototype
+  // Fires `toggle` with `newState` on `node`.
+  const toggle = (node, newState) => {
+    const event = new window.Event('toggle')
+    event.newState = newState
+    node.dispatchEvent(event)
+  }
+  proto.showPopover = function showPopover() {
+    this.popoverOpen = true
+    toggle(this, 'open')
+  }
+  proto.hidePopover = function hidePopover() {
+    this.popoverOpen = false
+    toggle(this, 'closed')
+  }
+}
+
+// A menu button and its menu, with a disabled item.
+function menuPage() {
+  stubPopover()
+  document.body.innerHTML = `
+    <button id="ship" data-ap-menu="ship-menu">Ship</button>
+    <div id="ship-menu" class="ap-c-menu" popover>
+      <button class="ap-c-menu__item" value="rename">Rename</button>
+      <button class="ap-c-menu__item" aria-disabled="true">Repair</button>
+      <button class="ap-c-menu__item" value="refuel">Refuel</button>
+      <button class="ap-c-menu__item" value="scrap">Scrap</button>
+    </div>`
+  return document.getElementById('ship')
+}
+
+// Text of the focused element.
+const focused = () => document.activeElement.textContent.trim()
+
+test('the menu button opens the menu on the first item and wires the ARIA roles', () => {
+  const button = menuPage()
+  const handle = createMenu(button, {}, { createId: () => 'x' })
+  const menu = document.getElementById('ship-menu')
+  assert.equal(button.getAttribute('aria-haspopup'), 'menu')
+  assert.equal(button.getAttribute('aria-controls'), 'ship-menu')
+  assert.equal(menu.getAttribute('role'), 'menu')
+  assert.ok([...menu.children].every((item) => item.getAttribute('role') === 'menuitem'))
+  button.click()
+  assert.equal(handle.isOpen(), true)
+  assert.equal(menu.popoverOpen, true)
+  assert.equal(button.getAttribute('aria-expanded'), 'true')
+  assert.equal(focused(), 'Rename')
+})
+
+test('menu keys move over enabled items, jump by letter and close on Escape', () => {
+  const button = menuPage()
+  const handle = createMenu(button)
+  press(button, 'ArrowUp')
+  assert.equal(focused(), 'Scrap')
+  press(document.activeElement, 'ArrowDown')
+  assert.equal(focused(), 'Rename')
+  press(document.activeElement, 'ArrowDown')
+  assert.equal(focused(), 'Refuel', 'skips the disabled item')
+  press(document.activeElement, 'Home')
+  press(document.activeElement, 'r')
+  assert.equal(focused(), 'Refuel')
+  press(document.activeElement, 'Escape')
+  assert.equal(handle.isOpen(), false)
+  assert.equal(button.getAttribute('aria-expanded'), 'false')
+  assert.equal(document.activeElement, button)
+})
+
+test('choosing an item fires ap:select and closes; a disabled item does nothing', () => {
+  const button = menuPage()
+  const handle = createMenu(button)
+  const menu = document.getElementById('ship-menu')
+  const chosen = []
+  menu.addEventListener('ap:select', (event) => chosen.push(event.detail.value))
+  button.click()
+  menu.children[1].click()
+  assert.equal(handle.isOpen(), true)
+  menu.children[2].click()
+  assert.deepEqual(chosen, ['refuel'])
+  assert.equal(handle.isOpen(), false)
+  assert.equal(document.activeElement, button)
+})
+
+test('a close by the browser (light dismiss) updates the button; destroy() restores it', () => {
+  const button = menuPage()
+  const handle = createMenu(button)
+  const menu = document.getElementById('ship-menu')
+  button.click()
+  menu.hidePopover()
+  assert.equal(handle.isOpen(), false)
+  assert.equal(button.getAttribute('aria-expanded'), 'false')
+  handle.destroy()
+  assert.equal(button.hasAttribute('aria-haspopup'), false)
+  assert.equal(menu.hasAttribute('role'), false)
+  assert.equal(menu.children[0].hasAttribute('tabindex'), false)
+})
+
+// A trigger with its tooltip, and fake timers that run on demand.
+function tooltipPage() {
+  stubPopover()
+  document.body.innerHTML = `
+    <button id="scan" data-ap-tooltip="scan-tip" aria-describedby="scan-tip">Scan</button>
+    <span id="scan-tip" class="ap-c-tooltip" role="tooltip" popover="manual">Long-range scan</span>`
+  const timers = []
+  const env = {
+    setTimeout: (callback, ms) => timers.push({ callback, ms }) - 1,
+    clearTimeout: (index) => {
+      if (timers[index]) timers[index].callback = null
+    },
+  }
+  // Runs the pending timers.
+  const flush = () => timers.splice(0).forEach((timer) => timer.callback?.())
+  return { trigger: document.getElementById('scan'), env, flush }
+}
+
+test('a tooltip shows after the hover delay and right away on focus', () => {
+  const { trigger, env, flush } = tooltipPage()
+  const handle = createTooltip(trigger, {}, env)
+  const tip = document.getElementById('scan-tip')
+  trigger.dispatchEvent(new window.Event('pointerenter'))
+  assert.equal(handle.isOpen(), false)
+  flush()
+  assert.equal(handle.isOpen(), true)
+  assert.ok(tip.style.top.endsWith('px'))
+  assert.ok(tip.hasAttribute('data-ap-side'))
+  trigger.dispatchEvent(new window.Event('pointerleave'))
+  tip.dispatchEvent(new window.Event('pointerenter'))
+  flush()
+  assert.equal(handle.isOpen(), true, 'stays while the pointer is on the tooltip')
+  handle.hide()
+  trigger.dispatchEvent(new window.FocusEvent('focusin'))
+  assert.equal(handle.isOpen(), true)
+  trigger.dispatchEvent(new window.FocusEvent('focusout'))
+  assert.equal(handle.isOpen(), false)
+})
+
+test('Escape hides a tooltip; autoInit wires tooltips and menus', () => {
+  const { trigger } = tooltipPage()
+  document.body.insertAdjacentHTML(
+    'beforeend',
+    '<button data-ap-menu="m">More</button><div id="m" class="ap-c-menu" popover><button class="ap-c-menu__item">One</button></div>',
+  )
+  const handles = autoInit(document)
+  assert.equal(handles.length, 2)
+  const tooltip = handles.find((handle) => handle.tooltip)
+  trigger.dispatchEvent(new window.FocusEvent('focusin'))
+  press(document.body, 'Escape')
+  assert.equal(tooltip.isOpen(), false)
+  assert.ok(trigger.hasAttribute('data-ap-enhanced'))
 })

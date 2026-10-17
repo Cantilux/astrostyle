@@ -3,6 +3,7 @@
 @use '../settings/typography';
 @use 'functions' as fn;
 @use 'registry';
+@use 'surfaces';
 
 // Applies a full type role: family, size × `--ap-font-scale`, weight, line height, tracking.
 // The scale is applied here, at the use site, so changing it on any element takes effect.
@@ -54,4 +55,13 @@
 // Four hard-edged gradient bands of the Design Guide as a background image.
 @mixin spectrum($direction: 90deg) {
   background-image: registry.spectrum-gradient($direction);
+}
+
+// Paints one texture of the Design Guide (`halftone`, `noise` or `crt`) as the background image,
+// for decorative areas. Keep it off text-dense controls.
+@mixin surface($kind) {
+  $layer: surfaces.layer($kind);
+
+  background-image: map.get($layer, image);
+  background-size: map.get($layer, size);
 }
