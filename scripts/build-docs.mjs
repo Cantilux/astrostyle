@@ -21,6 +21,7 @@ export const navigation = [
   ['forms.html', 'Forms'],
   ['navigation.html', 'Navigation'],
   ['feedback.html', 'Feedback'],
+  ['blocks.html', 'Blocks'],
 ]
 
 /** Design Guide names of the palette tokens. */
@@ -43,9 +44,9 @@ const guideNames = {
   rose: 'Synth Magenta',
 }
 
-// Swatch markup: a color chip reading `cssValue`, a title and a code line.
+// Swatch markup: a color chip reading `cssValue`, a name and a code line.
 function swatch(cssValue, title, code) {
-  return `<div class="docs-swatch"><span class="docs-swatch__chip" style="--swatch: ${cssValue}"></span><span class="ap-o-stack ap-o-stack--gap-xxs"><strong>${title}</strong><code>${code}</code></span></div>`
+  return `<div class="ap-c-swatch" style="--ap-swatch-color: ${cssValue}"><span class="ap-c-swatch__chip"></span><strong class="ap-c-swatch__name">${title}</strong><code class="ap-c-swatch__value">${code}</code></div>`
 }
 
 // Palette swatches with their Design Guide names and hex values.
@@ -68,7 +69,7 @@ export function themesHtml(tokens) {
       const rows = Object.keys(colors)
         .map((name) => swatch(`var(--ap-${name})`, name, `--ap-${name}`))
         .join('\n')
-      return `<div class="docs-card ap-o-stack" data-ap-theme="${theme}"><h3>${theme}</h3><div class="ap-o-stack ap-o-stack--gap-xs">${rows}</div></div>`
+      return `<div class="ap-c-card ap-o-stack" data-ap-theme="${theme}"><h3>${theme}</h3><div class="ap-o-stack ap-o-stack--gap-xs">${rows}</div></div>`
     })
     .join('\n')
 }

@@ -1,0 +1,43 @@
+// Section heading (ITCSS Components): the Design Guide's pink section title, followed by a
+// hairline rule and a right-aligned two-digit index ("GRAPHICS —— 01").
+// Contract and tokens: scss/components/section-heading/README.md.
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults. `link` is the theme's pink that stays readable as text.
+$tokens: (
+  color: fn.token('link'),
+  gap: fn.space(md),
+  rule-color: currentcolor,
+  rule-width: fn.token('border-width-hairline'),
+  index-color: currentcolor,
+);
+
+// Emits `.ap-c-section-heading` and its index.
+@mixin emit {
+  #{c.component(section-heading)} {
+    @include c.tokens(section-heading, $tokens);
+    @include mixins.text(screen-title);
+
+    display: flex;
+    align-items: center;
+    gap: c.private(gap);
+    min-inline-size: 0;
+    color: c.private(color);
+
+    &::after {
+      flex: 1;
+      order: 1;
+      min-inline-size: fn.space(xl);
+      border-block-start: c.private(rule-width) solid c.private(rule-color);
+      content: '';
+    }
+  }
+
+  #{c.component(section-heading, index)} {
+    order: 2;
+    color: c.private(index-color);
+    font-variant-numeric: tabular-nums;
+  }
+}

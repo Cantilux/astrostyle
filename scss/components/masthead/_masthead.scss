@@ -1,0 +1,46 @@
+// Masthead (ITCSS Components): the Design Guide's page opener, a small tracked eyebrow over a huge
+// display word whose size follows the viewport between two limits.
+// Contract and tokens: scss/components/masthead/README.md.
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults.
+$tokens: (
+  gap: fn.space(xs),
+  eyebrow-color: fn.token('text-muted'),
+  title-color: fn.token('text'),
+  title-size:
+    clamp(
+      calc(#{fn.token('text-display-size')} * 1.2),
+      8vw,
+      calc(#{fn.token('text-display-size')} * 2.4)
+    ),
+  title-leading: 0.95,
+);
+
+// Emits `.ap-c-masthead` and its elements.
+@mixin emit {
+  #{c.component(masthead)} {
+    @include c.tokens(masthead, $tokens);
+
+    display: grid;
+    gap: c.private(gap);
+    min-inline-size: 0;
+  }
+
+  #{c.component(masthead, eyebrow)} {
+    @include mixins.text(label);
+
+    color: c.private(eyebrow-color);
+  }
+
+  #{c.component(masthead, title)} {
+    @include mixins.text(display);
+
+    font-size: calc(#{c.private(title-size)} * #{fn.token('font-scale')});
+    line-height: c.private(title-leading);
+    color: c.private(title-color);
+    overflow-wrap: break-word;
+  }
+}

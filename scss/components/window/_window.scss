@@ -1,0 +1,75 @@
+// Window (ITCSS Components): the Design Guide's window panel, a hairline frame under a title bar in
+// the theme's inverse colors, with an optional index badge on the end side.
+// Contract and tokens: scss/components/window/README.md.
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults. The bar swaps text and background, so it is dark on the light
+// theme and light on the dark one.
+$tokens: (
+  bg: fn.token('bg'),
+  fg: fn.token('text'),
+  border-color: fn.token('border-strong'),
+  radius: fn.token('radius-control'),
+  bar-bg: fn.token('text'),
+  bar-fg: fn.token('bg'),
+  bar-padding-block: fn.space(xs),
+  bar-padding-inline: fn.space(md),
+  index-bg: fn.token('accent'),
+  index-fg: fn.token('on-accent'),
+  padding: fn.space(lg),
+);
+
+// Emits `.ap-c-window` and its elements.
+@mixin emit {
+  #{c.component(window)} {
+    @include c.tokens(window, $tokens);
+
+    display: flex;
+    flex-direction: column;
+    min-inline-size: 0;
+    overflow: clip;
+    border: fn.token('border-width-hairline') solid c.private(border-color);
+    border-radius: c.private(radius);
+    background-color: c.private(bg);
+    color: c.private(fg);
+  }
+
+  #{c.component(window, bar)} {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: fn.space(sm);
+    padding-block: c.private(bar-padding-block);
+    padding-inline: c.private(bar-padding-inline);
+    background-color: c.private(bar-bg);
+    color: c.private(bar-fg);
+  }
+
+  #{c.component(window, title)} {
+    @include mixins.text(label);
+
+    min-inline-size: 0;
+    font-weight: fn.token('weight-regular');
+    color: inherit;
+  }
+
+  #{c.component(window, index)} {
+    @include mixins.text(label);
+
+    flex-shrink: 0;
+    padding-inline: fn.space(xs);
+    border-radius: fn.token('radius-control');
+    background-color: c.private(index-bg);
+    color: c.private(index-fg);
+    font-weight: fn.token('weight-medium');
+    font-variant-numeric: tabular-nums;
+  }
+
+  #{c.component(window, body)} {
+    flex: 1;
+    min-inline-size: 0;
+    padding: c.private(padding);
+  }
+}
