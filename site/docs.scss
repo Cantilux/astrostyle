@@ -1,6 +1,7 @@
 // Docs site stylesheet: the framework with its defaults plus the docs chrome, written only with
 // the public API, as any consumer would.
 @use 'index' as ap;
+@use 'fonts' with ($path: 'fonts');
 
 @include ap.emit;
 
@@ -153,6 +154,12 @@
   padding: ap.space(sm);
   border: ap.token('border-width-hairline') dashed ap.token('border-strong');
   border-radius: ap.token('radius-control');
+}
+
+.docs-specimen {
+  font-size: ap.token('text-screen-title-size');
+  line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 
 .docs-note {

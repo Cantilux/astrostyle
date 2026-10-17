@@ -24,7 +24,7 @@
 > [!IMPORTANT]
 > **🛰️ Engines warming up.**
 >
-> **In place:** design tokens, light and dark themes, the reset, element defaults, layout objects (stack, cluster, grid, sidebar, switcher, frame, container), utilities and the Sass toolbox.
+> **In place:** design tokens, light and dark themes, the Design Guide fonts that may be redistributed, the reset, element defaults, layout objects (stack, cluster, grid, sidebar, switcher, frame, container), utilities and the Sass toolbox.
 >
 > **Components:** buttons, button groups, fields, inputs, selects, a searchable combobox, checkboxes, radios, switches, ranges, segmented meters, breadcrumbs, pagination, tabs, tags, callouts, progress bars, spinners, empty states, toasts, dialogs, drawers, accordions, tooltips, menus, tables, lists, dividers, key caps, skeletons, and the Design Guide's own blocks: mastheads, section headings, subheadings, windows, cards, tabbed boxes, segment bars, swatches and textured surfaces.
 >
@@ -250,14 +250,32 @@ The guide uses both pairings: black on white and white on black. astrostyle ship
 
 ### / Typography /
 
-| Font | Role in the guide | In astrostyle |
-| --- | --- | --- |
-| **Feature Mono** | Main text: Light for body, Medium for bold, Hairline for details | Body and data |
-| **Newake** *(paid)*, or **Powerr** *(free)* | Titles and the logo | Display |
-| **Rimma Sans**, **Free Fat Font**, **Genesys**, **ST-Cyberillic**, **SCHABO** | Special titles and graphic details | Accent roles (optional) |
-| *Instrument Serif* | Italics and map labels | Serif |
+| Font | Role in the guide | Token | Used by |
+| --- | --- | --- | --- |
+| **Feature Mono** | Main text: Light for body, Medium for bold, Hairline for details | `--ap-font-body` | Type roles `body`, `data`, `label`, `caption`, `action`; code |
+| **Newake** *(paid)*, or **Powerr** *(free)* | Titles and the logo | `--ap-font-display` | Type roles `display`, `screen-title`, `panel-title` (`h1`–`h3`) |
+| *Instrument Serif* | Italics and map labels | `--ap-font-serif` | `em`, `i`, `cite`, `blockquote` |
+| **Rimma Sans**, **Free Fat Font**, **Genesys**, **ST-Cyberillic**, **SCHABO** | Special titles and graphic details | `--ap-font-accent-rimma`, `-fat`, `-genesys`, `-cyberillic`, `-schabo` | Nothing by default: put them where you need them, e.g. `font-family: var(--ap-font-accent-genesys)` |
 
-Font files are **not bundled**: each font has its own license, so every project brings its own.
+Every token ends in system fonts, so a font that is not loaded falls back quietly. The [Foundations page](https://cantilux.github.io/astrostyle/foundations.html#fonts) shows a sample of each.
+
+The fonts whose license allows redistribution ship in the package: **Feature Mono**, *Instrument Serif*, **Genesys** and **ST-Cyberillic**, each under its own license ([`fonts/README.md`](fonts/README.md)). The optional `astrostyle/fonts.css` declares them:
+
+```js
+import 'astrostyle/fonts.css'   // bundlers copy the font files for you
+```
+
+With Sass, point the faces to wherever your build serves the `fonts/` folder:
+
+```scss
+@use 'pkg:astrostyle/scss/fonts' with ($path: '/assets/fonts');
+```
+
+Newake, Powerr, Rimma Sans, SCHABO and Free Fat Font are **not bundled**: Newake is paid, and the others' licenses do not clearly allow redistribution. Bring your own files and the tokens pick them up; for Powerr, Rimma Sans and SCHABO, `$licensed-path` adds the faces too (file names in [`fonts/README.md`](fonts/README.md)):
+
+```scss
+@use 'pkg:astrostyle/scss/fonts' with ($path: '/assets/fonts', $licensed-path: '/assets/own-fonts');
+```
 
 <br>
 
@@ -432,7 +450,7 @@ bun install
 | Command | What it does |
 | --- | --- |
 | `bun run dev` | Serves the docs at <http://localhost:4321/demo.html> and rebuilds and reloads the page on every change in `scss/`, `site/` or `scripts/`; Sass errors appear in the page |
-| `bun run build` | Builds `dist/`: the full bundle (`astrostyle.css`), `core.css`, one file per component in `components/` (each also `.min`) and `tokens.json` |
+| `bun run build` | Builds `dist/`: the full bundle (`astrostyle.css`), `core.css`, one file per component in `components/` (each also `.min`), `fonts.css` and `tokens.json` |
 | `bun run docs:build` | Builds the documentation site into `_site/` (serve it over HTTP, e.g. with `bun run dev`: JavaScript modules do not run from `file://`) |
 | `bun run test` | Runs every `tests/**/*.test.mjs` with `node --test` |
 | `bun run lint` | Stylelint on `scss/` plus a Prettier check |
@@ -474,7 +492,7 @@ Run `bun run check:package` to see exactly what npm would receive.
 
 ## ![05 / License](.github/assets/section-license.svg)
 
-The astrostyle code is released under the [MIT license](LICENSE). Take it, fork it, fly it.
+The astrostyle code is released under the [MIT license](LICENSE). Take it, fork it, fly it. The font files in `fonts/` are not: each keeps its own license, listed in [`fonts/README.md`](fonts/README.md).
 
 The ASTROPRISMA look it reproduces (palette, typography choices and graphic motifs from the Creator Kit Design Guide) is used under the [ASTROPRISMA Third Party License](https://www.astroprisma.com/license). ASTROPRISMA is copyright Camila Mera and Crescent Chimera. Apart from the "Compatible with ASTROPRISMA" logo below, which the license allows, astrostyle uses no ASTROPRISMA or Crescent Chimera logos.
 

@@ -1,11 +1,12 @@
-// Builds dist/: the readable and minified stylesheets, each with the license header, and the
-// W3C Design Tokens export.
+// Builds dist/: the readable and minified stylesheets, each with the license header, the optional
+// font faces and the W3C Design Tokens export.
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import * as sass from 'sass'
 
 const root = fileURLToPath(new URL('..', import.meta.url))
 const entry = `${root}scss/astrostyle.scss`
+const fontsEntry = `${root}scss/fonts.scss`
 const tokensEntry = `${root}scripts/tokens.scss`
 const componentsEntry = `${root}scripts/component-tokens.scss`
 const distDir = `${root}dist`
@@ -94,6 +95,7 @@ async function build() {
   const tokens = exportTokens()
   const outputs = {
     ...compileTargets(entry),
+    'fonts.css': sass.compile(fontsEntry).css,
     ...compileSplit(splitSources(Object.keys(exportComponentTokens()))),
   }
   await rm(distDir, { recursive: true, force: true })

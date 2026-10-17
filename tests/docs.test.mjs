@@ -8,6 +8,7 @@ import {
   componentTokenValues,
   componentTokensHtml,
   fill,
+  fontsHtml,
   navHtml,
   navigation,
   paletteHtml,
@@ -39,6 +40,8 @@ test('each theme card sets its own data-ap-theme and lists every semantic token'
 })
 
 test('type, spacing and shape sections cover every token of their group', () => {
+  for (const name of Object.keys(tokens.font.family))
+    assert.ok(fontsHtml(tokens).includes(`--ap-font-${name}`))
   for (const role of Object.keys(tokens.text))
     assert.ok(typeRolesHtml(tokens).includes(`ap-u-text-${role}`))
   for (const step of Object.keys(tokens.space))
@@ -113,6 +116,7 @@ test('every page in site/pages is in the navigation and renders without leftover
     version: '0.0.0',
     palette: '',
     themes: '',
+    fonts: '',
     'type-roles': '',
     spacing: '',
     shapes: '',

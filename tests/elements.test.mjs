@@ -40,6 +40,11 @@ test('headings take the type roles of $element-roles', () => {
   assert.match(declarationsOf(custom, ':where(:root) :where(h1)')['font-size'], /screen-title-size/)
 })
 
+test('code shows `--` as two hyphens, not as a Feature Mono ligature', () => {
+  const code = declarationsOf(css, ':where(:root) :where(code, kbd, samp, pre)')
+  assert.equal(code['font-variant-ligatures'], 'none')
+})
+
 test('links use the link tokens', () => {
   assert.equal(declarationsOf(css, ':where(:root) :where(a)').color, 'var(--ap-link)')
   assert.equal(declarationsOf(css, ':where(:root) :where(a:hover)').color, 'var(--ap-link-hover)')

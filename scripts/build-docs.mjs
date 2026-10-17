@@ -78,6 +78,76 @@ export function themesHtml(tokens) {
 // Pixel size of a DTCG rem dimension, for display.
 const toPx = (dimension) => `${Math.round(dimension.value * 16)}px`
 
+/** How the files of each font arrive, keyed as in `fontGuide`. */
+const fontFiles = {
+  bundled: 'Bundled: <code>astrostyle/fonts.css</code> declares it.',
+  licensed: 'Not bundled: add your copy and set <code>$licensed-path</code>.',
+  own: 'Not bundled: add your copy with your own <code>@font-face</code>.',
+}
+
+/** Usage note shared by the accent fonts. */
+const accentUse = (name) =>
+  `Special titles and graphic details. No component uses it: set <code>font-family: var(--ap-font-${name})</code> where you need it.`
+
+/** Design Guide font, intended use, samples (label and inline style) and files of each family token. */
+const fontGuide = {
+  body: {
+    font: 'Feature Mono',
+    use: 'Main text: Light for body copy, Medium for bold and data, Hairline for labels and captions. Roles body, data, label, caption and action, plus code.',
+    samples: [
+      ['Hairline 100', 'font-weight: 100'],
+      ['Light 300', 'font-weight: 300'],
+      ['Medium 500', 'font-weight: 500'],
+    ],
+    files: 'bundled',
+  },
+  display: {
+    font: 'Newake, or Powerr',
+    use: 'Titles and the logo. Roles display, screen-title and panel-title (h1 to h3). Newake is paid; Powerr is its free alternative.',
+    samples: [
+      ['Regular 400', 'font-weight: 400'],
+      ['Medium 500', 'font-weight: 500'],
+      ['Bold 700', 'font-weight: 700'],
+    ],
+    files: 'licensed',
+  },
+  serif: {
+    font: 'Instrument Serif',
+    use: 'Italics: <code>em</code>, <code>i</code>, <code>cite</code> and <code>blockquote</code>; names on maps.',
+    samples: [
+      ['Regular', 'font-style: normal'],
+      ['Italic', 'font-style: italic'],
+    ],
+    files: 'bundled',
+  },
+  'accent-rimma': {
+    font: 'Rimma Sans',
+    samples: [['Bold 700', 'font-weight: 700']],
+    files: 'licensed',
+  },
+  'accent-fat': { font: 'Free Fat Font', files: 'own' },
+  'accent-genesys': { font: 'Genesys', files: 'bundled' },
+  'accent-cyberillic': { font: 'ST-Cyberillic', files: 'bundled' },
+  'accent-schabo': { font: 'SCHABO Condensed', files: 'licensed' },
+}
+
+// One card per font-family token: samples in that family, the token, its use and its files.
+export function fontsHtml(tokens) {
+  return Object.keys(tokens.font.family)
+    .map((name) => {
+      const guide = fontGuide[name]
+      if (!guide) throw new Error(`font-${name} has no entry in fontGuide`)
+      const samples = (guide.samples ?? [['Regular 400', 'font-weight: 400']])
+        .map(
+          ([label, style]) =>
+            `<p class="docs-specimen" style="font-family: var(--ap-font-${name}); ${style}">Sensor lock 0427</p><p class="docs-note"><small>${label}</small></p>`,
+        )
+        .join('')
+      return `<div class="ap-c-card ap-o-stack ap-o-stack--gap-sm"><h3>${guide.font}</h3><div>${samples}</div><p><code>--ap-font-${name}</code></p><p>${guide.use ?? accentUse(name)}</p><p class="docs-note"><small>${fontFiles[guide.files]}</small></p></div>`
+    })
+    .join('\n')
+}
+
 // One sample per type role, with its size, weight reference and line height.
 export function typeRolesHtml(tokens) {
   return Object.entries(tokens.text)
@@ -173,6 +243,7 @@ export async function buildDocs({ style = 'compressed' } = {}) {
     version,
     palette: paletteHtml(tokens),
     themes: themesHtml(tokens),
+    fonts: fontsHtml(tokens),
     'type-roles': typeRolesHtml(tokens),
     spacing: spacingHtml(tokens),
     shapes: shapesHtml(tokens),
@@ -195,6 +266,7 @@ export async function buildDocs({ style = 'compressed' } = {}) {
     writeFile(`${outDir}/docs.css`, `${licenseHeader(version)}\n${css}\n`),
     copyFile(`${siteDir}/docs.js`, `${outDir}/docs.js`),
     cp(`${root}js`, `${outDir}/js`, { recursive: true }),
+    cp(`${root}fonts`, `${outDir}/fonts`, { recursive: true }),
     copyFile(`${siteDir}/assets/favicon.svg`, `${outDir}/assets/favicon.svg`),
     writeFile(`${outDir}/.nojekyll`, ''),
   ])

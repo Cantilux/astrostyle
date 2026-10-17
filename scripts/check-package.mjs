@@ -40,6 +40,9 @@ export const requiredFiles = [
   'dist/astrostyle.css',
   'dist/astrostyle.min.css',
   'dist/tokens.json',
+  'dist/fonts.css',
+  'fonts/README.md',
+  'fonts/FeatureMono-Light.ttf',
 ]
 
 /** Path prefixes that must never be published. */
@@ -105,12 +108,18 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const problems = packageProblems(packedFiles(), [...requiredFiles, ...splitFiles(components)])
   assert.deepEqual(problems, [], `package contents:\n${problems.join('\n')}`)
   assert.match(compileAsConsumer(), /--ap-palette-black: #130d1c/)
+  assert.match(
+    compileAsConsumer("@use 'pkg:astrostyle/scss/fonts' with ($path: '/f');"),
+    /url\("\/f\/FeatureMono-Light\.ttf"\)/,
+  )
   const subpaths = [
     'astrostyle/css',
     'astrostyle/css/min',
     'astrostyle/css/core',
     'astrostyle/css/core.min',
     'astrostyle/tokens.json',
+    'astrostyle/fonts.css',
+    'astrostyle/fonts/FeatureMono-Light.ttf',
     'astrostyle/js',
     'astrostyle/js/combobox',
     'astrostyle/js/pagination',
@@ -120,7 +129,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     ...components.flatMap((name) => [`astrostyle/css/${name}`, `astrostyle/css/${name}.min`]),
   ]
   for (const [specifier, file] of Object.entries(resolveAsConsumer(subpaths))) {
-    assert.ok(/\/(dist|js)\//.test(file), `${specifier} resolved to ${file}`)
+    assert.ok(/\/(dist|js|fonts)\//.test(file), `${specifier} resolved to ${file}`)
   }
   console.log(`Package contents and ${subpaths.length} entry points resolve correctly.`)
 }

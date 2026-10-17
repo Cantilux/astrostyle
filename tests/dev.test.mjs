@@ -1,7 +1,7 @@
 // Local dev server helpers (scripts/dev.mjs).
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { debounce, handle, injectClient, resolveRequest } from '../scripts/dev.mjs'
+import { clientScript, debounce, handle, injectClient, resolveRequest } from '../scripts/dev.mjs'
 
 test('the dev client is injected just before </body>', () => {
   assert.equal(
@@ -36,4 +36,19 @@ test('a malformed URL gets a 404 instead of crashing the server', async () => {
   }
   await handle({ url: '/%' }, response)
   assert.deepEqual(sent, { status: 404, body: 'Not found' })
+})
+
+test('the dev client closes its event stream when the page is left', () => {
+  const listeners = {}
+  const source = { closed: false, addEventListener() {}, close: () => (source.closed = true) }
+  const run = new Function('EventSource', 'addEventListener', 'location', clientScript)
+  run(
+    function () {
+      return source
+    },
+    (type, listener) => (listeners[type] = listener),
+    {},
+  )
+  listeners.pagehide()
+  assert.equal(source.closed, true)
 })
