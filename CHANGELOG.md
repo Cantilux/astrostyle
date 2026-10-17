@@ -1,5 +1,37 @@
 # astrostyle
 
+## 0.4.0
+
+### Minor Changes
+
+- 5958f1f: The Design Guide's blocks, CSS only:
+  
+  - `ap-c-masthead`: a small tracked eyebrow over a display title that grows with the viewport (`--ap-masthead-title-size`).
+  - `ap-c-section-heading`: pink title, hairline rule and an optional two-digit index on the end side.
+  - `ap-c-subheading`: the guide's `/ TITLE /` subheading; the slashes are generated content screen readers skip (`--ap-subheading-slash`).
+  - `ap-c-window`: a hairline frame under a title bar in the theme's inverse colors, with an optional index badge.
+  - `ap-c-card`: the rounded card surface, without layout of its own; as a link or a button it reacts to hover and focus.
+  - `ap-c-tabbed-box`: a framed box with a vertical tab label on its start edge.
+  - `ap-c-segment-bar`: an outlined pill legend split into labelled segments that wrap on narrow widths.
+  - `ap-c-swatch`: a rounded color tile with a name and a value (`--ap-swatch-color`).
+- 933bac8: Containers and data:
+  
+  - `ap-c-dialog` with `createDialog()` from `astrostyle/js/dialog`: a native modal `<dialog>` with header, scrolling body and footer; openers (`data-ap-dialog-open`), close buttons whose `value` becomes the return value (`data-ap-dialog-close`), backdrop close (`dismissible`), focus return, `ap:open` and `ap:close`.
+  - `ap-c-drawer`: the same dialog along the full height of the end edge, `--start` for the start edge.
+  - `ap-c-accordion`: a native `<details>` with a chevron; the same `name` opens one at a time.
+  - `ap-c-table`: a framed, focusable region that scrolls a native table sideways, with `--striped`, `--compact` and end-aligned `__numeric` cells.
+  - `ap-c-list`: rows split by hairlines, end-side meta text and full-row links (`--plain` without hairlines).
+  - `ap-c-divider`: a hairline on an `<hr>` or around a short label, `--strong`.
+  - `ap-c-kbd`: a key cap.
+  - `ap-c-skeleton`: a pulsing placeholder line, `--block` and `--circle`.
+  - `autoInit()` also enhances `dialog[data-ap-dialog]` (`data-ap-dialog="static"` ignores backdrop clicks).
+- aa63e88: Tooltips, menus and textured surfaces:
+  
+  - `ap-c-tooltip` with `createTooltip()` from `astrostyle/js/tooltip`: a hint in a popover, in the theme's inverse colors, shown on hover after a delay and on keyboard focus, kept while the pointer is on it, hidden on Escape; placed above the trigger, below when there is no room.
+  - `ap-c-menu` with `createMenu()` from `astrostyle/js/menu`: a WAI-ARIA menu button over a popover; arrow keys, Home, End, type-to-jump, Escape and light dismiss with focus back on the button, `ap:select` with the chosen item's value, `ap:open` and `ap:close`; `__separator`, `__icon` and `__item--danger`.
+  - `ap-c-surface` with `--halftone`, `--crt` and `--noise`: the Design Guide's print textures behind a decorative area's content; the `ap.surface($kind)` mixin paints the same textures on any rule.
+  - `autoInit()` also enhances `[data-ap-menu]` and `[data-ap-tooltip]`.
+
 ## 0.3.5
 
 ### Minor Changes
