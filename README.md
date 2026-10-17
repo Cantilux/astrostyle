@@ -250,12 +250,14 @@ The guide uses both pairings: black on white and white on black. astrostyle ship
 
 ### / Typography /
 
-| Font | Role in the guide | In astrostyle |
-| --- | --- | --- |
-| **Feature Mono** | Main text: Light for body, Medium for bold, Hairline for details | Body and data |
-| **Newake** *(paid)*, or **Powerr** *(free)* | Titles and the logo | Display |
-| **Rimma Sans**, **Free Fat Font**, **Genesys**, **ST-Cyberillic**, **SCHABO** | Special titles and graphic details | Accent roles (optional) |
-| *Instrument Serif* | Italics and map labels | Serif |
+| Font | Role in the guide | Token | Used by |
+| --- | --- | --- | --- |
+| **Feature Mono** | Main text: Light for body, Medium for bold, Hairline for details | `--ap-font-body` | Type roles `body`, `data`, `label`, `caption`, `action`; code |
+| **Newake** *(paid)*, or **Powerr** *(free)* | Titles and the logo | `--ap-font-display` | Type roles `display`, `screen-title`, `panel-title` (`h1`–`h3`) |
+| *Instrument Serif* | Italics and map labels | `--ap-font-serif` | `em`, `i`, `cite`, `blockquote` |
+| **Rimma Sans**, **Free Fat Font**, **Genesys**, **ST-Cyberillic**, **SCHABO** | Special titles and graphic details | `--ap-font-accent-rimma`, `-fat`, `-genesys`, `-cyberillic`, `-schabo` | Nothing by default: put them where you need them, e.g. `font-family: var(--ap-font-accent-genesys)` |
+
+Every token ends in system fonts, so a font that is not loaded falls back quietly. The [Foundations page](https://cantilux.github.io/astrostyle/foundations.html#fonts) shows a sample of each.
 
 The fonts whose license allows redistribution ship in the package: **Feature Mono**, *Instrument Serif*, **Genesys** and **ST-Cyberillic**, each under its own license ([`fonts/README.md`](fonts/README.md)). The optional `astrostyle/fonts.css` declares them:
 

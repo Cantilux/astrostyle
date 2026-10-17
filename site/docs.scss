@@ -156,6 +156,12 @@
   border-radius: ap.token('radius-control');
 }
 
+.docs-specimen {
+  font-size: ap.token('text-screen-title-size');
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
 .docs-note {
   color: ap.token('text-muted');
 }

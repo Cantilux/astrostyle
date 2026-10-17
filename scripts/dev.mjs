@@ -22,9 +22,16 @@ const contentTypes = {
   '.otf': 'font/otf',
 }
 
-/** Browser-side client: reloads on `reload`, shows a banner on `failure`. */
+/**
+ * Browser-side client: reloads on `reload`, shows a banner on `failure`. The stream closes when
+ * the page is left: open streams of earlier pages would fill the browser's six connections per
+ * host and stall the next page's fonts, styles and scripts. A page restored from the
+ * back/forward cache reloads, since its stream is gone.
+ */
 export const clientScript = `
 const source = new EventSource('/__dev/events')
+addEventListener('pagehide', () => source.close())
+addEventListener('pageshow', (event) => event.persisted && location.reload())
 source.addEventListener('reload', () => location.reload())
 source.addEventListener('failure', (event) => {
   let box = document.getElementById('__dev-error')

@@ -17,18 +17,33 @@
   <div class="ap-o-switcher ap-o-switcher--gap-lg">{{themes}}</div>
 </section>
 
+<section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="fonts">
+  <h2 class="ap-c-section-heading" id="fonts">Fonts <span class="ap-c-section-heading__index">03</span></h2>
+  <p>The Design Guide fonts, one font-family token each. Every token ends in system fonts, so a font that is not loaded falls back quietly: on this site, Powerr, Rimma Sans, SCHABO and Free Fat Font show their fallback.</p>
+  <p>Load the bundled fonts once, then use the tokens. The type roles below already pick the right family and weight; the accent fonts are yours to place.</p>
+  <pre><code>// Plain CSS or a bundler: Feature Mono, Instrument Serif, Genesys, ST-Cyberillic
+import 'astrostyle/fonts.css'
+
+// Sass: where your build serves fonts/, plus your own Powerr, Rimma Sans and SCHABO files
+@use 'pkg:astrostyle/scss/fonts' with ($path: '/assets/fonts', $licensed-path: '/assets/own-fonts');
+
+// An accent font on your own element
+.weapon-name { font-family: var(--ap-font-accent-genesys); }</code></pre>
+  <div class="ap-o-grid ap-o-grid--gap-lg">{{fonts}}</div>
+</section>
+
 <section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="type">
-  <h2 class="ap-c-section-heading" id="type">Type roles <span class="ap-c-section-heading__index">03</span></h2>
+  <h2 class="ap-c-section-heading" id="type">Type roles <span class="ap-c-section-heading__index">04</span></h2>
   <p>Apply a whole role with <code>@include ap.text(role)</code> or the <code>ap-u-text-role</code> utility. Sizes follow <code>--ap-font-scale</code>.</p>
   <div class="ap-o-stack ap-o-stack--gap-lg">{{type-roles}}</div>
 </section>
 
 <section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="space">
-  <h2 class="ap-c-section-heading" id="space">Spacing <span class="ap-c-section-heading__index">04</span></h2>
+  <h2 class="ap-c-section-heading" id="space">Spacing <span class="ap-c-section-heading__index">05</span></h2>
   <div class="ap-o-stack ap-o-stack--gap-sm">{{spacing}}</div>
 </section>
 
 <section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="shape">
-  <h2 class="ap-c-section-heading" id="shape">Shapes and elevation <span class="ap-c-section-heading__index">05</span></h2>
+  <h2 class="ap-c-section-heading" id="shape">Shapes and elevation <span class="ap-c-section-heading__index">06</span></h2>
   <div class="ap-o-grid">{{shapes}}</div>
 </section>
