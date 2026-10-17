@@ -39,7 +39,7 @@
       <text x="60" y="70" fill="#130d1c" font-size="18" font-weight="700" letter-spacing="1">DOM EVENTS</text>
       <text font-size="16">
         <tspan x="400" y="50.0">Components talk through DOM events prefixed with ap:</tspan>
-        <tspan x="400" y="74.0">(ap:change, ap:open, ap:close, ap:page).</tspan>
+        <tspan x="400" y="74.0">(ap:change, ap:open, ap:close, ap:page, ap:select).</tspan>
       </text>
     </g>
     <g transform="translate(0 496)" data-rule="4">

@@ -264,7 +264,7 @@ Font files are **not bundled**: each font has its own license, so every project 
 ### / Texture & motifs /
 
 - **Halftone and noise.** The guide's print filters (halftone dots, a fine grain) become the optional `ap-c-surface` for decorative areas, behind headings and art, never under forms or long text.
-- **Graphic motifs → components.** The big masthead with its tiny eyebrow, the pink section heading with a hairline rule and a two-digit index (like the ones in this README), the window panel with a dark title bar, pill buttons, segmented pill legends, side-tab boxes, callouts and `/ SLASHED /` subheadings.
+- **Graphic motifs → components.** The big masthead with its tiny eyebrow, the pink section heading with a hairline rule and a two-digit index (like the ones in this README), the window panel with its inverted title bar, rounded cards and swatch tiles, pill buttons, segmented pill legends, side-tab boxes, callouts and `/ SLASHED /` subheadings.
 
 <br>
 
