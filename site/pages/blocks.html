@@ -1,0 +1,147 @@
+<!-- title: Blocks -->
+<section class="ap-o-stack ap-o-stack--gap-md">
+  <h1>Blocks</h1>
+  <p>The Design Guide's own motifs, turned into components: mastheads, section headings and subheadings, windows, cards, side-tab boxes, segment bars and swatches. These pages use them for their own headings and cards.</p>
+</section>
+
+<section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="masthead">
+  <h2 class="ap-c-section-heading" id="masthead">Masthead <span class="ap-c-section-heading__index">01</span></h2>
+  <div class="ap-c-masthead">
+    <p class="ap-c-masthead__eyebrow">Style guide 01</p>
+    <p class="ap-c-masthead__title">Graphics</p>
+  </div>
+  <pre><code>&lt;header class="ap-c-masthead"&gt;
+  &lt;p class="ap-c-masthead__eyebrow"&gt;Style guide 01&lt;/p&gt;
+  &lt;h1 class="ap-c-masthead__title"&gt;Night Heron&lt;/h1&gt;
+&lt;/header&gt;</code></pre>
+  <p class="docs-note">One per page, with the page's <code>&lt;h1&gt;</code> as the title (this sample uses a paragraph, so the page keeps one <code>&lt;h1&gt;</code>). The title grows with the viewport between 1.2× and 2.4× the display size.</p>
+  {{tokens-masthead}}
+</section>
+
+<section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="section-heading">
+  <h2 class="ap-c-section-heading" id="section-heading">Section heading <span class="ap-c-section-heading__index">02</span></h2>
+  <h3 class="ap-c-section-heading" style="--ap-section-heading-color: var(--ap-text)">Ship log <span class="ap-c-section-heading__index">07</span></h3>
+  <h3 class="ap-c-section-heading">A much longer section title that has to wrap on a phone <span class="ap-c-section-heading__index">08</span></h3>
+  <pre><code>&lt;h2 class="ap-c-section-heading" id="graphics"&gt;Graphics &lt;span class="ap-c-section-heading__index"&gt;01&lt;/span&gt;&lt;/h2&gt;</code></pre>
+  <p class="docs-note">Every heading on these pages is one. The rule fills the space between title and index and is never announced; the index is optional.</p>
+  {{tokens-section-heading}}
+</section>
+
+<section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="subheading">
+  <h2 class="ap-c-section-heading" id="subheading">Subheading <span class="ap-c-section-heading__index">03</span></h2>
+  <h3 class="ap-c-subheading">Colors</h3>
+  <h3 class="ap-c-subheading" style="--ap-subheading-slash: '//'; --ap-subheading-slash-color: var(--ap-info)">Sensors</h3>
+  <pre><code>&lt;h3 class="ap-c-subheading"&gt;Colors&lt;/h3&gt;</code></pre>
+  <p class="docs-note">Write the title only: the slashes are generated content that screen readers skip. Change them with <code>--ap-subheading-slash</code> (a CSS string).</p>
+  {{tokens-subheading}}
+</section>
+
+<section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="window">
+  <h2 class="ap-c-section-heading" id="window">Window <span class="ap-c-section-heading__index">04</span></h2>
+  <div class="ap-o-grid ap-o-grid--gap-lg">
+    <section class="ap-c-window" aria-labelledby="w-export">
+      <div class="ap-c-window__bar">
+        <h3 class="ap-c-window__title" id="w-export">Export as image</h3>
+        <span class="ap-c-window__index">02</span>
+      </div>
+      <div class="ap-c-window__body ap-o-stack">
+        <p>Pick a size and a format, then export the sector map.</p>
+        <div class="ap-o-cluster ap-o-cluster--gap-sm"><button class="ap-c-button ap-c-button--primary" type="button">Export</button><button class="ap-c-button ap-c-button--quiet" type="button">Cancel</button></div>
+      </div>
+    </section>
+    <section class="ap-c-window" aria-labelledby="w-comms" data-ap-theme="dark">
+      <div class="ap-c-window__bar">
+        <h3 class="ap-c-window__title" id="w-comms">Comms</h3>
+      </div>
+      <div class="ap-c-window__body">
+        <p>A window with <code>data-ap-theme="dark"</code> on a light page, and no index.</p>
+      </div>
+    </section>
+  </div>
+  <pre><code>&lt;section class="ap-c-window" aria-labelledby="export"&gt;
+  &lt;div class="ap-c-window__bar"&gt;
+    &lt;h3 class="ap-c-window__title" id="export"&gt;Export as image&lt;/h3&gt;
+    &lt;span class="ap-c-window__index"&gt;02&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="ap-c-window__body"&gt;…&lt;/div&gt;
+&lt;/section&gt;</code></pre>
+  <p class="docs-note">The bar uses the theme's inverse colors: dark on the light theme, light on the dark one. The body has no layout: add an object to it.</p>
+  {{tokens-window}}
+</section>
+
+<section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="card">
+  <h2 class="ap-c-section-heading" id="card">Card <span class="ap-c-section-heading__index">05</span></h2>
+  <div class="ap-o-grid ap-o-grid--gap-md">
+    <article class="ap-c-card ap-o-stack ap-o-stack--gap-sm" aria-labelledby="k-heron">
+      <h3 class="ap-c-card__title" id="k-heron">Night Heron</h3>
+      <p>Light freighter, crew of four.</p>
+      <div class="ap-o-cluster ap-o-cluster--gap-sm"><button class="ap-c-button" type="button">Board</button></div>
+    </article>
+    <a class="ap-c-card ap-o-stack ap-o-stack--gap-xs" href="#card"><strong>Link card</strong><span class="docs-note">The whole card is one link: hover it or tab to it.</span></a>
+    <button class="ap-c-card ap-o-stack ap-o-stack--gap-xs" type="button"><strong>Button card</strong><span class="docs-note">The whole card is one button.</span></button>
+    <div class="ap-c-card ap-o-stack ap-o-stack--gap-xs" data-ap-theme="dark"><strong>Dark card</strong><span>The guide's dark card for light swatches, with <code>data-ap-theme="dark"</code>.</span></div>
+  </div>
+  <pre><code>&lt;article class="ap-c-card ap-o-stack ap-o-stack--gap-sm" aria-labelledby="heron"&gt;
+  &lt;h3 class="ap-c-card__title" id="heron"&gt;Night Heron&lt;/h3&gt;
+  &lt;p&gt;Light freighter, crew of four.&lt;/p&gt;
+&lt;/article&gt;
+&lt;a class="ap-c-card ap-o-stack" href="/fleet/heron"&gt;…&lt;/a&gt;</code></pre>
+  <p class="docs-note">A card is a surface without layout: combine it with an object. As a link or a button it shows the accent border on hover and the focus ring.</p>
+  {{tokens-card}}
+</section>
+
+<section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="tabbed-box">
+  <h2 class="ap-c-section-heading" id="tabbed-box">Tabbed box <span class="ap-c-section-heading__index">06</span></h2>
+  <section class="ap-c-tabbed-box" aria-labelledby="t-resources">
+    <h3 class="ap-c-tabbed-box__tab" id="t-resources">Free resources</h3>
+    <div class="ap-c-tabbed-box__body ap-o-stack ap-o-stack--gap-sm">
+      <p>Fonts, textures and templates from the Creator Kit.</p>
+      <div class="ap-o-cluster ap-o-cluster--gap-sm"><a class="ap-c-button ap-c-button--primary" href="#tabbed-box">Download</a></div>
+    </div>
+  </section>
+  <pre><code>&lt;section class="ap-c-tabbed-box" aria-labelledby="resources"&gt;
+  &lt;h3 class="ap-c-tabbed-box__tab" id="resources"&gt;Free resources&lt;/h3&gt;
+  &lt;div class="ap-c-tabbed-box__body"&gt;…&lt;/div&gt;
+&lt;/section&gt;</code></pre>
+  <p class="docs-note">The tab is a label, not a control, and reads from bottom to top. Keep it to one or two words.</p>
+  {{tokens-tabbed-box}}
+</section>
+
+<section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="segment-bar">
+  <h2 class="ap-c-section-heading" id="segment-bar">Segment bar <span class="ap-c-section-heading__index">07</span></h2>
+  <ul class="ap-c-segment-bar" aria-label="Blacks">
+    <li class="ap-c-segment-bar__segment">Rich black</li>
+    <li class="ap-c-segment-bar__segment">ASTROPRISMA Black</li>
+    <li class="ap-c-segment-bar__segment">Basic black</li>
+  </ul>
+  <ul class="ap-c-segment-bar" aria-label="Crew roles">
+    <li class="ap-c-segment-bar__segment">Pilot</li>
+    <li class="ap-c-segment-bar__segment">Engineer</li>
+    <li class="ap-c-segment-bar__segment">Hacker</li>
+    <li class="ap-c-segment-bar__segment">Gunner</li>
+    <li class="ap-c-segment-bar__segment">Face</li>
+    <li class="ap-c-segment-bar__segment">Medic</li>
+  </ul>
+  <pre><code>&lt;ul class="ap-c-segment-bar" aria-label="Blacks"&gt;
+  &lt;li class="ap-c-segment-bar__segment"&gt;Rich black&lt;/li&gt;
+  &lt;li class="ap-c-segment-bar__segment"&gt;ASTROPRISMA Black&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+  <p class="docs-note">A legend, not a control. Segments share the width and wrap when it runs out; narrow the window to see the dividers follow.</p>
+  {{tokens-segment-bar}}
+</section>
+
+<section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="swatch">
+  <h2 class="ap-c-section-heading" id="swatch">Swatch <span class="ap-c-section-heading__index">08</span></h2>
+  <div class="ap-o-grid ap-o-grid--gap-md" style="--ap-grid-min: 14rem">
+    <div class="ap-c-swatch" style="--ap-swatch-color: var(--ap-palette-pink)"><span class="ap-c-swatch__chip"></span><strong class="ap-c-swatch__name">ASTROPRISMA Pink</strong><code class="ap-c-swatch__value">#ef476e</code></div>
+    <div class="ap-c-swatch" style="--ap-swatch-color: var(--ap-palette-indigo)"><span class="ap-c-swatch__chip"></span><strong class="ap-c-swatch__name">Gradient Indigo</strong><code class="ap-c-swatch__value">#54009d</code></div>
+    <div class="ap-c-swatch" style="--ap-swatch-color: var(--ap-accent); --ap-swatch-chip-radius: var(--ap-radius-pill)"><span class="ap-c-swatch__chip"></span><strong class="ap-c-swatch__name">Accent</strong></div>
+  </div>
+  <pre><code>&lt;div class="ap-c-swatch" style="--ap-swatch-color: var(--ap-palette-pink)"&gt;
+  &lt;span class="ap-c-swatch__chip"&gt;&lt;/span&gt;
+  &lt;strong class="ap-c-swatch__name"&gt;ASTROPRISMA Pink&lt;/strong&gt;
+  &lt;code class="ap-c-swatch__value"&gt;#ef476e&lt;/code&gt;
+&lt;/div&gt;</code></pre>
+  <p class="docs-note">The palette on the <a href="foundations.html#palette">Foundations</a> page is built with it. The value is optional.</p>
+  {{tokens-swatch}}
+</section>

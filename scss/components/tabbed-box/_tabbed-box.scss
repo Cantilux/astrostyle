@@ -1,0 +1,54 @@
+// Tabbed box (ITCSS Components): the Design Guide's framed box with a vertical pink tab label on
+// its start edge ("FREE RESOURCES").
+// Contract and tokens: scss/components/tabbed-box/README.md.
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults.
+$tokens: (
+  border-color: fn.token('accent'),
+  radius: fn.token('radius-control'),
+  bg: transparent,
+  fg: fn.token('text'),
+  tab-bg: fn.token('accent'),
+  tab-fg: fn.token('on-accent'),
+  tab-padding: fn.space(sm),
+  padding: fn.space(lg),
+);
+
+// Emits `.ap-c-tabbed-box` and its elements.
+@mixin emit {
+  #{c.component(tabbed-box)} {
+    @include c.tokens(tabbed-box, $tokens);
+
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    min-inline-size: 0;
+    overflow: clip;
+    border: fn.token('border-width-hairline') solid c.private(border-color);
+    border-radius: c.private(radius);
+    background-color: c.private(bg);
+    color: c.private(fg);
+  }
+
+  #{c.component(tabbed-box, tab)} {
+    @include mixins.text(label);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: c.private(tab-padding);
+    background-color: c.private(tab-bg);
+    color: c.private(tab-fg);
+    font-weight: fn.token('weight-medium');
+    white-space: nowrap;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+
+  #{c.component(tabbed-box, body)} {
+    min-inline-size: 0;
+    padding: c.private(padding);
+  }
+}

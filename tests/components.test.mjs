@@ -26,6 +26,14 @@ const components = [
   'pagination',
   'tabs',
   'toast',
+  'masthead',
+  'section-heading',
+  'subheading',
+  'window',
+  'card',
+  'tabbed-box',
+  'segment-bar',
+  'swatch',
 ]
 const controls = ['button', 'input', 'checkbox', 'radio', 'switch', 'range']
 
@@ -233,4 +241,73 @@ test('the toast region is fixed above the page and anchors to the end corner fro
     '--ap-toast-tone': 'var(--ap-danger)',
     '--ap-toast-bar-width': 'var(--ap-space-xs)',
   })
+})
+
+test('the masthead title grows with the viewport between two limits, times the font scale', () => {
+  const title = declarationsOf(css, '.ap-c-masthead__title')
+  assert.equal(title['font-size'], 'calc(var(--_title-size) * var(--ap-font-scale))')
+  assert.match(
+    declarationsOf(css, '.ap-c-masthead')['--_title-size'],
+    /^var\(--ap-masthead-title-size, clamp\(var\(--ap-text-display-size\) \* 1\.2, 8vw, /,
+  )
+})
+
+test('the section heading draws its rule between the title and the index', () => {
+  assert.deepEqual(declarationsOf(css, '.ap-c-section-heading::after'), {
+    flex: '1',
+    order: '1',
+    'min-inline-size': 'var(--ap-space-xl)',
+    'border-block-start': 'var(--_rule-width) solid var(--_rule-color)',
+    content: '""',
+  })
+  assert.equal(declarationsOf(css, '.ap-c-section-heading__index').order, '2')
+})
+
+test('subheading slashes are generated content hidden from assistive technology', () => {
+  assert.equal(declarationsOf(css, '.ap-c-subheading::before').content, 'var(--_slash)/""')
+  assert.equal(
+    declarationsOf(css, '.ap-c-subheading')['--_slash'],
+    'var(--ap-subheading-slash, "/")',
+  )
+})
+
+test('the window bar swaps the theme colors', () => {
+  const window = declarationsOf(css, '.ap-c-window')
+  assert.equal(window['--_bar-bg'], 'var(--ap-window-bar-bg, var(--ap-text))')
+  assert.equal(window['--_bar-fg'], 'var(--ap-window-bar-fg, var(--ap-bg))')
+  assert.equal(window.overflow, 'clip')
+})
+
+test('a card has no layout, and reacts to hover and focus only as a link or a button', () => {
+  assert.equal(declarationsOf(css, '.ap-c-card').display, undefined)
+  assert.ok(declarationsOf(css, '.ap-c-card:where(a[href], button):where(:focus-visible)'))
+  assert.deepEqual(
+    declarationsOf(css, '.ap-c-card:where(a[href], button):where(:hover):where(:not(:disabled))'),
+    { 'border-color': 'var(--_hover-border-color)' },
+  )
+})
+
+test('the tabbed box sets its tab vertically, reading from bottom to top', () => {
+  const tab = declarationsOf(css, '.ap-c-tabbed-box__tab')
+  assert.equal(tab['writing-mode'], 'vertical-rl')
+  assert.equal(tab.transform, 'rotate(180deg)')
+  assert.equal(
+    declarationsOf(css, '.ap-c-tabbed-box')['grid-template-columns'],
+    'auto minmax(0, 1fr)',
+  )
+})
+
+test('segment bar segments wrap and draw their dividers inside the clipped frame', () => {
+  const bar = declarationsOf(css, '.ap-c-segment-bar')
+  assert.equal(bar['flex-wrap'], 'wrap')
+  assert.equal(bar.overflow, 'clip')
+  assert.match(declarationsOf(css, '.ap-c-segment-bar__segment')['box-shadow'], /\* -1\) 0 0 /)
+})
+
+test('a swatch fills its chip with the color set on it', () => {
+  assert.equal(
+    declarationsOf(css, '.ap-c-swatch')['--_color'],
+    'var(--ap-swatch-color, transparent)',
+  )
+  assert.equal(declarationsOf(css, '.ap-c-swatch__chip')['background-color'], 'var(--_color)')
 })
