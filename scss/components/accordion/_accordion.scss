@@ -1,0 +1,77 @@
+// Accordion (ITCSS Components): a native `<details>` with a full-width summary row and a chevron
+// that turns when it opens. Several with the same `name` open one at a time, natively.
+// Contract and tokens: scss/components/accordion/README.md.
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults.
+$tokens: (
+  border-color: fn.token('border-subtle'),
+  summary-fg: fn.token('text'),
+  summary-hover-bg: color-mix(in oklab, #{fn.token('text')} 6%, transparent),
+  chevron-color: fn.token('accent'),
+  padding-inline: fn.space(sm),
+  body-padding: fn.space(sm) fn.space(sm) fn.space(lg),
+);
+
+// Emits `.ap-c-accordion` and its elements.
+@mixin emit {
+  #{c.component(accordion)} {
+    @include c.tokens(accordion, $tokens);
+
+    min-inline-size: 0;
+    border-block-end: fn.token('border-width-hairline') solid c.private(border-color);
+
+    &:where(:first-child) {
+      border-block-start: fn.token('border-width-hairline') solid c.private(border-color);
+    }
+  }
+
+  #{c.component(accordion, summary)} {
+    @include mixins.text(action);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: fn.space(md);
+    min-block-size: fn.token('size-control');
+    padding-block: fn.space(xs);
+    padding-inline: c.private(padding-inline);
+    color: c.private(summary-fg);
+    list-style: none;
+
+    @include mixins.interactive;
+    @include mixins.focus-ring;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    // Chevron drawn with two borders, pointing down; it turns up when the accordion is open.
+    &::after {
+      flex-shrink: 0;
+      inline-size: 0.5em;
+      block-size: 0.5em;
+      margin-block-start: -0.25em;
+      border-block-end: fn.token('border-width-strong') solid c.private(chevron-color);
+      border-inline-end: fn.token('border-width-strong') solid c.private(chevron-color);
+      content: '';
+      rotate: 45deg;
+      transition: rotate fn.token('duration-fast') fn.token('ease-out');
+    }
+
+    &:where(:hover) {
+      background-color: c.private(summary-hover-bg);
+    }
+
+    &:where([open] > *)::after {
+      margin-block: 0.25em 0;
+      rotate: -135deg;
+    }
+  }
+
+  #{c.component(accordion, body)} {
+    padding: c.private(body-padding);
+  }
+}

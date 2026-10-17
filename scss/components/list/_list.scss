@@ -1,0 +1,86 @@
+// List (ITCSS Components): rows of related items split by hairlines, each with optional meta text
+// on the end side. A row can be one link or button that fills it.
+// Contract and tokens: scss/components/list/README.md.
+@use '../../settings/config';
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults.
+$tokens: (
+  divider-color: fn.token('border-subtle'),
+  gap: fn.space(md),
+  padding-block: fn.space(sm),
+  padding-inline: fn.space(sm),
+  meta-color: fn.token('text-muted'),
+  hover-bg: color-mix(in oklab, #{fn.token('text')} 6%, transparent),
+);
+
+// Emits `.ap-c-list`, its elements and its modifier.
+@mixin emit {
+  #{c.component(list)} {
+    @include c.tokens(list, $tokens);
+
+    min-inline-size: 0;
+    list-style: none;
+  }
+
+  #{c.component(list, item)} {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    column-gap: c.private(gap);
+    padding-block: c.private(padding-block);
+    padding-inline: c.private(padding-inline);
+    border-block-end: fn.token('border-width-hairline') solid c.private(divider-color);
+
+    &:where(:last-child) {
+      border-block-end: 0;
+    }
+
+    &:where(:has(> .#{config.$prefix}-c-list__link)) {
+      padding: 0;
+    }
+  }
+
+  #{c.component(list, meta)} {
+    @include mixins.text(caption);
+
+    color: c.private(meta-color);
+  }
+
+  #{c.component(list, link)} {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    column-gap: c.private(gap);
+    min-block-size: fn.token('size-control');
+    padding-block: c.private(padding-block);
+    padding-inline: c.private(padding-inline);
+    border-radius: fn.token('radius-control');
+    color: inherit;
+    text-align: start;
+    text-decoration-line: none;
+
+    @include mixins.interactive;
+    @include mixins.focus-ring;
+
+    &:where(:focus-visible) {
+      outline-offset: calc(#{fn.token('focus-width')} * -1);
+    }
+
+    &:where(:hover) {
+      background-color: c.private(hover-bg);
+    }
+
+    &:where([aria-current]:not([aria-current='false'])) {
+      color: fn.token('link');
+      font-weight: fn.token('weight-medium');
+    }
+  }
+
+  @include c.modifier(list, plain, (divider-color: transparent));
+}

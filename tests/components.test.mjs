@@ -34,6 +34,14 @@ const components = [
   'tabbed-box',
   'segment-bar',
   'swatch',
+  'dialog',
+  'drawer',
+  'accordion',
+  'table',
+  'list',
+  'divider',
+  'kbd',
+  'skeleton',
 ]
 const controls = ['button', 'input', 'checkbox', 'radio', 'switch', 'range']
 
@@ -310,4 +318,78 @@ test('a swatch fills its chip with the color set on it', () => {
     'var(--ap-swatch-color, transparent)',
   )
   assert.equal(declarationsOf(css, '.ap-c-swatch__chip')['background-color'], 'var(--_color)')
+})
+
+test('dialogs and drawers lay out only when open, over a backdrop read from the public token', () => {
+  for (const name of ['dialog', 'drawer']) {
+    assert.equal(declarationsOf(css, `.ap-c-${name}`).display, undefined, name)
+    assert.equal(declarationsOf(css, `.ap-c-${name}:where([open])`).display, 'flex', name)
+    assert.match(
+      declarationsOf(css, `.ap-c-${name}::backdrop`)['background-color'],
+      new RegExp(`^var\\(--ap-${name}-backdrop, color-mix\\(`),
+      name,
+    )
+    assert.match(css, new RegExp(`@keyframes ap-${name}-in`), name)
+  }
+  assert.deepEqual(declarationsOf(css, '.ap-c-drawer--start'), {
+    '--ap-drawer-start': '0',
+    '--ap-drawer-end': 'auto',
+    '--ap-drawer-offset': 'calc(var(--ap-space-xl) * -1)',
+  })
+})
+
+test('the accordion hides the native marker and turns its chevron when open', () => {
+  assert.equal(declarationsOf(css, '.ap-c-accordion__summary')['list-style'], 'none')
+  assert.ok(declarationsOf(css, '.ap-c-accordion__summary::-webkit-details-marker'))
+  assert.equal(
+    declarationsOf(css, '.ap-c-accordion__summary:where([open] > *)::after').rotate,
+    '-135deg',
+  )
+})
+
+test('the table scrolls sideways in its frame; stripes and density are tokens', () => {
+  assert.equal(declarationsOf(css, '.ap-c-table')['overflow-x'], 'auto')
+  assert.ok(declarationsOf(css, '.ap-c-table:where(:focus-visible)'))
+  assert.equal(
+    declarationsOf(css, '.ap-c-table :where(tbody tr:nth-child(even))')['background-color'],
+    'var(--_stripe-bg)',
+  )
+  assert.deepEqual(declarationsOf(css, '.ap-c-table--striped'), {
+    '--ap-table-stripe-bg': 'var(--ap-surface-1)',
+  })
+})
+
+test('list rows split by hairlines; a link row fills the item and keeps a 40px target', () => {
+  assert.equal(declarationsOf(css, '.ap-c-list__item:where(:last-child)')['border-block-end'], '0')
+  assert.equal(declarationsOf(css, '.ap-c-list__link')['min-block-size'], 'var(--ap-size-control)')
+  assert.deepEqual(declarationsOf(css, '.ap-c-list--plain'), {
+    '--ap-list-divider-color': 'transparent',
+  })
+})
+
+test('the divider draws both lines and spaces them from a label only', () => {
+  assert.equal(declarationsOf(css, '.ap-c-divider').border, '0')
+  for (const line of ['::before', '::after']) {
+    assert.equal(
+      declarationsOf(css, `.ap-c-divider${line}`)['border-block-start'],
+      'var(--_width) solid var(--_color)',
+    )
+  }
+  assert.equal(declarationsOf(css, '.ap-c-divider:where(:not(:empty))').gap, 'var(--_gap)')
+})
+
+test('kbd draws a key cap with a thicker bottom edge', () => {
+  assert.equal(
+    declarationsOf(css, '.ap-c-kbd')['border-block-end-width'],
+    'var(--ap-border-width-strong)',
+  )
+})
+
+test('the skeleton pulses with prefixed keyframes and offers block and circle shapes', () => {
+  assert.match(declarationsOf(css, '.ap-c-skeleton').animation, /^ap-skeleton-pulse /)
+  assert.match(css, /@keyframes ap-skeleton-pulse/)
+  assert.equal(
+    declarationsOf(css, '.ap-c-skeleton--circle')['--ap-skeleton-radius'],
+    'var(--ap-radius-pill)',
+  )
 })

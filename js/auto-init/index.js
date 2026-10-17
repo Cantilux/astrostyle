@@ -1,5 +1,6 @@
 // Declarative setup: enhances every element that asks for it with a `data-ap-*` attribute.
 import { createCombobox } from '../combobox/index.js'
+import { createDialog } from '../dialog/index.js'
 import { createPagination } from '../pagination/index.js'
 import { createTabs } from '../tabs/index.js'
 
@@ -30,11 +31,16 @@ const enhancers = [
         activation: root.dataset.apTabs === 'manual' ? 'manual' : 'automatic',
       }),
   ],
+  [
+    'dialog[data-ap-dialog]',
+    (dialog) => createDialog(dialog, { dismissible: dialog.dataset.apDialog !== 'static' }),
+  ],
 ]
 
 // Enhances, under `root`, every `select[data-ap-combobox]` (free text with `data-ap-creatable`),
 // `nav[data-ap-pagination]` (`data-ap-page`, `data-ap-count`, optional `data-ap-href` template
-// with `{page}`) and `[data-ap-tabs]` (`data-ap-tabs="manual"` for manual activation). Returns
+// with `{page}`), `[data-ap-tabs]` (`data-ap-tabs="manual"` for manual activation) and
+// `dialog[data-ap-dialog]` (`data-ap-dialog="static"` keeps it open on a backdrop click). Returns
 // the handles; elements already enhanced (`data-ap-enhanced`) are skipped. An element that cannot
 // be enhanced (broken markup) is reported on the console and left as it is; the others go on.
 export function autoInit(root = document) {

@@ -1,0 +1,42 @@
+// Divider (ITCSS Components): a hairline that separates content, on an `<hr>` or around a short
+// label ("OR"). The lines are generated content, so the label is the only thing read.
+// Contract and tokens: scss/components/divider/README.md.
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults.
+$tokens: (
+  color: fn.token('border'),
+  width: fn.token('border-width-hairline'),
+  gap: fn.space(md),
+  label-color: fn.token('text-muted'),
+);
+
+// Emits `.ap-c-divider` and its modifier.
+@mixin emit {
+  #{c.component(divider)} {
+    @include c.tokens(divider, $tokens);
+    @include mixins.text(label);
+
+    display: flex;
+    align-items: center;
+    block-size: auto;
+    min-inline-size: 0;
+    border: 0;
+    color: c.private(label-color);
+
+    &::before,
+    &::after {
+      flex: 1;
+      border-block-start: c.private(width) solid c.private(color);
+      content: '';
+    }
+
+    &:where(:not(:empty)) {
+      gap: c.private(gap);
+    }
+  }
+
+  @include c.modifier(divider, strong, (color: fn.token('border-strong'), width: fn.token('border-width-strong')));
+}

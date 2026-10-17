@@ -30,6 +30,7 @@ export const requiredFiles = [
   'scss/astrostyle.scss',
   'js/index.js',
   'js/combobox/index.js',
+  'js/dialog/index.js',
   'js/pagination/index.js',
   'js/tabs/index.js',
   'js/toast/index.js',

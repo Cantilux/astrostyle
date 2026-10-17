@@ -1,0 +1,94 @@
+// Drawer (ITCSS Components): a native `<dialog>` that slides in along the full height of the end
+// edge (`--start` for the start edge), with a header, a scrolling body and a footer. It shares
+// `createDialog()` with the dialog. Contract and tokens: scss/components/drawer/README.md.
+@use '../../settings/config';
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults. `start` and `end` are the insets of the two edges; `offset`
+// is where the slide starts.
+$tokens: (
+  bg: fn.token('bg'),
+  fg: fn.token('text'),
+  border-color: fn.token('border'),
+  shadow: fn.token('elevation-overlay'),
+  width: 24rem,
+  padding: fn.space(xl),
+  gap: fn.space(lg),
+  start: auto,
+  end: 0,
+  offset: fn.space(xl),
+  duration: fn.token('duration-slow'),
+);
+
+// Backdrop color, read on `::backdrop` from the public token (see the dialog).
+$backdrop: color-mix(in oklab, #{fn.token('palette-black')} 60%, transparent);
+
+// Emits `.ap-c-drawer`, its elements, its modifier and its keyframes.
+@mixin emit {
+  #{c.component(drawer)} {
+    @include c.tokens(drawer, $tokens);
+    @include mixins.text(body);
+
+    inset-block: 0;
+    inset-inline: c.private(start) c.private(end);
+    inline-size: min(#{c.private(width)}, 100%);
+    max-inline-size: 100%;
+    block-size: 100%;
+    max-block-size: 100%;
+    margin: 0;
+    padding: c.private(padding);
+    border-inline: fn.token('border-width-hairline') solid c.private(border-color);
+    background-color: c.private(bg);
+    box-shadow: c.private(shadow);
+    color: c.private(fg);
+    overscroll-behavior: contain;
+
+    &:where([open]) {
+      display: flex;
+      flex-direction: column;
+      gap: c.private(gap);
+      animation: #{config.$prefix}-drawer-in c.private(duration) fn.token('ease-out');
+    }
+
+    &::backdrop {
+      background-color: var(#{c.public-token(drawer, backdrop)}, #{$backdrop});
+    }
+  }
+
+  #{c.component(drawer, header)} {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: fn.space(md);
+  }
+
+  #{c.component(drawer, title)} {
+    @include mixins.text(panel-title);
+
+    align-self: center;
+    min-inline-size: 0;
+  }
+
+  #{c.component(drawer, body)} {
+    flex: 1 1 auto;
+    min-block-size: 0;
+    overflow-y: auto;
+  }
+
+  #{c.component(drawer, footer)} {
+    display: flex;
+    flex-wrap: wrap;
+    gap: fn.space(sm);
+  }
+
+  @include c.modifier(drawer, start, (start: 0, end: auto, offset: calc(#{fn.space(xl)} * -1)));
+
+  @keyframes #{config.$prefix}-drawer-in {
+    from {
+      opacity: 0;
+      translate: c.private(offset) 0;
+    }
+  }
+}

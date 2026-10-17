@@ -1,0 +1,68 @@
+// Table (ITCSS Components): a framed, horizontally scrolling region around a native `<table>`,
+// with a tinted header, optional stripes and a compact density. Cells keep the element defaults
+// (label-style headers, tabular numbers). Contract and tokens: scss/components/table/README.md.
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults.
+$tokens: (
+  border-color: fn.token('border-subtle'),
+  radius: fn.token('radius-control'),
+  head-bg: fn.token('surface-1'),
+  stripe-bg: transparent,
+  cell-padding-block: fn.space(sm),
+  cell-padding-inline: fn.space(md),
+);
+
+// Emits `.ap-c-table`, its numeric cells and its modifiers.
+@mixin emit {
+  #{c.component(table)} {
+    @include c.tokens(table, $tokens);
+
+    min-inline-size: 0;
+    overflow-x: auto;
+    border: fn.token('border-width-hairline') solid c.private(border-color);
+    border-radius: c.private(radius);
+
+    @include mixins.focus-ring;
+
+    > :where(table) {
+      inline-size: 100%;
+    }
+
+    :where(th, td) {
+      padding-block: c.private(cell-padding-block);
+      padding-inline: c.private(cell-padding-inline);
+      border-block-end-color: c.private(border-color);
+    }
+
+    :where(thead th) {
+      background-color: c.private(head-bg);
+    }
+
+    :where(tbody tr:nth-child(even)) {
+      background-color: c.private(stripe-bg);
+    }
+
+    :where(tbody tr:last-child > *) {
+      border-block-end: 0;
+    }
+
+    :where(caption) {
+      padding-inline: c.private(cell-padding-inline);
+      border-block-start: fn.token('border-width-hairline') solid c.private(border-color);
+    }
+  }
+
+  #{c.component(table, numeric)} {
+    text-align: end;
+  }
+
+  @include c.modifier(table, striped, (stripe-bg: fn.token('surface-1')));
+  @include c.modifier(
+    table,
+    compact,
+    (cell-padding-block: fn.space(xxs), cell-padding-inline: fn.space(sm))
+  );
+}

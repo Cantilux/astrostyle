@@ -1,6 +1,7 @@
 // Component registry (ITCSS Components): emission order, `$components` selection and the token
 // maps used by the docs.
-@use 'sass:list';
+// `list` is the namespace of the list component, so the Sass module gets another name.
+@use 'sass:list' as sass-list;
 @use 'sass:map';
 @use 'sass:meta';
 @use '../settings/config';
@@ -32,6 +33,14 @@
 @use 'tabbed-box/tabbed-box';
 @use 'segment-bar/segment-bar';
 @use 'swatch/swatch';
+@use 'dialog/dialog';
+@use 'drawer/drawer';
+@use 'accordion/accordion';
+@use 'table/table';
+@use 'list/list';
+@use 'divider/divider';
+@use 'kbd/kbd';
+@use 'skeleton/skeleton';
 
 // Emission order: a component that adjusts another one comes after it.
 $order: (
@@ -63,6 +72,14 @@ $order: (
   tabbed-box,
   segment-bar,
   swatch,
+  dialog,
+  drawer,
+  accordion,
+  table,
+  list,
+  divider,
+  kbd,
+  skeleton,
 );
 
 // Public tokens of every component, keyed by component name.
@@ -95,13 +112,21 @@ $tokens: (
   tabbed-box: tabbed-box.$tokens,
   segment-bar: segment-bar.$tokens,
   swatch: swatch.$tokens,
+  dialog: dialog.$tokens,
+  drawer: drawer.$tokens,
+  accordion: accordion.$tokens,
+  table: table.$tokens,
+  list: list.$tokens,
+  divider: divider.$tokens,
+  kbd: kbd.$tokens,
+  skeleton: skeleton.$tokens,
 );
 
 // Fails compilation when `$names` (`all` or a list) contains an unknown component.
 @function _validate($names) {
   @if $names != all {
     @each $name in $names {
-      @if not list.index($order, $name) {
+      @if not sass-list.index($order, $name) {
         @error 'astrostyle: unknown component `#{$name}`. Known: #{$order}.';
       }
     }
@@ -124,8 +149,8 @@ $_configured: _validate(config.$components);
   $result: ();
 
   @each $name in $order {
-    @if list.index($names, $name) {
-      $result: list.append($result, $name, $separator: comma);
+    @if sass-list.index($names, $name) {
+      $result: sass-list.append($result, $name, $separator: comma);
     }
   }
 
