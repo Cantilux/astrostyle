@@ -27,8 +27,10 @@
     @include mixins.text(map.get(typography.$element-roles-values, small));
   }
 
+  // Feature Mono joins `--` into one dash; code must show every character.
   :where(#{$s}) :where(code, kbd, samp, pre) {
     font-family: fn.token('font-body');
+    font-variant-ligatures: none;
   }
 
   :where(#{$s}) :where(code, kbd, samp) {

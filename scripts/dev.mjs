@@ -18,6 +18,8 @@ const contentTypes = {
   '.js': 'text/javascript; charset=utf-8',
   '.svg': 'image/svg+xml',
   '.json': 'application/json',
+  '.ttf': 'font/ttf',
+  '.otf': 'font/otf',
 }
 
 /** Browser-side client: reloads on `reload`, shows a banner on `failure`. */

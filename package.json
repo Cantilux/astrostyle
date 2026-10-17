@@ -33,6 +33,8 @@
     "./css/core": "./dist/core.css",
     "./css/core.min": "./dist/core.min.css",
     "./css/*": "./dist/components/*.css",
+    "./fonts.css": "./dist/fonts.css",
+    "./fonts/*": "./fonts/*",
     "./tokens.json": "./dist/tokens.json",
     "./js": "./js/index.js",
     "./js/*": "./js/*/index.js",
@@ -43,6 +45,7 @@
     "scss",
     "js",
     "dist",
+    "fonts",
     "LICENSE",
     "README.md",
     "CHANGELOG.md"

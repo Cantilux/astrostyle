@@ -195,6 +195,7 @@ export async function buildDocs({ style = 'compressed' } = {}) {
     writeFile(`${outDir}/docs.css`, `${licenseHeader(version)}\n${css}\n`),
     copyFile(`${siteDir}/docs.js`, `${outDir}/docs.js`),
     cp(`${root}js`, `${outDir}/js`, { recursive: true }),
+    cp(`${root}fonts`, `${outDir}/fonts`, { recursive: true }),
     copyFile(`${siteDir}/assets/favicon.svg`, `${outDir}/assets/favicon.svg`),
     writeFile(`${outDir}/.nojekyll`, ''),
   ])

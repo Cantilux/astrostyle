@@ -1,0 +1,49 @@
+// Optional @font-face rules for the Design Guide fonts, compiled to dist/fonts.css. The fonts whose
+// license allows redistribution ship in fonts/; Powerr, Rimma Sans and SCHABO are declared only
+// when `$licensed-path` points to the project's own copies. Family names match the font-family
+// tokens in settings/_typography.scss.
+
+// Folder of the bundled font files, as a URL relative to the compiled stylesheet.
+$path: '../fonts' !default;
+
+// Folder of the project's Powerr, Rimma Sans and SCHABO files; `null` leaves them out.
+$licensed-path: null !default;
+
+// Fonts bundled in fonts/: family, weight, style, file name, format.
+$_bundled: (
+  ('Feature Mono', 100, normal, 'FeatureMono-Hairline.ttf', 'truetype'),
+  ('Feature Mono', 300, normal, 'FeatureMono-Light.ttf', 'truetype'),
+  ('Feature Mono', 500, normal, 'FeatureMono-Medium.ttf', 'truetype'),
+  ('Instrument Serif', 400, normal, 'InstrumentSerif-Regular.ttf', 'truetype'),
+  ('Instrument Serif', 400, italic, 'InstrumentSerif-Italic.ttf', 'truetype'),
+  ('Genesys', 400, normal, 'Genesys-Regular.ttf', 'truetype'),
+  ('ST-Cyberillic', 400, normal, 'ST-Cyberillic.otf', 'opentype'),
+);
+
+// Fonts the project provides under `$licensed-path`, with their upstream file names.
+$_licensed: (
+  ('Powerr', 400, normal, 'Powerr-Regular.ttf', 'truetype'),
+  ('Powerr', 500, normal, 'Powerr-Medium.ttf', 'truetype'),
+  ('Powerr', 700, normal, 'Powerr-Bold.ttf', 'truetype'),
+  ('Rimma Sans', 700, normal, 'RimmaSans-Bold.ttf', 'truetype'),
+  ('SCHABO', 400, normal, 'Schabo-Condensed.woff2', 'woff2'),
+);
+
+// Emits one @font-face per entry of `$faces`, reading the files from `$folder`.
+@mixin _faces($faces, $folder) {
+  @each $family, $weight, $style, $file, $format in $faces {
+    @font-face {
+      font-family: $family;
+      font-style: $style;
+      font-weight: $weight;
+      font-display: swap;
+      src: url('#{$folder}/#{$file}') format($format);
+    }
+  }
+}
+
+@include _faces($_bundled, $path);
+
+@if $licensed-path {
+  @include _faces($_licensed, $licensed-path);
+}
