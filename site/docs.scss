@@ -27,6 +27,15 @@
   padding-block: ap.space(md);
 }
 
+// Brand on the start side, theme toggle on the end side, never wrapped: on narrow screens the
+// version drops under the name instead.
+.docs-header__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: ap.space(md);
+}
+
 .docs-brand {
   @include ap.text(panel-title);
 
@@ -38,6 +47,16 @@
   @include ap.text(caption);
 
   color: ap.token('text-muted');
+}
+
+// Page links on one line under the brand; on narrow screens the line scrolls sideways.
+.docs-nav {
+  display: flex;
+  gap: ap.space(lg);
+  overflow-x: auto;
+  padding-block: ap.space(xxs);
+  scrollbar-width: thin;
+  white-space: nowrap;
 }
 
 .docs-nav-link {
@@ -56,6 +75,8 @@
   @include ap.text(label);
   @include ap.interactive;
   @include ap.focus-ring;
+
+  flex-shrink: 0;
 
   min-block-size: ap.token('size-control');
   padding-inline: ap.space(lg);
