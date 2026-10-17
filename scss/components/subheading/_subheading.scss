@@ -1,0 +1,35 @@
+// Subheading (ITCSS Components): the Design Guide's slash-delimited subheading, "/ TITLE /".
+// Contract and tokens: scss/components/subheading/README.md.
+@use 'sass:string';
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults. `slash` is a CSS string.
+$tokens: (
+  color: fn.token('text'),
+  slash: string.unquote('"/"'),
+  slash-color: fn.token('accent'),
+  gap: fn.space(sm),
+);
+
+// Emits `.ap-c-subheading`.
+@mixin emit {
+  #{c.component(subheading)} {
+    @include c.tokens(subheading, $tokens);
+    @include mixins.text(panel-title);
+
+    display: flex;
+    align-items: baseline;
+    gap: c.private(gap);
+    min-inline-size: 0;
+    color: c.private(color);
+
+    &::before,
+    &::after {
+      flex-shrink: 0;
+      color: c.private(slash-color);
+      content: c.private(slash) / '';
+    }
+  }
+}

@@ -1,0 +1,52 @@
+// Swatch (ITCSS Components): the Design Guide's rounded color tile, with the color's name and
+// value beside it.
+// Contract and tokens: scss/components/swatch/README.md.
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults. Set `color` on each swatch.
+$tokens: (
+  color: transparent,
+  chip-size: fn.token('size-control-lg'),
+  chip-radius: fn.token('radius-control'),
+  border-color: fn.token('border'),
+  gap: fn.space(sm),
+  value-color: fn.token('text-muted'),
+);
+
+// Emits `.ap-c-swatch` and its elements.
+@mixin emit {
+  #{c.component(swatch)} {
+    @include c.tokens(swatch, $tokens);
+
+    display: grid;
+    grid-template-columns: c.private(chip-size) minmax(0, 1fr);
+    align-content: center;
+    column-gap: c.private(gap);
+    min-inline-size: 0;
+  }
+
+  #{c.component(swatch, chip)} {
+    grid-row: span 2;
+    align-self: center;
+    aspect-ratio: 1;
+    border: fn.token('border-width-hairline') solid c.private(border-color);
+    border-radius: c.private(chip-radius);
+    background-color: c.private(color);
+  }
+
+  #{c.component(swatch, name)} {
+    @include mixins.text(data);
+
+    place-self: end start;
+  }
+
+  #{c.component(swatch, value)} {
+    @include mixins.text(caption);
+
+    place-self: start;
+    color: c.private(value-color);
+    overflow-wrap: anywhere;
+  }
+}

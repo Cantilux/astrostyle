@@ -1,0 +1,49 @@
+// Card (ITCSS Components): the Design Guide's rounded card, a surface for grouped content. It has no
+// layout of its own: combine it with an object (`ap-o-stack`, `ap-o-cluster`). A card that is a
+// link or a button reacts to hover and focus.
+// Contract and tokens: scss/components/card/README.md.
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults.
+$tokens: (
+  bg: fn.token('surface-1'),
+  fg: fn.token('text'),
+  border-color: fn.token('border-subtle'),
+  hover-border-color: fn.token('accent'),
+  radius: fn.token('radius-card'),
+  padding: fn.space(lg),
+);
+
+// Emits `.ap-c-card` and its title.
+@mixin emit {
+  #{c.component(card)} {
+    @include c.tokens(card, $tokens);
+
+    min-inline-size: 0;
+    padding: c.private(padding);
+    border: fn.token('border-width-hairline') solid c.private(border-color);
+    border-radius: c.private(radius);
+    background-color: c.private(bg);
+    color: c.private(fg);
+
+    &:where(a[href], button) {
+      text-align: start;
+      text-decoration-line: none;
+
+      @include mixins.interactive;
+      @include mixins.focus-ring;
+    }
+
+    &:where(a[href], button):where(:hover):where(:not(:disabled)) {
+      border-color: c.private(hover-border-color);
+    }
+  }
+
+  #{c.component(card, title)} {
+    @include mixins.text(panel-title);
+
+    color: inherit;
+  }
+}

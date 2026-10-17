@@ -26,9 +26,9 @@
 >
 > **In place:** design tokens, light and dark themes, the reset, element defaults, layout objects (stack, cluster, grid, sidebar, switcher, frame, container), utilities and the Sass toolbox.
 >
-> **Components:** buttons, button groups, fields, inputs, selects, a searchable combobox, checkboxes, radios, switches, ranges, segmented meters, breadcrumbs, pagination, tabs, tags, callouts, progress bars, spinners, empty states and toasts.
+> **Components:** buttons, button groups, fields, inputs, selects, a searchable combobox, checkboxes, radios, switches, ranges, segmented meters, breadcrumbs, pagination, tabs, tags, callouts, progress bars, spinners, empty states, toasts, and the Design Guide's own blocks: mastheads, section headings, subheadings, windows, cards, tabbed boxes, segment bars and swatches.
 >
-> **Next:** cards, windows, dialogs, menus… over the next releases, following the [roadmap](https://github.com/Cantilux/astrostyle/issues). Until `1.0.0`, minor versions may still change the API.
+> **Next:** dialogs, drawers, accordions, menus, tooltips… over the next releases, following the [roadmap](https://github.com/Cantilux/astrostyle/issues). Until `1.0.0`, minor versions may still change the API.
 
 > [!NOTE]
 > astrostyle is an independent production by Enrico Cantile and is not affiliated with Crescent Chimera. It is published under the [ASTROPRISMA Third Party License](https://www.astroprisma.com/license).

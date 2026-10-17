@@ -1,0 +1,53 @@
+// Segment bar (ITCSS Components): the Design Guide's outlined pill legend split into labelled
+// segments ("RICH BLACK · ASTROPRISMA BLACK · BASIC BLACK"). Segments wrap on narrow widths and
+// the dividers follow them.
+// Contract and tokens: scss/components/segment-bar/README.md.
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults. The card radius rounds a one-line bar into a pill and keeps
+// a wrapped bar a rounded box.
+$tokens: (
+  border-color: fn.token('border-strong'),
+  radius: fn.token('radius-card'),
+  bg: transparent,
+  fg: fn.token('text'),
+  padding-block: fn.space(sm),
+  padding-inline: fn.space(lg),
+);
+
+// Emits `.ap-c-segment-bar` and its segments.
+@mixin emit {
+  #{c.component(segment-bar)} {
+    @include c.tokens(segment-bar, $tokens);
+
+    display: flex;
+    flex-wrap: wrap;
+    min-inline-size: 0;
+    overflow: clip;
+    border: fn.token('border-width-hairline') solid c.private(border-color);
+    border-radius: c.private(radius);
+    background-color: c.private(bg);
+    color: c.private(fg);
+    list-style: none;
+  }
+
+  // Each segment draws a divider on its start and top edges; the frame covers the ones that fall
+  // on the outer edge, so the dividers stay right however the segments wrap.
+  #{c.component(segment-bar, segment)} {
+    @include mixins.text(label);
+
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    padding-block: c.private(padding-block);
+    padding-inline: c.private(padding-inline);
+    box-shadow:
+      calc(#{fn.token('border-width-hairline')} * -1) 0 0 c.private(border-color),
+      0 calc(#{fn.token('border-width-hairline')} * -1) 0 c.private(border-color);
+    font-weight: fn.token('weight-regular');
+    text-align: center;
+  }
+}

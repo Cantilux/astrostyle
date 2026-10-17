@@ -24,6 +24,14 @@
 @use 'pagination/pagination';
 @use 'tabs/tabs';
 @use 'toast/toast';
+@use 'masthead/masthead';
+@use 'section-heading/section-heading';
+@use 'subheading/subheading';
+@use 'window/window';
+@use 'card/card';
+@use 'tabbed-box/tabbed-box';
+@use 'segment-bar/segment-bar';
+@use 'swatch/swatch';
 
 // Emission order: a component that adjusts another one comes after it.
 $order: (
@@ -47,6 +55,14 @@ $order: (
   pagination,
   tabs,
   toast,
+  masthead,
+  section-heading,
+  subheading,
+  window,
+  card,
+  tabbed-box,
+  segment-bar,
+  swatch,
 );
 
 // Public tokens of every component, keyed by component name.
@@ -71,6 +87,14 @@ $tokens: (
   pagination: pagination.$tokens,
   tabs: tabs.$tokens,
   toast: toast.$tokens,
+  masthead: masthead.$tokens,
+  section-heading: section-heading.$tokens,
+  subheading: subheading.$tokens,
+  window: window.$tokens,
+  card: card.$tokens,
+  tabbed-box: tabbed-box.$tokens,
+  segment-bar: segment-bar.$tokens,
+  swatch: swatch.$tokens,
 );
 
 // Fails compilation when `$names` (`all` or a list) contains an unknown component.
