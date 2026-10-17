@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="1024" viewBox="0 0 1040 1024" role="img" aria-labelledby="title desc">
+  <title id="title">astrostyle code conventions: JavaScript</title>
+  <desc id="desc">7 rules for JavaScript. A complete text version is available in the README below this image.</desc>
+  <defs>
+    <pattern id="halftone" width="8" height="8" patternUnits="userSpaceOnUse">
+      <circle cx="4" cy="4" r="1" fill="#130d1c" fill-opacity=".06"/>
+    </pattern>
+  </defs>
+  <rect width="1040" height="1024" rx="18" fill="#f0eee8"/>
+  <rect width="1040" height="1024" rx="18" fill="url(#halftone)"/>
+  <g font-family="'Feature Mono', 'SFMono-Regular', Menlo, Consolas, monospace" fill="#130d1c">
+    <text x="40" y="48" font-size="22" font-weight="700" letter-spacing="2">JAVASCRIPT</text>
+    <text x="1000" y="48" text-anchor="end" font-size="13" letter-spacing="2">CONVENTIONS / 05</text>
+    <line x1="40" y1="72" x2="1000" y2="72" stroke="#130d1c" stroke-width="2"/>
+    <g transform="translate(0 96)" data-rule="1">
+      <polygon points="40,0 366,0 346,112 40,112" fill="#54009d"/>
+      <text x="60" y="24" fill="#f0eee8" font-size="13" letter-spacing="2">01</text>
+      <text x="60" y="70" fill="#f0eee8" font-size="18" font-weight="700" letter-spacing="1">NATIVE MODULES</text>
+      <text font-size="16">
+        <tspan x="400" y="50.0">Native ES modules, zero dependencies, no build step needed</tspan>
+        <tspan x="400" y="74.0">on your side.</tspan>
+      </text>
+    </g>
+    <g transform="translate(0 224)" data-rule="2">
+      <polygon points="40,0 366,0 346,128 40,128" fill="#d50059"/>
+      <text x="60" y="24" fill="#f0eee8" font-size="13" letter-spacing="2">02</text>
+      <text x="60" y="66" fill="#f0eee8" font-size="18" font-weight="700" letter-spacing="1">ENHANCEMENT</text>
+      <text x="60" y="90" fill="#f0eee8" font-size="18" font-weight="700" letter-spacing="1">FACTORY</text>
+      <text font-size="16">
+        <tspan x="400" y="34.0">One module per interactive component, exposing a</tspan>
+        <tspan x="400" y="58.0">createX(element, options, env) factory that enhances</tspan>
+        <tspan x="400" y="82.0">native markup and returns a handle with destroy(); env</tspan>
+        <tspan x="400" y="106.0">injects the document and id generator for tests.</tspan>
+      </text>
+    </g>
+    <g transform="translate(0 368)" data-rule="3">
+      <polygon points="40,0 366,0 346,112 40,112" fill="#ef476e"/>
+      <text x="60" y="24" fill="#130d1c" font-size="13" letter-spacing="2">03</text>
+      <text x="60" y="70" fill="#130d1c" font-size="18" font-weight="700" letter-spacing="1">DOM EVENTS</text>
+      <text font-size="16">
+        <tspan x="400" y="50.0">Components talk through DOM events prefixed with ap:</tspan>
+        <tspan x="400" y="74.0">(ap:change, ap:open, ap:close, ap:page).</tspan>
+      </text>
+    </g>
+    <g transform="translate(0 496)" data-rule="4">
+      <polygon points="40,0 366,0 346,112 40,112" fill="#ff603e"/>
+      <text x="60" y="24" fill="#130d1c" font-size="13" letter-spacing="2">04</text>
+      <text x="60" y="70" fill="#130d1c" font-size="18" font-weight="700" letter-spacing="1">PURE LOGIC</text>
+      <text font-size="16">
+        <tspan x="400" y="38.0">Pure logic (filtering, page ranges) is kept in separate</tspan>
+        <tspan x="400" y="62.0">functions and unit tested; document and timers are passed</tspan>
+        <tspan x="400" y="86.0">in, never hard-coded.</tspan>
+      </text>
+    </g>
+    <g transform="translate(0 624)" data-rule="5">
+      <polygon points="40,0 366,0 346,112 40,112" fill="#ffbd5c"/>
+      <text x="60" y="24" fill="#130d1c" font-size="13" letter-spacing="2">05</text>
+      <text x="60" y="70" fill="#130d1c" font-size="18" font-weight="700" letter-spacing="1">PUBLIC EXPORTS</text>
+      <text font-size="16">
+        <tspan x="400" y="38.0">astrostyle/js exports only the public API (createX(),</tspan>
+        <tspan x="400" y="62.0">autoInit(), default labels, pageWindow()); pure helpers</tspan>
+        <tspan x="400" y="86.0">stay inside their modules.</tspan>
+      </text>
+    </g>
+    <g transform="translate(0 752)" data-rule="6">
+      <polygon points="40,0 366,0 346,112 40,112" fill="#54009d"/>
+      <text x="60" y="24" fill="#f0eee8" font-size="13" letter-spacing="2">06</text>
+      <text x="60" y="70" fill="#f0eee8" font-size="18" font-weight="700" letter-spacing="1">INLINE STYLES</text>
+      <text font-size="16">
+        <tspan x="400" y="50.0">JavaScript never sets visual styles inline, except for</tspan>
+        <tspan x="400" y="74.0">positioning.</tspan>
+      </text>
+    </g>
+    <g transform="translate(0 880)" data-rule="7">
+      <polygon points="40,0 366,0 346,112 40,112" fill="#d50059"/>
+      <text x="60" y="24" fill="#f0eee8" font-size="13" letter-spacing="2">07</text>
+      <text x="60" y="58" fill="#f0eee8" font-size="18" font-weight="700" letter-spacing="1">FUNCTION</text>
+      <text x="60" y="82" fill="#f0eee8" font-size="18" font-weight="700" letter-spacing="1">COMMENTS</text>
+      <text font-size="16">
+        <tspan x="400" y="50.0">Every named function gets a short comment above it saying</tspan>
+        <tspan x="400" y="74.0">what it is for.</tspan>
+      </text>
+    </g>
+  </g>
+</svg>

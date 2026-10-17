@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="560" viewBox="0 0 1040 560" role="img" aria-labelledby="title desc">
+  <title id="title">astrostyle code conventions: Components</title>
+  <desc id="desc">3 rules for Components. A complete text version is available in the README below this image.</desc>
+  <defs>
+    <pattern id="halftone" width="8" height="8" patternUnits="userSpaceOnUse">
+      <circle cx="4" cy="4" r="1" fill="#130d1c" fill-opacity=".06"/>
+    </pattern>
+  </defs>
+  <rect width="1040" height="560" rx="18" fill="#f0eee8"/>
+  <rect width="1040" height="560" rx="18" fill="url(#halftone)"/>
+  <g font-family="'Feature Mono', 'SFMono-Regular', Menlo, Consolas, monospace" fill="#130d1c">
+    <text x="40" y="48" font-size="22" font-weight="700" letter-spacing="2">COMPONENTS</text>
+    <text x="1000" y="48" text-anchor="end" font-size="13" letter-spacing="2">CONVENTIONS / 04</text>
+    <line x1="40" y1="72" x2="1000" y2="72" stroke="#130d1c" stroke-width="2"/>
+    <g transform="translate(0 96)" data-rule="1">
+      <polygon points="40,0 366,0 346,176 40,176" fill="#54009d"/>
+      <text x="60" y="24" fill="#f0eee8" font-size="13" letter-spacing="2">01</text>
+      <text x="60" y="102" fill="#f0eee8" font-size="18" font-weight="700" letter-spacing="1">FEATURE FOLDERS</text>
+      <text font-size="16">
+        <tspan x="400" y="34.0">One folder per component in scss/components/&lt;name&gt;/: the</tspan>
+        <tspan x="400" y="58.0">styles, with a $tokens map of public tokens and defaults,</tspan>
+        <tspan x="400" y="82.0">and a README.md with the markup contract. Its docs page</tspan>
+        <tspan x="400" y="106.0">lives in site/pages/, its tests in tests/, its behavior</tspan>
+        <tspan x="400" y="130.0">(if any) in js/&lt;name&gt;/, with helpers shared by several</tspan>
+        <tspan x="400" y="154.0">modules in js/shared/.</tspan>
+      </text>
+    </g>
+    <g transform="translate(0 288)" data-rule="2">
+      <polygon points="40,0 366,0 346,112 40,112" fill="#d50059"/>
+      <text x="60" y="24" fill="#f0eee8" font-size="13" letter-spacing="2">02</text>
+      <text x="60" y="70" fill="#f0eee8" font-size="18" font-weight="700" letter-spacing="1">COMPONENT TOKENS</text>
+      <text font-size="16">
+        <tspan x="400" y="38.0">Every visual property reads a component token with a</tspan>
+        <tspan x="400" y="62.0">sensible fallback, so you can restyle it without writing</tspan>
+        <tspan x="400" y="86.0">new selectors.</tspan>
+      </text>
+    </g>
+    <g transform="translate(0 416)" data-rule="3">
+      <polygon points="40,0 366,0 346,112 40,112" fill="#ef476e"/>
+      <text x="60" y="24" fill="#130d1c" font-size="13" letter-spacing="2">03</text>
+      <text x="60" y="70" fill="#130d1c" font-size="18" font-weight="700" letter-spacing="1">OUTER GEOMETRY</text>
+      <text font-size="16">
+        <tspan x="400" y="62.0">No outer margins, no fixed outer widths.</tspan>
+      </text>
+    </g>
+  </g>
+</svg>

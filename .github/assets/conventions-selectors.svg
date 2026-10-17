@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="1024" viewBox="0 0 1040 1024" role="img" aria-labelledby="title desc">
+  <title id="title">astrostyle code conventions: Selectors &amp; naming</title>
+  <desc id="desc">7 rules for Selectors &amp; naming. A complete text version is available in the README below this image.</desc>
+  <defs>
+    <pattern id="halftone" width="8" height="8" patternUnits="userSpaceOnUse">
+      <circle cx="4" cy="4" r="1" fill="#130d1c" fill-opacity=".06"/>
+    </pattern>
+  </defs>
+  <rect width="1040" height="1024" rx="18" fill="#f0eee8"/>
+  <rect width="1040" height="1024" rx="18" fill="url(#halftone)"/>
+  <g font-family="'Feature Mono', 'SFMono-Regular', Menlo, Consolas, monospace" fill="#130d1c">
+    <text x="40" y="48" font-size="22" font-weight="700" letter-spacing="2">SELECTORS &amp; NAMING</text>
+    <text x="1000" y="48" text-anchor="end" font-size="13" letter-spacing="2">CONVENTIONS / 02</text>
+    <line x1="40" y1="72" x2="1000" y2="72" stroke="#130d1c" stroke-width="2"/>
+    <g transform="translate(0 96)" data-rule="1">
+      <polygon points="40,0 366,0 346,112 40,112" fill="#54009d"/>
+      <text x="60" y="24" fill="#f0eee8" font-size="13" letter-spacing="2">01</text>
+      <text x="60" y="70" fill="#f0eee8" font-size="18" font-weight="700" letter-spacing="1">BEM NAMESPACES</text>
+      <text font-size="16">
+        <tspan x="400" y="38.0">BEM with ITCSS namespaces: .ap-c-button,</tspan>
+        <tspan x="400" y="62.0">.ap-c-button__icon, .ap-c-button--primary, .ap-o-stack,</tspan>
+        <tspan x="400" y="86.0">.ap-u-truncate.</tspan>
+      </text>
+    </g>
+    <g transform="translate(0 224)" data-rule="2">
+      <polygon points="40,0 366,0 346,112 40,112" fill="#d50059"/>
+      <text x="60" y="24" fill="#f0eee8" font-size="13" letter-spacing="2">02</text>
+      <text x="60" y="58" fill="#f0eee8" font-size="18" font-weight="700" letter-spacing="1">BREAKPOINT</text>
+      <text x="60" y="82" fill="#f0eee8" font-size="18" font-weight="700" letter-spacing="1">SUFFIX</text>
+      <text font-size="16">
+        <tspan x="400" y="50.0">Responsive utilities take a breakpoint suffix:</tspan>
+        <tspan x="400" y="74.0">.ap-u-hidden@md.</tspan>
+      </text>
+    </g>
+    <g transform="translate(0 352)" data-rule="3">
+      <polygon points="40,0 366,0 346,112 40,112" fill="#ef476e"/>
+      <text x="60" y="24" fill="#130d1c" font-size="13" letter-spacing="2">03</text>
+      <text x="60" y="58" fill="#130d1c" font-size="18" font-weight="700" letter-spacing="1">SPECIFICITY</text>
+      <text x="60" y="82" fill="#130d1c" font-size="18" font-weight="700" letter-spacing="1">BUDGET</text>
+      <text font-size="16">
+        <tspan x="400" y="50.0">Specificity budget: (0,0,0) in Generic and Elements</tspan>
+        <tspan x="400" y="74.0">(everything wrapped in :where()), (0,1,0) everywhere else.</tspan>
+      </text>
+    </g>
+    <g transform="translate(0 480)" data-rule="4">
+      <polygon points="40,0 366,0 346,112 40,112" fill="#ff603e"/>
+      <text x="60" y="24" fill="#130d1c" font-size="13" letter-spacing="2">04</text>
+      <text x="60" y="58" fill="#130d1c" font-size="18" font-weight="700" letter-spacing="1">FORBIDDEN</text>
+      <text x="60" y="82" fill="#130d1c" font-size="18" font-weight="700" letter-spacing="1">SELECTORS</text>
+      <text font-size="16">
+        <tspan x="400" y="38.0">Never use IDs, !important, type-qualified classes</tspan>
+        <tspan x="400" y="62.0">(button.ap-c-button) or chains between components</tspan>
+        <tspan x="400" y="86.0">(.ap-c-card .ap-c-button).</tspan>
+      </text>
+    </g>
+    <g transform="translate(0 608)" data-rule="5">
+      <polygon points="40,0 366,0 346,128 40,128" fill="#ffbd5c"/>
+      <text x="60" y="24" fill="#130d1c" font-size="13" letter-spacing="2">05</text>
+      <text x="60" y="66" fill="#130d1c" font-size="18" font-weight="700" letter-spacing="1">NATIVE &amp; ARIA</text>
+      <text x="60" y="90" fill="#130d1c" font-size="18" font-weight="700" letter-spacing="1">STATES</text>
+      <text font-size="16">
+        <tspan x="400" y="34.0">States come from native and ARIA attributes first</tspan>
+        <tspan x="400" y="58.0">(:disabled, [aria-invalid=&quot;true&quot;], [aria-expanded=&quot;true&quot;],</tspan>
+        <tspan x="400" y="82.0">[aria-current]). is-* and has-* classes only when no</tspan>
+        <tspan x="400" y="106.0">attribute fits.</tspan>
+      </text>
+    </g>
+    <g transform="translate(0 752)" data-rule="6">
+      <polygon points="40,0 366,0 346,112 40,112" fill="#54009d"/>
+      <text x="60" y="24" fill="#f0eee8" font-size="13" letter-spacing="2">06</text>
+      <text x="60" y="70" fill="#f0eee8" font-size="18" font-weight="700" letter-spacing="1">DATA ATTRIBUTES</text>
+      <text font-size="16">
+        <tspan x="400" y="50.0">data-ap-* attributes are JavaScript hooks and are never</tspan>
+        <tspan x="400" y="74.0">styled. Themes use data-ap-theme.</tspan>
+      </text>
+    </g>
+    <g transform="translate(0 880)" data-rule="7">
+      <polygon points="40,0 366,0 346,112 40,112" fill="#d50059"/>
+      <text x="60" y="24" fill="#f0eee8" font-size="13" letter-spacing="2">07</text>
+      <text x="60" y="58" fill="#f0eee8" font-size="18" font-weight="700" letter-spacing="1">CUSTOM</text>
+      <text x="60" y="82" fill="#f0eee8" font-size="18" font-weight="700" letter-spacing="1">PROPERTIES</text>
+      <text font-size="16">
+        <tspan x="400" y="38.0">Custom properties: --ap-{token} (global),</tspan>
+        <tspan x="400" y="62.0">--ap-{component}-{property} (component), --_{name}</tspan>
+        <tspan x="400" y="86.0">(private, inside a component).</tspan>
+      </text>
+    </g>
+  </g>
+</svg>
