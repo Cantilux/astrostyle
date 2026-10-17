@@ -2,6 +2,7 @@
 // autoInit(). Pure helpers stay internal to their modules.
 export { autoInit } from './auto-init/index.js'
 export { createCombobox, defaultLabels as comboboxLabels } from './combobox/index.js'
+export { createDialog } from './dialog/index.js'
 export { createPagination, defaultLabels as paginationLabels } from './pagination/index.js'
 export { pageWindow } from './pagination/range.js'
 export { createTabs } from './tabs/index.js'

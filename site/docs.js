@@ -73,8 +73,20 @@ function initPageOutputs() {
   }
 }
 
+// Writes the return value of a closed dialog into the element named by
+// `data-docs-dialog-output`.
+function initDialogOutputs() {
+  for (const dialog of document.querySelectorAll('[data-docs-dialog-output]')) {
+    const output = document.getElementById(dialog.dataset.docsDialogOutput)
+    dialog.addEventListener('ap:close', (event) => {
+      output.textContent = `ap:close → ${dialog.id}, return value "${event.detail.returnValue}"`
+    })
+  }
+}
+
 initThemeToggle()
 initIndeterminate()
 autoInit(document)
 initToastButtons()
 initPageOutputs()
+initDialogOutputs()

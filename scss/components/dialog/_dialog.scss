@@ -1,0 +1,90 @@
+// Dialog (ITCSS Components): a native `<dialog>` centered over a dimmed page, with a header, a
+// scrolling body and a footer for actions. `createDialog()` adds openers, backdrop close and
+// focus return. Contract and tokens: scss/components/dialog/README.md.
+@use '../../settings/config';
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults.
+$tokens: (
+  bg: fn.token('bg'),
+  fg: fn.token('text'),
+  border-color: fn.token('border'),
+  radius: fn.token('radius-card'),
+  shadow: fn.token('elevation-overlay'),
+  width: 32rem,
+  padding: fn.space(xl),
+  gap: fn.space(lg),
+  edge: fn.space(lg),
+  duration: fn.token('duration-base'),
+);
+
+// Backdrop color. It is read on `::backdrop` from the public token, since older engines do not
+// pass the dialog's custom properties to its backdrop.
+$backdrop: color-mix(in oklab, #{fn.token('palette-black')} 60%, transparent);
+
+// Emits `.ap-c-dialog`, its elements and its keyframes.
+@mixin emit {
+  #{c.component(dialog)} {
+    @include c.tokens(dialog, $tokens);
+    @include mixins.text(body);
+
+    inline-size: min(#{c.private(width)}, 100% - #{c.private(edge)} * 2);
+    max-inline-size: none;
+    max-block-size: calc(100% - #{c.private(edge)} * 2);
+    margin: auto;
+    padding: c.private(padding);
+    border: fn.token('border-width-hairline') solid c.private(border-color);
+    border-radius: c.private(radius);
+    background-color: c.private(bg);
+    box-shadow: c.private(shadow);
+    color: c.private(fg);
+    overscroll-behavior: contain;
+
+    &:where([open]) {
+      display: flex;
+      flex-direction: column;
+      gap: c.private(gap);
+      animation: #{config.$prefix}-dialog-in c.private(duration) fn.token('ease-out');
+    }
+
+    &::backdrop {
+      background-color: var(#{c.public-token(dialog, backdrop)}, #{$backdrop});
+    }
+  }
+
+  #{c.component(dialog, header)} {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: fn.space(md);
+  }
+
+  #{c.component(dialog, title)} {
+    @include mixins.text(panel-title);
+
+    align-self: center;
+    min-inline-size: 0;
+  }
+
+  #{c.component(dialog, body)} {
+    flex: 1 1 auto;
+    min-block-size: 0;
+    overflow-y: auto;
+  }
+
+  #{c.component(dialog, footer)} {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: fn.space(sm);
+  }
+
+  @keyframes #{config.$prefix}-dialog-in {
+    from {
+      opacity: 0;
+      scale: 0.96;
+    }
+  }
+}

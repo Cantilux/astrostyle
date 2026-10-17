@@ -1,8 +1,9 @@
-// Pagination, tabs and toast behavior in a DOM (happy-dom).
+// Pagination, tabs, toast and dialog behavior in a DOM (happy-dom).
 import assert from 'node:assert/strict'
 import { afterEach, beforeEach, test } from 'node:test'
 import { Window } from 'happy-dom'
 import { autoInit } from '../js/auto-init/index.js'
+import { createDialog } from '../js/dialog/index.js'
 import { createPagination } from '../js/pagination/index.js'
 import { createTabs } from '../js/tabs/index.js'
 import { createToaster } from '../js/toast/index.js'
@@ -299,4 +300,77 @@ test('autoInit reports broken markup and still enhances the other elements', (t)
   assert.equal(errors.length, 1)
   assert.equal(document.querySelector('#t [role="tablist"]').getAttribute('role'), 'tablist')
   assert.equal(document.querySelector('[data-ap-tabs]').hasAttribute('data-ap-enhanced'), false)
+})
+
+// A page with an opener, a dialog with a close button, and focus on the opener.
+function dialogPage() {
+  document.body.innerHTML = `
+    <button id="opener" data-ap-dialog-open="d">Open</button>
+    <dialog id="d" class="ap-c-dialog">
+      <p>Jump now?</p>
+      <button id="yes" data-ap-dialog-close value="jump">Jump</button>
+    </dialog>`
+  document.getElementById('opener').focus()
+  return document.getElementById('d')
+}
+
+test('an opener shows the dialog as modal and a close button returns its value', () => {
+  const dialog = dialogPage()
+  const handle = createDialog(dialog, {}, { document })
+  const events = []
+  dialog.addEventListener('ap:open', () => events.push('open'))
+  dialog.addEventListener('ap:close', (event) => events.push(event.detail.returnValue))
+  document.getElementById('opener').click()
+  assert.equal(handle.isOpen(), true)
+  document.getElementById('yes').click()
+  assert.equal(handle.isOpen(), false)
+  assert.deepEqual(events, ['open', 'jump'])
+})
+
+test('closing the dialog puts focus back on the element that opened it', () => {
+  const dialog = dialogPage()
+  const handle = createDialog(dialog, {}, { document })
+  handle.open()
+  document.getElementById('yes').focus()
+  handle.close('later')
+  assert.equal(document.activeElement.id, 'opener')
+  assert.equal(dialog.returnValue, 'later')
+})
+
+test('a click on the backdrop closes a dismissible dialog only', () => {
+  const dialog = dialogPage()
+  const box = { left: 100, right: 300, top: 100, bottom: 200 }
+  dialog.getBoundingClientRect = () => box
+  // Clicks on the dialog element itself at (x, y): inside its box or on the backdrop.
+  const clickAt = (x, y) =>
+    dialog.dispatchEvent(new window.MouseEvent('click', { bubbles: true, clientX: x, clientY: y }))
+  const handle = createDialog(dialog, {}, { document })
+  handle.open()
+  clickAt(150, 150)
+  assert.equal(handle.isOpen(), true, 'a click on the padding keeps it open')
+  clickAt(10, 10)
+  assert.equal(handle.isOpen(), false)
+  handle.destroy()
+  const fixed = createDialog(dialog, { dismissible: false }, { document })
+  fixed.open()
+  clickAt(10, 10)
+  assert.equal(fixed.isOpen(), true)
+})
+
+test('destroy() stops the openers', () => {
+  const dialog = dialogPage()
+  createDialog(dialog, {}, { document }).destroy()
+  document.getElementById('opener').click()
+  assert.equal(dialog.open, false)
+})
+
+test('autoInit enhances dialogs; data-ap-dialog="static" ignores backdrop clicks', () => {
+  const dialog = dialogPage()
+  dialog.setAttribute('data-ap-dialog', 'static')
+  dialog.getBoundingClientRect = () => ({ left: 100, right: 300, top: 100, bottom: 200 })
+  const [handle] = autoInit(document)
+  document.getElementById('opener').click()
+  dialog.dispatchEvent(new window.MouseEvent('click', { bubbles: true, clientX: 1, clientY: 1 }))
+  assert.equal(handle.isOpen(), true)
+  assert.ok(dialog.hasAttribute('data-ap-enhanced'))
 })

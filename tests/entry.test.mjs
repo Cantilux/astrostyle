@@ -9,6 +9,7 @@ test('astrostyle/js exports exactly the public API', () => {
     'autoInit',
     'comboboxLabels',
     'createCombobox',
+    'createDialog',
     'createPagination',
     'createTabs',
     'createToaster',

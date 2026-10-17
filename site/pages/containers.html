@@ -1,0 +1,221 @@
+<!-- title: Containers -->
+<section class="ap-o-stack ap-o-stack--gap-md">
+  <h1>Containers</h1>
+  <p>Dialogs, drawers and accordions hold content that comes and goes; tables, lists, dividers, key caps and skeletons arrange and stand in for it. Dialogs and drawers are native <code>&lt;dialog&gt;</code> elements with a small JavaScript module; everything else is HTML and CSS.</p>
+</section>
+
+<section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="dialog">
+  <h2 class="ap-c-section-heading" id="dialog">Dialog <span class="ap-c-section-heading__index">01</span></h2>
+  <div class="ap-o-cluster ap-o-cluster--gap-sm">
+    <button class="ap-c-button ap-c-button--primary" type="button" data-ap-dialog-open="k-jump">Open a dialog</button>
+    <button class="ap-c-button" type="button" data-ap-dialog-open="k-static">Open a static dialog</button>
+  </div>
+  <p class="docs-note" id="k-dialog-output" aria-live="polite">Close a dialog: <code>ap:close</code> reports its return value here.</p>
+  <dialog class="ap-c-dialog" id="k-jump" aria-labelledby="k-jump-title" data-ap-dialog data-docs-dialog-output="k-dialog-output">
+    <header class="ap-c-dialog__header">
+      <h3 class="ap-c-dialog__title" id="k-jump-title">Jump to sector 7G?</h3>
+      <button class="ap-c-button ap-c-button--quiet ap-c-button--icon" type="button" data-ap-dialog-close value="close" aria-label="Close"><svg class="ap-c-button__icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </header>
+    <div class="ap-c-dialog__body ap-o-stack ap-o-stack--gap-sm">
+      <p>The drive needs two cycles to cool down afterwards. Press Escape, click outside or pick an answer.</p>
+      <div class="ap-c-field"><label class="ap-c-field__label" for="k-jump-note">Log note</label><input class="ap-c-input" id="k-jump-note" type="text"></div>
+    </div>
+    <footer class="ap-c-dialog__footer">
+      <button class="ap-c-button ap-c-button--quiet" type="button" data-ap-dialog-close value="cancel">Cancel</button>
+      <button class="ap-c-button ap-c-button--primary" type="button" data-ap-dialog-close value="jump">Jump</button>
+    </footer>
+  </dialog>
+  <dialog class="ap-c-dialog" id="k-static" aria-labelledby="k-static-title" data-ap-dialog="static" data-docs-dialog-output="k-dialog-output">
+    <header class="ap-c-dialog__header">
+      <h3 class="ap-c-dialog__title" id="k-static-title">Hull breach</h3>
+    </header>
+    <div class="ap-c-dialog__body"><p>A click outside does not close this one: answer, or press Escape.</p></div>
+    <footer class="ap-c-dialog__footer">
+      <button class="ap-c-button ap-c-button--danger" type="button" data-ap-dialog-close value="seal">Seal deck 3</button>
+    </footer>
+  </dialog>
+  <pre><code>&lt;button class="ap-c-button" type="button" data-ap-dialog-open="jump"&gt;Jump&lt;/button&gt;
+
+&lt;dialog class="ap-c-dialog" id="jump" aria-labelledby="jump-title" data-ap-dialog&gt;
+  &lt;header class="ap-c-dialog__header"&gt;
+    &lt;h2 class="ap-c-dialog__title" id="jump-title"&gt;Jump to sector 7G?&lt;/h2&gt;
+  &lt;/header&gt;
+  &lt;div class="ap-c-dialog__body"&gt;…&lt;/div&gt;
+  &lt;footer class="ap-c-dialog__footer"&gt;
+    &lt;button class="ap-c-button" type="button" data-ap-dialog-close value="cancel"&gt;Cancel&lt;/button&gt;
+  &lt;/footer&gt;
+&lt;/dialog&gt;</code></pre>
+  <pre><code>import { createDialog } from 'astrostyle/js/dialog'
+
+const jump = createDialog(document.querySelector('#jump'), { dismissible: true })
+jump.element.addEventListener('ap:close', (event) =&gt; console.log(event.detail.returnValue))</code></pre>
+  <p class="docs-note">A native modal dialog: the page behind is inert and Escape closes it. The module adds openers (<code>data-ap-dialog-open</code>), close buttons whose <code>value</code> becomes the return value, backdrop close, focus return and the <code>ap:open</code> and <code>ap:close</code> events.</p>
+  {{tokens-dialog}}
+</section>
+
+<section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="drawer">
+  <h2 class="ap-c-section-heading" id="drawer">Drawer <span class="ap-c-section-heading__index">02</span></h2>
+  <div class="ap-o-cluster ap-o-cluster--gap-sm">
+    <button class="ap-c-button" type="button" data-ap-dialog-open="k-filters">Open from the end</button>
+    <button class="ap-c-button" type="button" data-ap-dialog-open="k-menu">Open from the start</button>
+  </div>
+  <dialog class="ap-c-drawer" id="k-filters" aria-labelledby="k-filters-title" data-ap-dialog data-docs-dialog-output="k-dialog-output">
+    <header class="ap-c-drawer__header">
+      <h3 class="ap-c-drawer__title" id="k-filters-title">Filters</h3>
+      <button class="ap-c-button ap-c-button--quiet ap-c-button--icon" type="button" data-ap-dialog-close value="close" aria-label="Close"><svg class="ap-c-button__icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </header>
+    <div class="ap-c-drawer__body">
+      <fieldset class="ap-o-stack ap-o-stack--gap-md">
+        <legend>Category</legend>
+        <label class="ap-o-cluster"><input class="ap-c-checkbox" type="checkbox" checked> Equipment</label>
+        <label class="ap-o-cluster"><input class="ap-c-checkbox" type="checkbox"> Hacks</label>
+        <label class="ap-o-cluster"><input class="ap-c-checkbox" type="checkbox"> Drones</label>
+      </fieldset>
+    </div>
+    <footer class="ap-c-drawer__footer">
+      <button class="ap-c-button ap-c-button--primary" type="button" data-ap-dialog-close value="apply">Apply</button>
+      <button class="ap-c-button ap-c-button--quiet" type="button" data-ap-dialog-close value="reset">Reset</button>
+    </footer>
+  </dialog>
+  <dialog class="ap-c-drawer ap-c-drawer--start" id="k-menu" aria-labelledby="k-menu-title" data-ap-dialog data-docs-dialog-output="k-dialog-output">
+    <header class="ap-c-drawer__header">
+      <h3 class="ap-c-drawer__title" id="k-menu-title">Ship</h3>
+      <button class="ap-c-button ap-c-button--quiet ap-c-button--icon" type="button" data-ap-dialog-close value="close" aria-label="Close"><svg class="ap-c-button__icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </header>
+    <nav class="ap-c-drawer__body" aria-label="Ship">
+      <ul class="ap-c-list ap-c-list--plain">
+        <li class="ap-c-list__item"><a class="ap-c-list__link" href="#drawer" aria-current="page">Console</a></li>
+        <li class="ap-c-list__item"><a class="ap-c-list__link" href="#drawer">Crew <span class="ap-c-list__meta">4</span></a></li>
+        <li class="ap-c-list__item"><a class="ap-c-list__link" href="#drawer">Cargo <span class="ap-c-list__meta">15</span></a></li>
+      </ul>
+    </nav>
+  </dialog>
+  <pre><code>&lt;dialog class="ap-c-drawer" id="filters" aria-labelledby="filters-title" data-ap-dialog&gt;
+  &lt;header class="ap-c-drawer__header"&gt;…&lt;/header&gt;
+  &lt;div class="ap-c-drawer__body"&gt;…&lt;/div&gt;
+  &lt;footer class="ap-c-drawer__footer"&gt;…&lt;/footer&gt;
+&lt;/dialog&gt;</code></pre>
+  <p class="docs-note">A dialog along the full height of the end edge; <code>--start</code> moves it to the start edge. Same module, same behavior. It takes the full width on narrow screens.</p>
+  {{tokens-drawer}}
+</section>
+
+<section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="accordion">
+  <h2 class="ap-c-section-heading" id="accordion">Accordion <span class="ap-c-section-heading__index">03</span></h2>
+  <div>
+    <details class="ap-c-accordion" name="k-faq" open>
+      <summary class="ap-c-accordion__summary">How far can the ship jump?</summary>
+      <div class="ap-c-accordion__body"><p>Three sectors per cycle, two with a full hold.</p></div>
+    </details>
+    <details class="ap-c-accordion" name="k-faq">
+      <summary class="ap-c-accordion__summary">Who can pilot it?</summary>
+      <div class="ap-c-accordion__body"><p>Anyone with a license and a steady hand.</p></div>
+    </details>
+    <details class="ap-c-accordion" name="k-faq">
+      <summary class="ap-c-accordion__summary">What happens when the drive overheats during a jump that was already planned?</summary>
+      <div class="ap-c-accordion__body"><p>The jump is cancelled and the drive cools for one cycle.</p></div>
+    </details>
+  </div>
+  <pre><code>&lt;details class="ap-c-accordion" name="faq"&gt;
+  &lt;summary class="ap-c-accordion__summary"&gt;How far can the ship jump?&lt;/summary&gt;
+  &lt;div class="ap-c-accordion__body"&gt;…&lt;/div&gt;
+&lt;/details&gt;</code></pre>
+  <p class="docs-note">Native <code>&lt;details&gt;</code>, no JavaScript. With the same <code>name</code>, only one opens at a time.</p>
+  {{tokens-accordion}}
+</section>
+
+<section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="table">
+  <h2 class="ap-c-section-heading" id="table">Table <span class="ap-c-section-heading__index">04</span></h2>
+  <div class="ap-c-table ap-c-table--striped" role="region" aria-labelledby="k-manifest" tabindex="0">
+    <table>
+      <caption id="k-manifest">Manifest, cycle 7 (striped)</caption>
+      <thead><tr><th scope="col">Item</th><th scope="col">Category</th><th class="ap-c-table__numeric" scope="col">Qty</th><th class="ap-c-table__numeric" scope="col">Value</th></tr></thead>
+      <tbody>
+        <tr><td>Plasma cells</td><td>Equipment</td><td class="ap-c-table__numeric">12</td><td class="ap-c-table__numeric">480</td></tr>
+        <tr><td>Medusa spike</td><td>Hacks</td><td class="ap-c-table__numeric">1</td><td class="ap-c-table__numeric">1,150</td></tr>
+        <tr><td>Drone frame</td><td>Drones</td><td class="ap-c-table__numeric">2</td><td class="ap-c-table__numeric">900</td></tr>
+        <tr><td>Ration packs</td><td>Supplies</td><td class="ap-c-table__numeric">40</td><td class="ap-c-table__numeric">120</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="ap-c-table ap-c-table--compact" role="region" aria-labelledby="k-crew-table" tabindex="0">
+    <table>
+      <caption id="k-crew-table">Crew (compact)</caption>
+      <thead><tr><th scope="col">Name</th><th scope="col">Role</th><th class="ap-c-table__numeric" scope="col">Level</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Vega</th><td>Pilot</td><td class="ap-c-table__numeric">4</td></tr>
+        <tr><th scope="row">Okonkwo</th><td>Engineer</td><td class="ap-c-table__numeric">3</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <pre><code>&lt;div class="ap-c-table" role="region" aria-labelledby="manifest" tabindex="0"&gt;
+  &lt;table&gt;
+    &lt;caption id="manifest"&gt;Manifest, cycle 7&lt;/caption&gt;
+    …
+  &lt;/table&gt;
+&lt;/div&gt;</code></pre>
+  <p class="docs-note">The class goes on a focusable region around the table, so a wide table scrolls sideways with the keyboard too. <code>--striped</code> and <code>--compact</code> change the look; <code>ap-c-table__numeric</code> aligns numbers to the end.</p>
+  {{tokens-table}}
+</section>
+
+<section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="list">
+  <h2 class="ap-c-section-heading" id="list">List <span class="ap-c-section-heading__index">05</span></h2>
+  <div class="ap-o-grid ap-o-grid--gap-lg">
+    <ul class="ap-c-list" aria-label="Crew">
+      <li class="ap-c-list__item">Vega <span class="ap-c-list__meta">Pilot</span></li>
+      <li class="ap-c-list__item">Okonkwo <span class="ap-c-list__meta">Engineer</span></li>
+      <li class="ap-c-list__item">Hasegawa <span class="ap-c-list__meta">Hacker</span></li>
+    </ul>
+    <ul class="ap-c-list" aria-label="Sectors">
+      <li class="ap-c-list__item"><a class="ap-c-list__link" href="#list" aria-current="page">Sector 7G <span class="ap-c-list__meta">Here</span></a></li>
+      <li class="ap-c-list__item"><a class="ap-c-list__link" href="#list">Medusa relay <span class="ap-c-list__meta">2 jumps</span></a></li>
+      <li class="ap-c-list__item"><button class="ap-c-list__link" type="button">Corsair dock <span class="ap-c-list__meta">3 jumps</span></button></li>
+    </ul>
+  </div>
+  <pre><code>&lt;ul class="ap-c-list"&gt;
+  &lt;li class="ap-c-list__item"&gt;Vega &lt;span class="ap-c-list__meta"&gt;Pilot&lt;/span&gt;&lt;/li&gt;
+  &lt;li class="ap-c-list__item"&gt;&lt;a class="ap-c-list__link" href="/sectors/7g"&gt;Sector 7G&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+  <p class="docs-note">A row can hold one link or button that fills it. <code>aria-current</code> marks the current item; <code>--plain</code> drops the hairlines.</p>
+  {{tokens-list}}
+</section>
+
+<section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="divider">
+  <h2 class="ap-c-section-heading" id="divider">Divider <span class="ap-c-section-heading__index">06</span></h2>
+  <hr class="ap-c-divider">
+  <div class="ap-c-divider">Or</div>
+  <hr class="ap-c-divider ap-c-divider--strong">
+  <pre><code>&lt;hr class="ap-c-divider"&gt;
+&lt;div class="ap-c-divider"&gt;Or&lt;/div&gt;</code></pre>
+  <p class="docs-note">An <code>&lt;hr&gt;</code> is announced as a separator; a labelled divider reads only its label.</p>
+  {{tokens-divider}}
+</section>
+
+<section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="kbd">
+  <h2 class="ap-c-section-heading" id="kbd">Keyboard key <span class="ap-c-section-heading__index">07</span></h2>
+  <p>Press <kbd class="ap-c-kbd">Ctrl</kbd> + <kbd class="ap-c-kbd">K</kbd> to search, <kbd class="ap-c-kbd">Esc</kbd> to close, <kbd class="ap-c-kbd">↑</kbd> <kbd class="ap-c-kbd">↓</kbd> to move.</p>
+  <pre><code>&lt;kbd class="ap-c-kbd"&gt;Ctrl&lt;/kbd&gt; + &lt;kbd class="ap-c-kbd"&gt;K&lt;/kbd&gt;</code></pre>
+  {{tokens-kbd}}
+</section>
+
+<section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="skeleton">
+  <h2 class="ap-c-section-heading" id="skeleton">Skeleton <span class="ap-c-section-heading__index">08</span></h2>
+  <div class="ap-o-grid ap-o-grid--gap-lg">
+    <div class="ap-c-card ap-o-stack ap-o-stack--gap-sm" aria-busy="true" aria-label="Loading a crew card">
+      <span class="ap-c-skeleton ap-c-skeleton--circle"></span>
+      <span class="ap-c-skeleton" style="--ap-skeleton-inline-size: 60%"></span>
+      <span class="ap-c-skeleton"></span>
+      <span class="ap-c-skeleton" style="--ap-skeleton-inline-size: 80%"></span>
+    </div>
+    <div class="ap-o-stack ap-o-stack--gap-sm" aria-busy="true" aria-label="Loading a sensor view">
+      <span class="ap-c-skeleton ap-c-skeleton--block"></span>
+      <span class="ap-c-skeleton" style="--ap-skeleton-inline-size: 40%"></span>
+    </div>
+  </div>
+  <pre><code>&lt;div aria-busy="true" aria-label="Loading crew"&gt;
+  &lt;span class="ap-c-skeleton ap-c-skeleton--circle"&gt;&lt;/span&gt;
+  &lt;span class="ap-c-skeleton" style="--ap-skeleton-inline-size: 60%"&gt;&lt;/span&gt;
+  &lt;span class="ap-c-skeleton ap-c-skeleton--block"&gt;&lt;/span&gt;
+&lt;/div&gt;</code></pre>
+  <p class="docs-note">A text line by default, <code>--block</code> for media, <code>--circle</code> for avatars. Mark the loading region with <code>aria-busy="true"</code>; <code>--ap-skeleton-duration: 0s</code> stops the pulse.</p>
+  {{tokens-skeleton}}
+</section>

@@ -79,6 +79,14 @@ test('component token tables list every public token with its default', () => {
     'tabbed-box',
     'segment-bar',
     'swatch',
+    'dialog',
+    'drawer',
+    'accordion',
+    'table',
+    'list',
+    'divider',
+    'kbd',
+    'skeleton',
   ]) {
     assert.ok(values[`tokens-${name}`], name)
   }

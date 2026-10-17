@@ -26,9 +26,9 @@
 >
 > **In place:** design tokens, light and dark themes, the reset, element defaults, layout objects (stack, cluster, grid, sidebar, switcher, frame, container), utilities and the Sass toolbox.
 >
-> **Components:** buttons, button groups, fields, inputs, selects, a searchable combobox, checkboxes, radios, switches, ranges, segmented meters, breadcrumbs, pagination, tabs, tags, callouts, progress bars, spinners, empty states, toasts, and the Design Guide's own blocks: mastheads, section headings, subheadings, windows, cards, tabbed boxes, segment bars and swatches.
+> **Components:** buttons, button groups, fields, inputs, selects, a searchable combobox, checkboxes, radios, switches, ranges, segmented meters, breadcrumbs, pagination, tabs, tags, callouts, progress bars, spinners, empty states, toasts, dialogs, drawers, accordions, tables, lists, dividers, key caps, skeletons, and the Design Guide's own blocks: mastheads, section headings, subheadings, windows, cards, tabbed boxes, segment bars and swatches.
 >
-> **Next:** dialogs, drawers, accordions, menus, tooltips… over the next releases, following the [roadmap](https://github.com/Cantilux/astrostyle/issues). Until `1.0.0`, minor versions may still change the API.
+> **Next:** menus, tooltips and textured surfaces… over the next releases, following the [roadmap](https://github.com/Cantilux/astrostyle/issues). Until `1.0.0`, minor versions may still change the API.
 
 > [!NOTE]
 > astrostyle is an independent production by Enrico Cantile and is not affiliated with Crescent Chimera. It is published under the [ASTROPRISMA Third Party License](https://www.astroprisma.com/license).
@@ -104,7 +104,8 @@ A few components get optional behavior from small, dependency-free ES modules. W
 import { autoInit } from 'astrostyle/js'
 
 autoInit(document)   // select[data-ap-combobox] → searchable combobox,
-                     // nav[data-ap-pagination] → pagination, [data-ap-tabs] → tabs
+                     // nav[data-ap-pagination] → pagination, [data-ap-tabs] → tabs,
+                     // dialog[data-ap-dialog] → dialog or drawer with openers
 ```
 
 ```js

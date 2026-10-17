@@ -1,0 +1,34 @@
+// Keyboard key (ITCSS Components): a key cap for shortcuts and key names, with a thicker bottom
+// edge. Contract and tokens: scss/components/kbd/README.md.
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults.
+$tokens: (
+  bg: fn.token('surface-1'),
+  fg: fn.token('text'),
+  border-color: fn.token('border-strong'),
+  radius: fn.token('radius-control'),
+);
+
+// Emits `.ap-c-kbd`.
+@mixin emit {
+  #{c.component(kbd)} {
+    @include c.tokens(kbd, $tokens);
+    @include mixins.text(data);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: 1.75em;
+    padding: 0.1em 0.45em;
+    border: fn.token('border-width-hairline') solid c.private(border-color);
+    border-block-end-width: fn.token('border-width-strong');
+    border-radius: c.private(radius);
+    background-color: c.private(bg);
+    color: c.private(fg);
+    line-height: 1.3;
+    white-space: nowrap;
+  }
+}

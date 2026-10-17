@@ -43,8 +43,20 @@
       <aside class="ap-c-callout ap-c-callout--danger" aria-labelledby="d-breach">
         <h3 class="ap-c-callout__title" id="d-breach">Hull breach on deck 3</h3>
         <p>Seal it before the next jump, or the drive will not engage.</p>
-        <div class="ap-o-cluster ap-o-cluster--gap-sm"><button class="ap-c-button ap-c-button--danger" type="button" data-docs-toast data-tone="success" data-title="Deck 3 sealed" data-message="The jump drive can engage again.">Seal deck</button><button class="ap-c-button ap-c-button--quiet" type="button">Show damage</button></div>
+        <div class="ap-o-cluster ap-o-cluster--gap-sm"><button class="ap-c-button ap-c-button--danger" type="button" data-docs-toast data-tone="success" data-title="Deck 3 sealed" data-message="The jump drive can engage again.">Seal deck</button><button class="ap-c-button ap-c-button--quiet" type="button" data-ap-dialog-open="d-damage">Show damage</button></div>
       </aside>
+      <dialog class="ap-c-dialog" id="d-damage" aria-labelledby="d-damage-title" data-ap-dialog>
+        <header class="ap-c-dialog__header">
+          <h3 class="ap-c-dialog__title" id="d-damage-title">Damage report</h3>
+          <button class="ap-c-button ap-c-button--quiet ap-c-button--icon" type="button" data-ap-dialog-close aria-label="Close"><svg class="ap-c-button__icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        </header>
+        <ul class="ap-c-dialog__body ap-c-list">
+          <li class="ap-c-list__item">Deck 3 <span class="ap-c-list__meta">Breached</span></li>
+          <li class="ap-c-list__item">Port thruster <span class="ap-c-list__meta">60%</span></li>
+          <li class="ap-c-list__item">Comms array <span class="ap-c-list__meta">Online</span></li>
+        </ul>
+        <footer class="ap-c-dialog__footer"><button class="ap-c-button ap-c-button--primary" type="button" data-ap-dialog-close>Close</button></footer>
+      </dialog>
       <div class="ap-c-field"><label class="ap-c-field__label" for="d-scan">Sector scan</label><progress class="ap-c-progress" id="d-scan"></progress></div>
       <div class="docs-gradient" role="img" aria-label="Spectrum band"></div>
     </section>
@@ -103,16 +115,16 @@
         <button class="ap-c-button" type="button" aria-pressed="false">Equipment</button>
         <button class="ap-c-button" type="button" aria-pressed="false">Hacks</button>
       </div>
-      <div style="overflow-x: auto">
+      <div class="ap-c-table ap-c-table--striped" role="region" aria-labelledby="d-manifest" tabindex="0">
         <table>
-          <caption>Manifest, cycle 7</caption>
+          <caption id="d-manifest">Manifest, cycle 7</caption>
           <thead>
-            <tr><th scope="col">Item</th><th scope="col">Category</th><th scope="col">Qty</th><th scope="col">Value</th></tr>
+            <tr><th scope="col">Item</th><th scope="col">Category</th><th class="ap-c-table__numeric" scope="col">Qty</th><th class="ap-c-table__numeric" scope="col">Value</th></tr>
           </thead>
           <tbody>
-            <tr><td>Plasma cells</td><td>Equipment</td><td>12</td><td>480</td></tr>
-            <tr><td>Medusa spike</td><td>Hacks</td><td>1</td><td>1,150</td></tr>
-            <tr><td>Drone frame</td><td>Drones</td><td>2</td><td>900</td></tr>
+            <tr><td>Plasma cells</td><td>Equipment</td><td class="ap-c-table__numeric">12</td><td class="ap-c-table__numeric">480</td></tr>
+            <tr><td>Medusa spike</td><td>Hacks</td><td class="ap-c-table__numeric">1</td><td class="ap-c-table__numeric">1,150</td></tr>
+            <tr><td>Drone frame</td><td>Drones</td><td class="ap-c-table__numeric">2</td><td class="ap-c-table__numeric">900</td></tr>
           </tbody>
         </table>
       </div>

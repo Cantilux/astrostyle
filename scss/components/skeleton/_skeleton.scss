@@ -1,0 +1,52 @@
+// Skeleton (ITCSS Components): a pulsing placeholder that holds the place of content while it
+// loads: a text line by default, `--block` for media and cards, `--circle` for avatars.
+// Contract and tokens: scss/components/skeleton/README.md.
+@use '../../settings/config';
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+
+// Public tokens and their defaults.
+$tokens: (
+  bg: color-mix(in oklab, #{fn.token('text')} 10%, transparent),
+  radius: fn.token('radius-control'),
+  inline-size: 100%,
+  block-size: 1em,
+  duration: calc(#{fn.token('duration-slow')} * 5),
+);
+
+// Token values of the shape modifiers.
+$modifiers: (
+  block: (block-size: calc(#{fn.token('size-control-lg')} * 3), radius: fn.token('radius-card')),
+  circle: (
+    inline-size: fn.token('size-control-lg'),
+    block-size: fn.token('size-control-lg'),
+    radius: fn.token('radius-pill'),
+  ),
+);
+
+// Emits `.ap-c-skeleton`, its modifiers and its keyframes.
+@mixin emit {
+  #{c.component(skeleton)} {
+    @include c.tokens(skeleton, $tokens);
+
+    display: block;
+    flex-shrink: 0;
+    inline-size: c.private(inline-size);
+    max-inline-size: 100%;
+    block-size: c.private(block-size);
+    border-radius: c.private(radius);
+    background-color: c.private(bg);
+    animation: #{config.$prefix}-skeleton-pulse c.private(duration) fn.token('ease-in-out')
+      infinite;
+  }
+
+  @each $name, $tokens in $modifiers {
+    @include c.modifier(skeleton, $name, $tokens);
+  }
+
+  @keyframes #{config.$prefix}-skeleton-pulse {
+    50% {
+      opacity: 0.45;
+    }
+  }
+}
