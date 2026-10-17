@@ -1,0 +1,40 @@
+// Texture layers of the Design Guide's print filters (ITCSS Tools, no CSS output): halftone dots,
+// a fine noise grain and CRT scanlines, as background images. Internal: used by `surface()` and
+// the surface component.
+@use 'sass:map';
+@use 'functions' as fn;
+
+// Grain: grey fractal noise, drawn by an SVG filter, at about a fifth of its opacity.
+$_noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E");
+
+// Background image and size of each kind.
+$_layers: (
+  halftone: (
+    image:
+      radial-gradient(
+        circle,
+        color-mix(in oklab, #{fn.token('text')} 16%, transparent) 1px,
+        transparent 1.5px
+      ),
+    size: 5px 5px,
+  ),
+  noise: (image: $_noise, size: 160px 160px),
+  crt: (
+    image:
+      repeating-linear-gradient(
+        to bottom,
+        color-mix(in oklab, #{fn.token('palette-black')} 18%, transparent) 0 1px,
+        transparent 1px 3px
+      ),
+    size: auto,
+  ),
+);
+
+// Background image and size (`(image: …, size: …)`) of `$kind`; unknown kinds fail compilation.
+@function layer($kind) {
+  @if not map.has-key($_layers, $kind) {
+    @error 'astrostyle: unknown surface `#{$kind}`. Known: #{map.keys($_layers)}.';
+  }
+
+  @return map.get($_layers, $kind);
+}

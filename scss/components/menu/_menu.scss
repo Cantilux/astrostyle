@@ -1,0 +1,85 @@
+// Menu (ITCSS Components): a list of actions in a popover under its button, opened and driven by
+// `createMenu()`. Contract and tokens: scss/components/menu/README.md.
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults.
+$tokens: (
+  bg: fn.token('bg'),
+  fg: fn.token('text'),
+  border-color: fn.token('border'),
+  radius: fn.token('radius-control'),
+  shadow: fn.token('elevation-overlay'),
+  min-width: 12rem,
+  padding: fn.space(xs),
+  item-hover-bg: color-mix(in oklab, #{fn.token('text')} 8%, transparent),
+  danger-fg: fn.token('danger-text'),
+);
+
+// Emits `.ap-c-menu` and its elements.
+@mixin emit {
+  #{c.component(menu)} {
+    @include c.tokens(menu, $tokens);
+    @include mixins.text(body);
+
+    position: fixed;
+    inset: auto;
+    min-inline-size: c.private(min-width);
+    max-inline-size: calc(100vw - #{fn.space(lg)});
+    margin: 0;
+    padding: c.private(padding);
+    border: fn.token('border-width-hairline') solid c.private(border-color);
+    border-radius: c.private(radius);
+    background-color: c.private(bg);
+    box-shadow: c.private(shadow);
+    color: c.private(fg);
+
+    &:where(:popover-open) {
+      display: grid;
+    }
+  }
+
+  #{c.component(menu, item)} {
+    display: flex;
+    align-items: center;
+    gap: fn.space(sm);
+    inline-size: 100%;
+    min-block-size: fn.token('size-control');
+    padding-inline: fn.space(md);
+    border-radius: fn.token('radius-control');
+    color: inherit;
+    text-align: start;
+    text-decoration-line: none;
+
+    @include mixins.interactive;
+    @include mixins.focus-ring;
+
+    &:where(:focus-visible) {
+      outline-offset: calc(#{fn.token('focus-width')} * -1);
+    }
+
+    &:where(:hover, :focus):where(:not(:disabled, [aria-disabled='true'])) {
+      background-color: c.private(item-hover-bg);
+    }
+
+    &:where(:disabled, [aria-disabled='true']) {
+      color: fn.token('text-disabled');
+    }
+  }
+
+  #{c.component(menu, item, danger)} {
+    color: c.private(danger-fg);
+  }
+
+  #{c.component(menu, icon)} {
+    flex-shrink: 0;
+    inline-size: fn.token('size-icon');
+    block-size: fn.token('size-icon');
+  }
+
+  #{c.component(menu, separator)} {
+    margin-block: c.private(padding);
+    border-block-start: fn.token('border-width-hairline') solid c.private(border-color);
+  }
+}

@@ -1,7 +1,7 @@
 <!-- title: Containers -->
 <section class="ap-o-stack ap-o-stack--gap-md">
   <h1>Containers</h1>
-  <p>Dialogs, drawers and accordions hold content that comes and goes; tables, lists, dividers, key caps and skeletons arrange and stand in for it. Dialogs and drawers are native <code>&lt;dialog&gt;</code> elements with a small JavaScript module; everything else is HTML and CSS.</p>
+  <p>Dialogs, drawers, accordions, tooltips and menus hold content that comes and goes; tables, lists, dividers, key caps and skeletons arrange and stand in for it. Dialogs, drawers, tooltips and menus are native <code>&lt;dialog&gt;</code> and popover elements with small JavaScript modules; everything else is HTML and CSS.</p>
 </section>
 
 <section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="dialog">
@@ -218,4 +218,42 @@ jump.element.addEventListener('ap:close', (event) =&gt; console.log(event.detail
 &lt;/div&gt;</code></pre>
   <p class="docs-note">A text line by default, <code>--block</code> for media, <code>--circle</code> for avatars. Mark the loading region with <code>aria-busy="true"</code>; <code>--ap-skeleton-duration: 0s</code> stops the pulse.</p>
   {{tokens-skeleton}}
+</section>
+
+<section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="tooltip">
+  <h2 class="ap-c-section-heading" id="tooltip">Tooltip <span class="ap-c-section-heading__index">09</span></h2>
+  <div class="ap-o-cluster ap-o-cluster--gap-sm">
+    <button class="ap-c-button ap-c-button--icon" type="button" aria-labelledby="k-tip-scan" data-ap-tooltip="k-tip-scan"><svg class="ap-c-button__icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg></button>
+    <span class="ap-c-tooltip" id="k-tip-scan" role="tooltip" popover="manual">Long-range scan</span>
+    <button class="ap-c-button" type="button" aria-describedby="k-tip-jump" data-ap-tooltip="k-tip-jump">Jump</button>
+    <span class="ap-c-tooltip" id="k-tip-jump" role="tooltip" popover="manual">Needs two cycles to cool down</span>
+  </div>
+  <pre><code>&lt;button class="ap-c-button ap-c-button--icon" type="button" aria-labelledby="scan-tip" data-ap-tooltip="scan-tip"&gt;…&lt;/button&gt;
+&lt;span class="ap-c-tooltip" id="scan-tip" role="tooltip" popover="manual"&gt;Long-range scan&lt;/span&gt;</code></pre>
+  <p class="docs-note">Hover or tab to the buttons. A popover in the top layer, placed above the trigger (below when there is no room) by <code>createTooltip()</code>; Escape hides it. Link it yourself: <code>aria-labelledby</code> for icon buttons, <code>aria-describedby</code> for extra hints.</p>
+  {{tokens-tooltip}}
+</section>
+
+<section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="menu">
+  <h2 class="ap-c-section-heading" id="menu">Menu <span class="ap-c-section-heading__index">10</span></h2>
+  <div class="ap-o-cluster ap-o-cluster--gap-sm">
+    <button class="ap-c-button" type="button" data-ap-menu="k-ship-menu">Ship actions</button>
+  </div>
+  <div class="ap-c-menu" id="k-ship-menu" popover data-docs-menu-output="k-menu-output">
+    <button class="ap-c-menu__item" type="button" value="rename">Rename</button>
+    <button class="ap-c-menu__item" type="button" value="refuel">Refuel</button>
+    <button class="ap-c-menu__item" type="button" value="repair" aria-disabled="true">Repair (no parts)</button>
+    <a class="ap-c-menu__item" href="#menu">Open the log</a>
+    <div class="ap-c-menu__separator" role="separator"></div>
+    <button class="ap-c-menu__item ap-c-menu__item--danger" type="button" value="scrap">Scrap</button>
+  </div>
+  <p class="docs-note" id="k-menu-output" aria-live="polite">Pick an action: <code>ap:select</code> reports it here.</p>
+  <pre><code>&lt;button class="ap-c-button" type="button" data-ap-menu="ship-menu"&gt;Ship&lt;/button&gt;
+&lt;div class="ap-c-menu" id="ship-menu" popover&gt;
+  &lt;button class="ap-c-menu__item" type="button" value="rename"&gt;Rename&lt;/button&gt;
+  &lt;div class="ap-c-menu__separator" role="separator"&gt;&lt;/div&gt;
+  &lt;button class="ap-c-menu__item ap-c-menu__item--danger" type="button" value="scrap"&gt;Scrap&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+  <p class="docs-note">Open it with a click or <kbd class="ap-c-kbd">↓</kbd>, move with the arrows, type a letter to jump, <kbd class="ap-c-kbd">Esc</kbd> to close. A click outside closes it too.</p>
+  {{tokens-menu}}
 </section>

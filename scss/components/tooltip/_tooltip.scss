@@ -1,0 +1,47 @@
+// Tooltip (ITCSS Components): a short hint in a popover, in the theme's inverse colors, placed
+// next to its trigger by `createTooltip()`. Contract and tokens: scss/components/tooltip/README.md.
+@use '../../settings/config';
+@use '../../tools/component' as c;
+@use '../../tools/functions' as fn;
+@use '../../tools/mixins';
+
+// Public tokens and their defaults.
+$tokens: (
+  bg: fn.token('text'),
+  fg: fn.token('bg'),
+  radius: fn.token('radius-control'),
+  padding-block: fn.space(xs),
+  padding-inline: fn.space(sm),
+  max-width: 18rem,
+  duration: fn.token('duration-fast'),
+);
+
+// Emits `.ap-c-tooltip` and its keyframes.
+@mixin emit {
+  #{c.component(tooltip)} {
+    @include c.tokens(tooltip, $tokens);
+    @include mixins.text(caption);
+
+    position: fixed;
+    inset: auto;
+    max-inline-size: c.private(max-width);
+    margin: 0;
+    padding-block: c.private(padding-block);
+    padding-inline: c.private(padding-inline);
+    overflow: visible;
+    border: 0;
+    border-radius: c.private(radius);
+    background-color: c.private(bg);
+    color: c.private(fg);
+
+    &:where(:popover-open) {
+      animation: #{config.$prefix}-tooltip-in c.private(duration) fn.token('ease-out');
+    }
+  }
+
+  @keyframes #{config.$prefix}-tooltip-in {
+    from {
+      opacity: 0;
+    }
+  }
+}

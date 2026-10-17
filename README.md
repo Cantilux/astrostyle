@@ -26,9 +26,9 @@
 >
 > **In place:** design tokens, light and dark themes, the reset, element defaults, layout objects (stack, cluster, grid, sidebar, switcher, frame, container), utilities and the Sass toolbox.
 >
-> **Components:** buttons, button groups, fields, inputs, selects, a searchable combobox, checkboxes, radios, switches, ranges, segmented meters, breadcrumbs, pagination, tabs, tags, callouts, progress bars, spinners, empty states, toasts, dialogs, drawers, accordions, tables, lists, dividers, key caps, skeletons, and the Design Guide's own blocks: mastheads, section headings, subheadings, windows, cards, tabbed boxes, segment bars and swatches.
+> **Components:** buttons, button groups, fields, inputs, selects, a searchable combobox, checkboxes, radios, switches, ranges, segmented meters, breadcrumbs, pagination, tabs, tags, callouts, progress bars, spinners, empty states, toasts, dialogs, drawers, accordions, tooltips, menus, tables, lists, dividers, key caps, skeletons, and the Design Guide's own blocks: mastheads, section headings, subheadings, windows, cards, tabbed boxes, segment bars, swatches and textured surfaces.
 >
-> **Next:** menus, tooltips and textured surfaces… over the next releases, following the [roadmap](https://github.com/Cantilux/astrostyle/issues). Until `1.0.0`, minor versions may still change the API.
+> **Next:** the `1.0.0` release: API freeze, an accessibility audit, the browser matrix and a customization guide, following the [roadmap](https://github.com/Cantilux/astrostyle/issues). Until then, minor versions may still change the API.
 
 > [!NOTE]
 > astrostyle is an independent production by Enrico Cantile and is not affiliated with Crescent Chimera. It is published under the [ASTROPRISMA Third Party License](https://www.astroprisma.com/license).
@@ -105,7 +105,8 @@ import { autoInit } from 'astrostyle/js'
 
 autoInit(document)   // select[data-ap-combobox] → searchable combobox,
                      // nav[data-ap-pagination] → pagination, [data-ap-tabs] → tabs,
-                     // dialog[data-ap-dialog] → dialog or drawer with openers
+                     // dialog[data-ap-dialog] → dialog or drawer with openers,
+                     // [data-ap-menu] → menu button, [data-ap-tooltip] → tooltip
 ```
 
 ```js
@@ -262,7 +263,7 @@ Font files are **not bundled**: each font has its own license, so every project 
 
 ### / Texture & motifs /
 
-- **Halftone and noise.** The guide's print filters (halftone at 50% opacity, a fine grain) become optional surfaces for decorative areas. They never cover text or controls.
+- **Halftone and noise.** The guide's print filters (halftone dots, a fine grain) become the optional `ap-c-surface` for decorative areas, behind headings and art, never under forms or long text.
 - **Graphic motifs → components.** The big masthead with its tiny eyebrow, the pink section heading with a hairline rule and a two-digit index (like the ones in this README), the window panel with a dark title bar, pill buttons, segmented pill legends, side-tab boxes, callouts and `/ SLASHED /` subheadings.
 
 <br>
@@ -389,7 +390,7 @@ The house rules, illustrated. Each image has an expandable text version below it
 
 - Native ES modules, zero dependencies, no build step needed on your side.
 - One module per interactive component, exposing a `createX(element, options, env)` factory that enhances native markup and returns a handle with `destroy()`; `env` injects the document and id generator for tests.
-- Components talk through DOM events prefixed with `ap:` (`ap:change`, `ap:open`, `ap:close`, `ap:page`).
+- Components talk through DOM events prefixed with `ap:` (`ap:change`, `ap:open`, `ap:close`, `ap:page`, `ap:select`).
 - Pure logic (filtering, page ranges) is kept in separate functions and unit tested; `document` and timers are passed in, never hard-coded.
 - `astrostyle/js` exports only the public API (`createX()`, `autoInit()`, default labels, `pageWindow()`); pure helpers stay inside their modules.
 - JavaScript never sets visual styles inline, except for positioning.

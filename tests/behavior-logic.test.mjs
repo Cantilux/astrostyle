@@ -1,7 +1,9 @@
-// Pure logic of the pagination, tabs and toast modules.
+// Pure logic of the pagination, tabs, toast and menu modules and of the popover placement.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
+import { nextByLetter } from '../js/menu/typeahead.js'
 import { GAP, clampPage, pageWindow } from '../js/pagination/range.js'
+import { place } from '../js/shared/position.js'
 import { targetForKey } from '../js/tabs/navigation.js'
 import { emptyQueue, enqueue, remove } from '../js/toast/queue.js'
 
@@ -67,4 +69,42 @@ test('the toast queue shows up to max and promotes waiting toasts in order', () 
   assert.deepEqual(first, { state: { visible: [2, 3], waiting: [4] }, promoted: [3] })
   const waiting = remove(first.state, 4, 2)
   assert.deepEqual(waiting, { state: { visible: [2, 3], waiting: [] }, promoted: [] })
+})
+
+// A 100×20 anchor at (200, 300) in a 1000×800 viewport, with its box edges.
+const anchor = { left: 200, right: 300, top: 300, bottom: 320, width: 100, height: 20 }
+const viewport = { width: 1000, height: 800 }
+const floating = { width: 160, height: 100 }
+
+test('place() puts the box on the preferred side, start-aligned or centered', () => {
+  assert.deepEqual(place({ anchor, floating, viewport }), { x: 200, y: 328, side: 'bottom' })
+  assert.deepEqual(place({ anchor, floating, viewport, side: 'top', align: 'center' }), {
+    x: 170,
+    y: 192,
+    side: 'top',
+  })
+  assert.equal(place({ anchor, floating, viewport, rtl: true }).x, 140)
+})
+
+test('place() flips to the side with more room and stays inside the viewport', () => {
+  const low = { ...anchor, top: 740, bottom: 760 }
+  assert.deepEqual(place({ anchor: low, floating, viewport }), { x: 200, y: 632, side: 'top' })
+  const high = { ...anchor, top: 10, bottom: 30 }
+  assert.equal(place({ anchor: high, floating, viewport, side: 'top' }).side, 'bottom')
+  const edge = { ...anchor, left: 950, right: 990 }
+  assert.equal(place({ anchor: edge, floating, viewport }).x, 1000 - 8 - 160)
+  assert.equal(place({ anchor, floating: { width: 2000, height: 10 }, viewport }).x, 8)
+})
+
+test('nextByLetter() finds the next enabled item by its first letter, wrapping around', () => {
+  const items = [
+    { label: 'Rename', disabled: false },
+    { label: ' Repair', disabled: true },
+    { label: 'Refuel', disabled: false },
+    { label: 'Scrap', disabled: false },
+  ]
+  assert.equal(nextByLetter(items, 0, 'r'), 2)
+  assert.equal(nextByLetter(items, 2, 'R'), 0)
+  assert.equal(nextByLetter(items, -1, 's'), 3)
+  assert.equal(nextByLetter(items, 0, 'x'), -1)
 })
