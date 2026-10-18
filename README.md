@@ -146,6 +146,8 @@ Every token is a CSS custom property (`--ap-accent`, `--ap-space-md`, `--ap-text
   $scope: '.my-app',                     // keep everything inside one element
   $themes: (dark: (bg: #0c0812)),        // change one token of one theme
   $components: (button, input, select),  // emit only the components you use
+  $emit-objects: false,                  // no layout classes (ap-o-*) if you lay out pages yourself
+  $emit-utilities: false,                // no helper classes (ap-u-*) if you use none
 );
 
 @include ap.emit;

@@ -60,3 +60,10 @@ test('every class in a layer carries that layer namespace', () => {
     }
   }
 })
+
+test('$emit-utilities: false leaves the utilities layer out', () => {
+  const bare = compileConfigured('$emit-utilities: false')
+  assert.equal(rules(bare).filter((r) => r.layer === 'astrostyle.utilities').length, 0)
+  assert.ok(rules(css).filter((r) => r.layer === 'astrostyle.utilities').length > 10)
+  assert.match(bare, /astrostyle\.components, astrostyle\.utilities;/)
+})

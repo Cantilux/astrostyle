@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import postcss from 'postcss'
 import { compileConfigured } from './helpers/sass.mjs'
-import { declarationsOf } from './helpers/css.mjs'
+import { declarationsOf, rules } from './helpers/css.mjs'
 
 const css = compileConfigured()
 
@@ -76,4 +76,12 @@ test('the end sidebar swaps the side and content roles', () => {
 test('a custom scope matches objects inside it and on its root, without extra specificity', () => {
   const scoped = compileConfigured("$scope: '.app'")
   assert.ok(declarationsOf(scoped, '.ap-o-stack:where(.app, .app *)'))
+})
+
+test('$emit-objects: false leaves the objects layer and its registered properties out', () => {
+  const bare = compileConfigured('$emit-objects: false')
+  assert.equal(rules(bare).filter((r) => r.layer === 'astrostyle.objects').length, 0)
+  assert.deepEqual(registeredProperties(bare), {})
+  assert.ok(rules(css).filter((r) => r.layer === 'astrostyle.objects').length > 10)
+  assert.match(bare, /@layer astrostyle\.generic, astrostyle\.elements, astrostyle\.objects/)
 })

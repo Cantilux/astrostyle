@@ -17,6 +17,12 @@ $theme-default: 'light' !default;
 // site that already styles its own elements.
 $emit-elements: true !default;
 
+// Emit the Objects layer (layout classes `ap-o-*`). Turn it off when the site lays out its own pages.
+$emit-objects: true !default;
+
+// Emit the Utilities layer (helper classes `ap-u-*`). Turn it off when the site uses none of them.
+$emit-utilities: true !default;
+
 // Components to emit: `all`, or a list such as (button, input). Order does not matter.
 $components: all !default;
 
