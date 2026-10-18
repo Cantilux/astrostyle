@@ -51,7 +51,7 @@ $_layers: (generic, elements, objects, components, utilities);
     }
   }
 
-  @if $core {
+  @if $core and config.$emit-utilities {
     /* stylelint-disable-next-line layer-name-pattern -- names come from the configurable $layer */
     @layer #{config.$layer}.utilities {
       @include visually-hidden.emit;
@@ -84,14 +84,16 @@ $_layers: (generic, elements, objects, components, utilities);
     }
   }
 
-  /* stylelint-disable-next-line layer-name-pattern -- names come from the configurable $layer */
-  @layer #{config.$layer}.objects {
-    @include container.emit;
-    @include stack.emit;
-    @include cluster.emit;
-    @include grid.emit;
-    @include sidebar.emit;
-    @include switcher.emit;
-    @include frame.emit;
+  @if config.$emit-objects {
+    /* stylelint-disable-next-line layer-name-pattern -- names come from the configurable $layer */
+    @layer #{config.$layer}.objects {
+      @include container.emit;
+      @include stack.emit;
+      @include cluster.emit;
+      @include grid.emit;
+      @include sidebar.emit;
+      @include switcher.emit;
+      @include frame.emit;
+    }
   }
 }
