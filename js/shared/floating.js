@@ -21,3 +21,25 @@ export function positionNear(floating, anchor, options = {}) {
   floating.style.top = `${y}px`
   floating.setAttribute('data-ap-side', side)
 }
+
+/**
+ * Calls `onChange` when the page scrolls (outside `inside`, if given) or the window is resized,
+ * the moments an open popover must be placed again to stay next to its anchor. Returns a function
+ * that stops listening.
+ * @param {Document} doc
+ * @param {() => void} onChange
+ * @param {Node | null} [inside]
+ * @returns {() => void}
+ */
+export function watchViewport(doc, onChange, inside = null) {
+  const view = /** @type {Window} */ (doc.defaultView)
+  const onScroll = (/** @type {Event} */ event) => {
+    if (!inside?.contains(/** @type {Node} */ (event.target))) onChange()
+  }
+  doc.addEventListener('scroll', onScroll, true)
+  view.addEventListener('resize', onChange)
+  return () => {
+    doc.removeEventListener('scroll', onScroll, true)
+    view.removeEventListener('resize', onChange)
+  }
+}

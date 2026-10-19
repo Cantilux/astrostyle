@@ -1,7 +1,7 @@
 // Tooltip: shows a short hint in a popover next to its trigger while the pointer rests on the
 // trigger or focus is on it. The tooltip stays while the pointer moves onto it, and Escape hides
 // it. Contract: scss/components/tooltip/README.md.
-import { positionNear } from '../shared/floating.js'
+import { positionNear, watchViewport } from '../shared/floating.js'
 
 /**
  * Enhances `trigger` and returns its handle. The tooltip is `options.tooltip`, or the element whose
@@ -26,6 +26,8 @@ export function createTooltip(trigger, options = {}, env = {}) {
   let open = false
   /** @type {any} Timer id: a number in browsers, whatever the injected `setTimeout` returns in tests. */
   let timer = null
+  /** @type {(() => void) | null} */
+  let stopWatching = null
 
   /**
    * Runs `action` after `ms`, replacing any pending show or hide.
@@ -43,7 +45,9 @@ export function createTooltip(trigger, options = {}, env = {}) {
     if (open) return
     open = true
     tooltip.showPopover()
-    positionNear(tooltip, trigger, { side, align: 'center' })
+    const place = () => positionNear(tooltip, trigger, { side, align: 'center' })
+    place()
+    stopWatching = watchViewport(doc, place)
   }
 
   // Hides the tooltip.
@@ -51,6 +55,8 @@ export function createTooltip(trigger, options = {}, env = {}) {
     clearTimer(timer)
     if (!open) return
     open = false
+    stopWatching?.()
+    stopWatching = null
     tooltip.hidePopover()
   }
 

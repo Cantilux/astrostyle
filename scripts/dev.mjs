@@ -122,7 +122,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
       scheduleRebuild(`${folder}/${file}`),
     )
   }
-  createServer(handle).listen(port, () => {
+  createServer(handle).listen(port, '127.0.0.1', () => {
     console.log(`astrostyle dev server: http://localhost:${port}/demo.html (Ctrl+C to stop)`)
   })
 }

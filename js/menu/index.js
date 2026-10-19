@@ -2,7 +2,7 @@
 // Home and End move between items, a letter jumps to the next item starting with it, Escape or a
 // click outside closes it and focus goes back to the button. Contract: scss/components/menu/README.md.
 import { nextId, snapshotAttributes } from '../shared/dom.js'
-import { positionNear } from '../shared/floating.js'
+import { positionNear, watchViewport } from '../shared/floating.js'
 import { moveActive } from '../shared/navigation.js'
 import { nextByLetter } from './typeahead.js'
 
@@ -33,9 +33,15 @@ export function createMenu(button, options = {}, env = {}) {
   if (!found) throw new Error('createMenu: no menu element')
   const menu = found
   const side = options.side ?? 'bottom'
-  const items = /** @type {HTMLButtonElement[]} */ ([...menu.querySelectorAll('.ap-c-menu__item')])
-  const restore = snapshotAttributes([button, menu, ...items], managed)
+  /** @type {(() => void)[]} */
+  const restores = [snapshotAttributes([button, menu], managed)]
+  /** @type {Set<HTMLButtonElement>} */
+  const known = new Set()
+  /** @type {HTMLButtonElement[]} */
+  let items = []
   let open = false
+  /** @type {(() => void) | null} */
+  let stopWatching = null
 
   if (!menu.id) menu.id = createId()
   button.setAttribute('aria-haspopup', 'menu')
@@ -43,10 +49,19 @@ export function createMenu(button, options = {}, env = {}) {
   button.setAttribute('aria-controls', menu.id)
   menu.setAttribute('role', 'menu')
   menu.setAttribute('tabindex', '-1')
-  for (const item of items) {
-    item.setAttribute('role', 'menuitem')
-    item.setAttribute('tabindex', '-1')
+
+  // Reads the items again, wiring the ones added since the last read.
+  function refreshItems() {
+    items = /** @type {HTMLButtonElement[]} */ ([...menu.querySelectorAll('.ap-c-menu__item')])
+    const fresh = items.filter((item) => !known.has(item))
+    fresh.forEach((item) => known.add(item))
+    restores.push(snapshotAttributes(fresh, managed))
+    for (const item of fresh) {
+      item.setAttribute('role', 'menuitem')
+      item.setAttribute('tabindex', '-1')
+    }
   }
+  refreshItems()
 
   // Fires `ap:<name>` on the menu.
   const emit = (/** @type {string} */ name, /** @type {object} */ detail = {}) =>
@@ -71,8 +86,11 @@ export function createMenu(button, options = {}, env = {}) {
   function show(focus = 'first') {
     if (!open) {
       open = true
+      refreshItems()
       menu.showPopover()
-      positionNear(menu, button, { side, offset: 4 })
+      const place = () => positionNear(menu, button, { side, offset: 4 })
+      place()
+      stopWatching = watchViewport(doc, place, menu)
       button.setAttribute('aria-expanded', 'true')
       emit('open')
     }
@@ -96,6 +114,8 @@ export function createMenu(button, options = {}, env = {}) {
   function closed(returnFocus) {
     if (!open) return
     open = false
+    stopWatching?.()
+    stopWatching = null
     button.setAttribute('aria-expanded', 'false')
     if (returnFocus || menu.contains(doc.activeElement)) button.focus()
     emit('close')
@@ -194,7 +214,7 @@ export function createMenu(button, options = {}, env = {}) {
       menu.removeEventListener('keydown', onMenuKeydown)
       menu.removeEventListener('click', onMenuClick)
       menu.removeEventListener('toggle', onToggle)
-      restore()
+      restores.forEach((restore) => restore())
     },
   }
 }

@@ -28,6 +28,7 @@ ship.menu.addEventListener('ap:select', (event) => console.log(event.detail.valu
 - Handle: `element`, `menu`, `open(focus)` (`first` or `last` item), `close()`, `isOpen()`, `destroy()`.
 - The button opens it on click, ArrowDown (first item) and ArrowUp (last item). Inside: ArrowUp and ArrowDown wrap over enabled items, Home and End, a letter jumps to the next item starting with it, Escape closes and focuses the button, Tab closes and moves on. A click outside closes it (native light dismiss).
 - Choosing an item fires `ap:select` on the menu with `{ item, value }` (`value` or `data-value`), then closes it. The menu also fires `ap:open` and `ap:close`.
+- Items are read each time the menu opens, so ones added later work; the menu is placed again on page scroll and window resize while open.
 - The module sets `role="menu"`, `role="menuitem"`, `tabindex="-1"` on the items, and `aria-haspopup`, `aria-expanded`, `aria-controls` on the button; `destroy()` restores them.
 - `autoInit()` enhances every `[data-ap-menu]`.
 

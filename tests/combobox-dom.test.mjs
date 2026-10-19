@@ -221,3 +221,32 @@ test('setValue shows the label of an option added after setup', () => {
   handle.setValue('gull')
   assert.equal(input.value, 'Grey Gull')
 })
+
+test('a required select hands `required` to the input and gets it back on destroy', () => {
+  const select = document.querySelector('select')
+  select.required = true
+  const handle = createCombobox(select, {}, { document })
+  assert.equal(select.required, false, 'a hidden required select would block the form silently')
+  assert.equal(handle.element.querySelector('input').required, true)
+  handle.destroy()
+  assert.equal(select.required, true)
+})
+
+test('a form reset shows the label of the restored value', async () => {
+  const { select, input } = setup()
+  select.value = 'moth'
+  input.value = 'Iron Moth'
+  // The browser restores the select after the reset event (happy-dom does not), so do the same.
+  select.form.dispatchEvent(new window.Event('reset'))
+  select.value = 'heron'
+  await new Promise((resolve) => setTimeout(resolve, 5))
+  assert.equal(input.value, 'Night Heron')
+})
+
+test('creatable: text equal to a disabled option reverts instead of duplicating it', () => {
+  const { select, input } = setup({ creatable: true })
+  type(input, 'Cybérillic Dawn')
+  blur(input)
+  assert.equal(select.querySelectorAll('option[data-ap-created]').length, 0)
+  assert.equal(input.value, '')
+})
