@@ -32,12 +32,13 @@ const handle = createCombobox(select, { creatable: true, labels: { noResults: 'N
 | `Alt` + `↓` | Opens without activating |
 | `Enter` | Chooses the active option; with `creatable`, unmatched text becomes a new option |
 | `Esc` | Closes and restores the selected label |
-| Leaving the field | Exact label → chosen; empty → placeholder value; other text → reverted (or created if `creatable`) |
+| Leaving the field | Exact label → chosen; empty → placeholder value; other text → reverted (or created if `creatable`, unless it equals a disabled option) |
 | Toggle button, clicks | Open the full list; clicking an enabled option chooses it |
 
 ## API
 
 - Options: `creatable`, `placeholder`, `labels` (`noResults`, `results(count)`, `create(text)`, `toggle`), `filter(options, query)`.
+- `required` moves to the input (the hidden select would block the form without a message) and returns to the select on `destroy()`. A form reset shows the restored value's label.
 - The native select stays the source of truth: options added or removed later are picked up the next time the list opens or `setValue()` runs.
 - Handle: `element`, `getValue()`, `setValue(value)` (no events), `open()`, `close()`, `destroy()` (restores the select and its id).
 - Events on the select: `input` and `change` on user choices, `ap:change` (`detail: { value, label, created }`), `ap:open`, `ap:close`.

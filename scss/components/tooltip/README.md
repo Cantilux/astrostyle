@@ -29,4 +29,5 @@ createTooltip(document.querySelector('[data-ap-tooltip="scan-tip"]'), { side: 'b
 - Link the tooltip to its trigger yourself: `aria-labelledby` when it is the trigger's only name (icon buttons), `aria-describedby` when it adds to a visible label.
 - Plain text only, a few words: no links or buttons inside; those belong in a menu or a dialog.
 - Never put information only in a tooltip that touch users need: there is no hover on touch screens.
+- The tooltip is placed again on page scroll and window resize while open.
 - The module sets `left`, `top` and `data-ap-side` on the tooltip; everything else is CSS.

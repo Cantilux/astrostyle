@@ -36,6 +36,7 @@ export function createCombobox(select, options = {}, env = {}) {
   const creatable = Boolean(options.creatable)
   const placeholderOption = [...select.options].find((option) => option.value === '')
   const originalId = select.id
+  const wasRequired = select.required
 
   let choices = readOptions(select)
   let visible = []
@@ -60,7 +61,7 @@ export function createCombobox(select, options = {}, env = {}) {
   for (const name of ['aria-describedby', 'aria-invalid', 'aria-label', 'aria-labelledby']) {
     if (select.hasAttribute(name)) input.setAttribute(name, select.getAttribute(name))
   }
-  input.required = select.required
+  input.required = wasRequired
   input.disabled = select.disabled
 
   const toggle = element(doc, 'button', 'ap-c-combobox__toggle', {
@@ -187,7 +188,7 @@ export function createCombobox(select, options = {}, env = {}) {
     const match = findByLabel(choices, text)
     if (match && !match.disabled) commit(match.value)
     else if (!text && placeholderOption) commit('')
-    else if (text && creatable) create(text)
+    else if (text && creatable && !match) create(text)
     else input.value = selectedLabel()
   }
 
@@ -245,6 +246,14 @@ export function createCombobox(select, options = {}, env = {}) {
     close()
   }
 
+  // Shows the label of the value a form reset gives back; the reset applies after its event.
+  function onReset() {
+    view.setTimeout(() => {
+      input.value = selectedLabel()
+    })
+  }
+
+  select.form?.addEventListener('reset', onReset)
   input.addEventListener('keydown', onKeydown)
   input.addEventListener('input', onInput)
   root.addEventListener('focusout', onFocusOut)
@@ -254,6 +263,9 @@ export function createCombobox(select, options = {}, env = {}) {
   listbox.addEventListener('click', onOptionClick)
 
   if (originalId) select.id = `${originalId}-native`
+  // The hidden select cannot take focus, so a required one would block the form without a message:
+  // the input carries `required` instead.
+  select.required = false
   select.hidden = true
   select.after(root)
   input.value = selectedLabel()
@@ -274,6 +286,8 @@ export function createCombobox(select, options = {}, env = {}) {
       close()
       root.remove()
       select.hidden = false
+      select.required = wasRequired
+      select.form?.removeEventListener('reset', onReset)
       if (originalId) select.id = originalId
     },
   }

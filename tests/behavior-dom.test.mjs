@@ -344,12 +344,18 @@ test('a click on the backdrop closes a dismissible dialog only', () => {
   const box = { left: 100, right: 300, top: 100, bottom: 200 }
   dialog.getBoundingClientRect = () => box
   // Clicks on the dialog element itself at (x, y): inside its box or on the backdrop.
-  const clickAt = (x, y) =>
+  const clickAt = (x, y) => {
+    dialog.dispatchEvent(new window.MouseEvent('mousedown', { bubbles: true }))
     dialog.dispatchEvent(new window.MouseEvent('click', { bubbles: true, clientX: x, clientY: y }))
+  }
   const handle = createDialog(dialog, {}, { document })
   handle.open()
   clickAt(150, 150)
   assert.equal(handle.isOpen(), true, 'a click on the padding keeps it open')
+  // A drag that starts inside a child and ends on the backdrop clicks the dialog, but must not close it.
+  dialog.firstElementChild?.dispatchEvent(new window.MouseEvent('mousedown', { bubbles: true }))
+  dialog.dispatchEvent(new window.MouseEvent('click', { bubbles: true, clientX: 10, clientY: 10 }))
+  assert.equal(handle.isOpen(), true, 'a drag from inside keeps it open')
   clickAt(10, 10)
   assert.equal(handle.isOpen(), false)
   handle.destroy()
@@ -527,4 +533,64 @@ test('Escape hides a tooltip; autoInit wires tooltips and menus', () => {
   press(document.body, 'Escape')
   assert.equal(tooltip.isOpen(), false)
   assert.ok(trigger.hasAttribute('data-ap-enhanced'))
+})
+
+test('menu items added after setup are wired when the menu opens; destroy restores them', () => {
+  const button = menuPage()
+  const handle = createMenu(button)
+  const menu = document.getElementById('ship-menu')
+  menu.insertAdjacentHTML('beforeend', '<button class="ap-c-menu__item" value="dock">Dock</button>')
+  button.click()
+  const added = menu.lastElementChild
+  assert.equal(added.getAttribute('role'), 'menuitem')
+  handle.destroy()
+  assert.equal(added.hasAttribute('role'), false)
+})
+
+test('an open menu is placed again on scroll, but not on a scroll inside it', () => {
+  const button = menuPage()
+  createMenu(button)
+  const menu = document.getElementById('ship-menu')
+  let top = 100
+  button.getBoundingClientRect = () => ({
+    top,
+    bottom: top + 20,
+    left: 0,
+    right: 50,
+    width: 50,
+    height: 20,
+  })
+  button.click()
+  const before = menu.style.top
+  top = 40
+  menu.dispatchEvent(new window.Event('scroll'))
+  assert.equal(menu.style.top, before, 'a scroll inside the menu leaves it alone')
+  document.dispatchEvent(new window.Event('scroll'))
+  assert.notEqual(menu.style.top, before, 'a page scroll moves it with the button')
+})
+
+test('an open tooltip is placed again on scroll and stops listening once hidden', () => {
+  const { trigger, env, flush } = tooltipPage()
+  const handle = createTooltip(trigger, {}, env)
+  const tip = document.getElementById('scan-tip')
+  let top = 200
+  trigger.getBoundingClientRect = () => ({
+    top,
+    bottom: top + 20,
+    left: 0,
+    right: 50,
+    width: 50,
+    height: 20,
+  })
+  handle.show()
+  const before = tip.style.top
+  top = 120
+  document.dispatchEvent(new window.Event('scroll'))
+  assert.notEqual(tip.style.top, before)
+  handle.hide()
+  const hidden = tip.style.top
+  top = 50
+  document.dispatchEvent(new window.Event('scroll'))
+  assert.equal(tip.style.top, hidden)
+  flush()
 })
