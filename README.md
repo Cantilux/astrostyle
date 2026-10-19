@@ -121,6 +121,18 @@ const toaster = createToaster()
 toaster.show({ title: 'Docked', message: 'All systems online.', tone: 'success' })
 ```
 
+In TypeScript, every `createX()` factory, its options and its handle are typed:
+
+```ts
+import { createCombobox } from 'astrostyle/js/combobox'
+
+const select = document.querySelector<HTMLSelectElement>('#ship')!
+const combobox = createCombobox(select, { creatable: true })
+combobox.setValue('falcon')  // string; getValue() returns a string
+```
+
+The declarations live in `dist/types/` and are found through the `types` condition of the package `exports`, so `tsconfig.json` needs `"moduleResolution": "bundler"` (`node16` and `nodenext` work too). The classic `node` resolution does not read `exports`, so the imports would stay untyped.
+
 <br>
 
 ### / First flight /
@@ -408,7 +420,7 @@ The house rules, illustrated. Each image has an expandable text version below it
 <details>
 <summary>Text version of JavaScript</summary>
 
-- Native ES modules, zero dependencies, no build step needed on your side.
+- Native ES modules in plain JavaScript, zero dependencies, no build step needed on your side; the types come as generated declarations.
 - One module per interactive component, exposing a `createX(element, options, env)` factory that enhances native markup and returns a handle with `destroy()`; `env` injects the document and id generator for tests.
 - Components talk through DOM events prefixed with `ap:` (`ap:change`, `ap:open`, `ap:close`, `ap:page`, `ap:select`).
 - Pure logic (filtering, page ranges) is kept in separate functions and unit tested; `document` and timers are passed in, never hard-coded.
