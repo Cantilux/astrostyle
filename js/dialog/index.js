@@ -19,6 +19,7 @@ export function createDialog(dialog, options = {}, env = {}) {
   const modal = options.modal ?? true
   const dismissible = options.dismissible ?? true
   let opener = null
+  let pressedOnBackdrop = false
 
   // Fires `ap:<name>` on the dialog.
   const emit = (name, detail) =>
@@ -47,6 +48,12 @@ export function createDialog(dialog, options = {}, env = {}) {
     emit('close', { returnValue: dialog.returnValue })
   }
 
+  // Remembers whether a press started on the backdrop: a drag that starts inside the dialog and
+  // ends outside (selecting text) must not close it.
+  function onMousedown(event) {
+    pressedOnBackdrop = event.target === dialog
+  }
+
   // Closes on a close button, or on a backdrop click when dismissible.
   function onClick(event) {
     const button = event.target.closest('[data-ap-dialog-close]')
@@ -54,7 +61,14 @@ export function createDialog(dialog, options = {}, env = {}) {
       close(button.value)
       return
     }
-    if (dismissible && event.target === dialog && isOutside(dialog, event.clientX, event.clientY)) {
+    const pressed = pressedOnBackdrop
+    pressedOnBackdrop = false
+    if (
+      dismissible &&
+      pressed &&
+      event.target === dialog &&
+      isOutside(dialog, event.clientX, event.clientY)
+    ) {
       close('')
     }
   }
@@ -68,6 +82,7 @@ export function createDialog(dialog, options = {}, env = {}) {
   }
 
   dialog.addEventListener('close', onClose)
+  dialog.addEventListener('mousedown', onMousedown)
   dialog.addEventListener('click', onClick)
   doc.addEventListener('click', onDocumentClick)
 
@@ -79,6 +94,7 @@ export function createDialog(dialog, options = {}, env = {}) {
     // Removes the behavior; an open dialog stays open.
     destroy() {
       dialog.removeEventListener('close', onClose)
+      dialog.removeEventListener('mousedown', onMousedown)
       dialog.removeEventListener('click', onClick)
       doc.removeEventListener('click', onDocumentClick)
     },

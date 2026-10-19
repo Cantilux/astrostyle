@@ -30,7 +30,7 @@ jump.element.addEventListener('ap:close', (event) => console.log(event.detail.re
 jump.open()
 ```
 
-- Options: `modal` (default `true`: opens with `showModal()`, the rest of the page is inert), `dismissible` (default `true`: a click on the backdrop closes it).
+- Options: `modal` (default `true`: opens with `showModal()`, the rest of the page is inert), `dismissible` (default `true`: a click on the backdrop closes it; a press that starts inside the dialog and ends on the backdrop does not).
 - Handle: `element`, `open()`, `close(returnValue)`, `isOpen()`, `destroy()`.
 - Buttons with `data-ap-dialog-open="<dialog id>"` open it. Buttons inside it with `data-ap-dialog-close` close it, and their `value` becomes the dialog's `returnValue`. A `<form method="dialog">` works too.
 - Events on the dialog: `ap:open`, then `ap:close` with `detail.returnValue`, however it closed (button, Escape, form, `close()`).
