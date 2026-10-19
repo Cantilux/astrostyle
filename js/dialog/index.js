@@ -1,6 +1,7 @@
 // Dialog: enhances a native `<dialog>` (an `ap-c-dialog` or an `ap-c-drawer`) with openers, close
 // buttons, backdrop close and focus return, and reports opening and closing as `ap:` events.
 // Contract: scss/components/dialog/README.md.
+import { windowOf } from '../shared/dom.js'
 
 /**
  * Whether a click at (`x`, `y`) falls outside the box of `node`, on its backdrop.
@@ -25,7 +26,7 @@ function isOutside(node, x, y) {
  */
 export function createDialog(dialog, options = {}, env = {}) {
   const doc = env.document ?? dialog.ownerDocument
-  const view = doc.defaultView ?? /** @type {Window & typeof globalThis} */ (globalThis)
+  const view = windowOf(doc)
   const modal = options.modal ?? true
   const dismissible = options.dismissible ?? true
   /** @type {Element | null} */

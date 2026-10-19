@@ -2,7 +2,7 @@
 // popup). The select stays in the form, hidden and in sync; the combobox replaces it on screen.
 // Contract: scss/components/combobox/README.md.
 import { filterOptions, findByLabel } from './filter.js'
-import { element, nextId } from '../shared/dom.js'
+import { element, nextId, windowOf } from '../shared/dom.js'
 import { firstEnabled, moveActive } from '../shared/navigation.js'
 
 /** Default texts; every one can be replaced through `options.labels`. */
@@ -43,7 +43,7 @@ function readOptions(select) {
  */
 export function createCombobox(select, options = {}, env = {}) {
   const doc = env.document ?? select.ownerDocument
-  const view = doc.defaultView ?? /** @type {Window & typeof globalThis} */ (globalThis)
+  const view = windowOf(doc)
   const createId = env.createId ?? (() => nextId('ap-combobox'))
   const labels = { ...defaultLabels, ...options.labels }
   const filter = options.filter ?? filterOptions

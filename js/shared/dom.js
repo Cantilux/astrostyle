@@ -3,6 +3,13 @@
 let lastId = 0
 
 /**
+ * The window of `doc`, or the global one when the document has none (detached, test doubles).
+ * @param {Document} doc
+ */
+export const windowOf = (doc) =>
+  doc.defaultView ?? /** @type {Window & typeof globalThis} */ (globalThis)
+
+/**
  * Unique id for generated elements, e.g. `ap-tabs-3`.
  * @param {string} prefix
  */

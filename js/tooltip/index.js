@@ -1,6 +1,7 @@
 // Tooltip: shows a short hint in a popover next to its trigger while the pointer rests on the
 // trigger or focus is on it. The tooltip stays while the pointer moves onto it, and Escape hides
 // it. Contract: scss/components/tooltip/README.md.
+import { windowOf } from '../shared/dom.js'
 import { positionNear, watchViewport } from '../shared/floating.js'
 
 /**
@@ -10,22 +11,23 @@ import { positionNear, watchViewport } from '../shared/floating.js'
  * `hideDelay` (ms before hiding, 100). `env.setTimeout` and `env.clearTimeout` can be injected.
  * @param {HTMLElement} trigger
  * @param {{ tooltip?: HTMLElement, side?: 'top' | 'bottom', delay?: number, hideDelay?: number }} [options]
- * @param {{ setTimeout?: (action: () => void, ms: number) => unknown, clearTimeout?: (id: any) => void }} [env]
+ * @param {{ setTimeout?: (action: () => void, ms: number) => number, clearTimeout?: (id: number | undefined) => void }} [env]
  */
 export function createTooltip(trigger, options = {}, env = {}) {
   const doc = trigger.ownerDocument
-  const view = doc.defaultView ?? /** @type {Window & typeof globalThis} */ (globalThis)
+  const view = windowOf(doc)
   const setTimer = env.setTimeout ?? view.setTimeout.bind(view)
   const clearTimer = env.clearTimeout ?? view.clearTimeout.bind(view)
-  const found = options.tooltip ?? doc.getElementById(trigger.dataset.apTooltip ?? '')
+  const found =
+    options.tooltip ?? doc.getElementById(/** @type {string} */ (trigger.dataset.apTooltip))
   if (!found) throw new Error('createTooltip: no tooltip element')
   const tooltip = found
   const side = options.side ?? 'top'
   const delay = options.delay ?? 300
   const hideDelay = options.hideDelay ?? 100
   let open = false
-  /** @type {any} Timer id: a number in browsers, whatever the injected `setTimeout` returns in tests. */
-  let timer = null
+  /** @type {number | undefined} */
+  let timer
   /** @type {(() => void) | null} */
   let stopWatching = null
 

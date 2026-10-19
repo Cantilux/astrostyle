@@ -17,17 +17,25 @@ function hrefFrom(template) {
 }
 
 /**
- * Enhancers by selector: each turns one element into a component and returns its handle.
- * @type {[string, (node: any) => { destroy(): void }][]}
+ * @typedef {ReturnType<typeof createCombobox> | ReturnType<typeof createPagination> |
+ *   ReturnType<typeof createTabs> | ReturnType<typeof createDialog> |
+ *   ReturnType<typeof createMenu> | ReturnType<typeof createTooltip>} Handle
+ */
+
+/**
+ * Enhancers by selector: each turns one element into a component and returns its handle. The
+ * selector guarantees the element type each enhancer declares, hence `never` here.
+ * @type {[string, (node: never) => Handle][]}
  */
 const enhancers = [
   [
     'select[data-ap-combobox]',
-    (select) => createCombobox(select, { creatable: select.hasAttribute('data-ap-creatable') }),
+    (/** @type {HTMLSelectElement} */ select) =>
+      createCombobox(select, { creatable: select.hasAttribute('data-ap-creatable') }),
   ],
   [
     'nav[data-ap-pagination]',
-    (nav) =>
+    (/** @type {HTMLElement} */ nav) =>
       createPagination(nav, {
         page: Number(nav.dataset.apPage) || 1,
         count: Number(nav.dataset.apCount) || 0,
@@ -36,17 +44,18 @@ const enhancers = [
   ],
   [
     '[data-ap-tabs]',
-    (root) =>
+    (/** @type {HTMLElement} */ root) =>
       createTabs(root, {
         activation: root.dataset.apTabs === 'manual' ? 'manual' : 'automatic',
       }),
   ],
   [
     'dialog[data-ap-dialog]',
-    (dialog) => createDialog(dialog, { dismissible: dialog.dataset.apDialog !== 'static' }),
+    (/** @type {HTMLDialogElement} */ dialog) =>
+      createDialog(dialog, { dismissible: dialog.dataset.apDialog !== 'static' }),
   ],
-  ['[data-ap-menu]', (button) => createMenu(button)],
-  ['[data-ap-tooltip]', (trigger) => createTooltip(trigger)],
+  ['[data-ap-menu]', (/** @type {HTMLElement} */ button) => createMenu(button)],
+  ['[data-ap-tooltip]', (/** @type {HTMLElement} */ trigger) => createTooltip(trigger)],
 ]
 
 /**
@@ -61,12 +70,12 @@ const enhancers = [
  * @param {ParentNode} [root]
  */
 export function autoInit(root = document) {
-  /** @type {{ destroy(): void }[]} */
+  /** @type {Handle[]} */
   const handles = []
   for (const [selector, enhance] of enhancers) {
     for (const node of root.querySelectorAll(`${selector}:not([data-ap-enhanced])`)) {
       try {
-        handles.push(enhance(node))
+        handles.push(enhance(/** @type {never} */ (node)))
         node.setAttribute('data-ap-enhanced', '')
       } catch (error) {
         console.error('astrostyle autoInit:', error, node)

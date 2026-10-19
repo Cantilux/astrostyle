@@ -1,7 +1,7 @@
 // Menu: a button that opens a list of actions in a popover (WAI-ARIA menu button): arrow keys,
 // Home and End move between items, a letter jumps to the next item starting with it, Escape or a
 // click outside closes it and focus goes back to the button. Contract: scss/components/menu/README.md.
-import { nextId, snapshotAttributes } from '../shared/dom.js'
+import { nextId, snapshotAttributes, windowOf } from '../shared/dom.js'
 import { positionNear, watchViewport } from '../shared/floating.js'
 import { moveActive } from '../shared/navigation.js'
 import { nextByLetter } from './typeahead.js'
@@ -27,9 +27,9 @@ const isDisabled = (item) => item.disabled || item.getAttribute('aria-disabled')
  */
 export function createMenu(button, options = {}, env = {}) {
   const doc = button.ownerDocument
-  const view = doc.defaultView ?? /** @type {Window & typeof globalThis} */ (globalThis)
+  const view = windowOf(doc)
   const createId = env.createId ?? (() => nextId('ap-menu'))
-  const found = options.menu ?? doc.getElementById(button.dataset.apMenu ?? '')
+  const found = options.menu ?? doc.getElementById(/** @type {string} */ (button.dataset.apMenu))
   if (!found) throw new Error('createMenu: no menu element')
   const menu = found
   const side = options.side ?? 'bottom'

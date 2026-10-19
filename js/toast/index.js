@@ -1,7 +1,7 @@
 // Toasts: short messages in a live region at the edge of the screen, dismissed by the user or
 // after a timeout that pauses while the pointer or focus is on them.
 // Contract: scss/components/toast/README.md.
-import { element } from '../shared/dom.js'
+import { element, windowOf } from '../shared/dom.js'
 import { emptyQueue, enqueue, remove } from './queue.js'
 
 /** Default texts; every one can be replaced through `options.labels`. */
@@ -26,6 +26,8 @@ const closeIcon =
  * @property {{ label: string, onClick?: () => void }} [action]
  */
 
+/** @typedef {{ element: HTMLElement, duration: number, timer: number | undefined, paused: boolean }} ToastEntry */
+
 /**
  * Creates a toaster and returns its handle. Options: `region` (an existing element to use;
  * otherwise one is appended to the body), `duration` (ms before a toast closes, 0 to keep it),
@@ -39,13 +41,13 @@ const closeIcon =
  * }} [options]
  * @param {{
  *   document?: Document,
- *   setTimeout?: (action: () => void, ms: number) => unknown,
- *   clearTimeout?: (id: any) => void,
+ *   setTimeout?: (action: () => void, ms: number) => number,
+ *   clearTimeout?: (id: number | undefined) => void,
  * }} [env]
  */
 export function createToaster(options = {}, env = {}) {
   const doc = env.document ?? options.region?.ownerDocument ?? globalThis.document
-  const view = doc.defaultView ?? /** @type {Window & typeof globalThis} */ (globalThis)
+  const view = windowOf(doc)
   const setTimer = env.setTimeout ?? view.setTimeout.bind(view)
   const clearTimer = env.clearTimeout ?? view.clearTimeout.bind(view)
   const labels = { ...defaultLabels, ...options.labels }
@@ -59,7 +61,7 @@ export function createToaster(options = {}, env = {}) {
   if (!region.hasAttribute('aria-label')) region.setAttribute('aria-label', labels.region)
   if (ownRegion) doc.body.append(region)
 
-  /** @type {Map<number, { element: HTMLElement, duration: number, timer: any, paused: boolean }>} */
+  /** @type {Map<number, ToastEntry>} */
   const toasts = new Map()
   let queue = /** @type {import('./queue.js').QueueState<number>} */ (emptyQueue())
   let lastId = 0
@@ -106,8 +108,7 @@ export function createToaster(options = {}, env = {}) {
    * @param {number} id
    */
   function reveal(id) {
-    const entry = toasts.get(id)
-    if (!entry) return
+    const entry = /** @type {ToastEntry} */ (toasts.get(id))
     region.append(entry.element)
     startTimer(id)
     emit('open', entry.element)
@@ -197,7 +198,7 @@ export function createToaster(options = {}, env = {}) {
       toasts.set(id, {
         element: toast,
         duration: content.duration ?? defaultDuration,
-        timer: null,
+        timer: undefined,
         paused: false,
       })
       queue = enqueue(queue, id, max)

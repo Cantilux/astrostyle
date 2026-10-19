@@ -71,7 +71,7 @@
     "changeset": "changeset",
     "check:package": "node scripts/check-package.mjs",
     "release:version": "changeset version",
-    "prepublishOnly": "node scripts/build.mjs && tsc -p ."
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "@changesets/cli": "3.0.3",

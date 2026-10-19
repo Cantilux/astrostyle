@@ -1,6 +1,6 @@
 // Tabs: turns a list of buttons and the panels after it into a WAI-ARIA tablist with a roving
 // tabindex, arrow keys, Home and End. Contract: scss/components/tabs/README.md.
-import { nextId, snapshotAttributes } from '../shared/dom.js'
+import { nextId, snapshotAttributes, windowOf } from '../shared/dom.js'
 import { targetForKey } from './navigation.js'
 
 /** Attributes the module sets, restored by destroy(). */
@@ -36,7 +36,7 @@ const isDisabled = (tab) => tab.disabled || tab.getAttribute('aria-disabled') ==
  */
 export function createTabs(root, options = {}, env = {}) {
   const doc = env.document ?? root.ownerDocument
-  const view = doc.defaultView ?? /** @type {Window & typeof globalThis} */ (globalThis)
+  const view = windowOf(doc)
   const createId = env.createId ?? (() => nextId('ap-tabs'))
   const activation = options.activation ?? 'automatic'
   const orientation = options.orientation ?? 'horizontal'

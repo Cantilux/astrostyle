@@ -1,6 +1,6 @@
 // Pagination: renders page links (or buttons) with previous and next steps into a <nav>, and
 // fires `ap:page` when the user picks a page. Contract: scss/components/pagination/README.md.
-import { element } from '../shared/dom.js'
+import { element, windowOf } from '../shared/dom.js'
 import { GAP, clampPage, pageWindow } from './range.js'
 
 /** Default texts; every one can be replaced through `options.labels`. */
@@ -34,7 +34,7 @@ const chevrons = {
  */
 export function createPagination(nav, options = {}, env = {}) {
   const doc = env.document ?? nav.ownerDocument
-  const view = doc.defaultView ?? /** @type {Window & typeof globalThis} */ (globalThis)
+  const view = windowOf(doc)
   const labels = { ...defaultLabels, ...options.labels }
   const { siblings = 1, boundaries = 1, href } = options
   const original = [...nav.childNodes]
@@ -92,8 +92,9 @@ export function createPagination(nav, options = {}, env = {}) {
     const items = [step('previous')]
     for (const entry of pageWindow({ page, count, siblings, boundaries })) {
       if (entry === GAP) {
-        items.push(element(doc, 'span', 'ap-c-pagination__gap', { 'aria-hidden': 'true' }))
-        items[items.length - 1].textContent = '…'
+        const gap = element(doc, 'span', 'ap-c-pagination__gap', { 'aria-hidden': 'true' })
+        gap.textContent = '…'
+        items.push(gap)
         continue
       }
       const node = control(entry, 'ap-c-pagination__link', labels.page(entry))

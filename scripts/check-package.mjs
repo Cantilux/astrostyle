@@ -5,7 +5,7 @@ import { execFileSync } from 'node:child_process'
 import { mkdtempSync, mkdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import * as sass from 'sass'
 import { exportComponentTokens } from './build.mjs'
@@ -129,7 +129,11 @@ export function typeCheckAsConsumer() {
         'export { index, pages }',
       ].join('\n'),
     )
-    const tsc = join(root, 'node_modules', 'typescript', 'bin', 'tsc')
+    const tsc = join(
+      dirname(createRequire(import.meta.url).resolve('typescript/package.json')),
+      'bin',
+      'tsc',
+    )
     const args = ['--noEmit', '--strict', '--moduleResolution', 'bundler', '--module', 'esnext']
     execFileSync(process.execPath, [tsc, ...args, '--lib', 'es2022,dom', 'use.ts'], {
       cwd: project,
