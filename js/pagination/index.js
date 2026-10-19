@@ -8,7 +8,7 @@ export const defaultLabels = {
   nav: 'Pagination',
   previous: 'Previous page',
   next: 'Next page',
-  page: (page) => `Page ${page}`,
+  page: (/** @type {number} */ page) => `Page ${page}`,
 }
 
 /** Chevron icons of the previous and next steps. */
@@ -17,26 +17,43 @@ const chevrons = {
   next: '<path d="M9 6l6 6-6 6"/>',
 }
 
-// Enhances `nav` with a pagination control and returns its handle. Options: `page`, `count`,
-// `siblings`, `boundaries`, `href(page)` (render links instead of buttons), `labels`.
-// `env.document` can be injected for tests.
+/**
+ * Enhances `nav` with a pagination control and returns its handle. Options: `page`, `count`,
+ * `siblings`, `boundaries`, `href(page)` (render links instead of buttons), `labels`.
+ * `env.document` can be injected for tests.
+ * @param {HTMLElement} nav
+ * @param {{
+ *   page?: number,
+ *   count?: number,
+ *   siblings?: number,
+ *   boundaries?: number,
+ *   href?: (page: number) => string,
+ *   labels?: Partial<typeof defaultLabels>,
+ * }} [options]
+ * @param {{ document?: Document }} [env]
+ */
 export function createPagination(nav, options = {}, env = {}) {
   const doc = env.document ?? nav.ownerDocument
-  const view = doc.defaultView ?? globalThis
+  const view = doc.defaultView ?? /** @type {Window & typeof globalThis} */ (globalThis)
   const labels = { ...defaultLabels, ...options.labels }
   const { siblings = 1, boundaries = 1, href } = options
   const original = [...nav.childNodes]
   const hadLabel = nav.hasAttribute('aria-label') || nav.hasAttribute('aria-labelledby')
   const hadClass = nav.classList.contains('ap-c-pagination')
 
-  let count = Math.max(Math.trunc(options.count) || 0, 0)
+  let count = Math.max(Math.trunc(options.count ?? 0) || 0, 0)
   let page = clampPage(options.page ?? 1, count)
 
   const list = element(doc, 'ul', 'ap-c-pagination__list')
   nav.classList.add('ap-c-pagination')
   if (!hadLabel) nav.setAttribute('aria-label', labels.nav)
 
-  // Link (or button) to `target`; `disabled` steps keep their place but do nothing.
+  /**
+   * Link (or button) to `target`; `disabled` steps keep their place but do nothing.
+   * @param {number} target
+   * @param {string} className
+   * @param {string} label
+   */
   function control(target, className, label, disabled = false) {
     const node = element(doc, href ? 'a' : 'button', className, { 'aria-label': label })
     node.dataset.page = String(target)
@@ -44,13 +61,17 @@ export function createPagination(nav, options = {}, env = {}) {
       if (disabled) node.setAttribute('aria-disabled', 'true')
       else node.setAttribute('href', href(target))
     } else {
-      node.type = 'button'
-      node.disabled = disabled
+      const button = /** @type {HTMLButtonElement} */ (node)
+      button.type = 'button'
+      button.disabled = disabled
     }
     return node
   }
 
-  // Previous or next step with its chevron.
+  /**
+   * Previous or next step with its chevron.
+   * @param {'previous' | 'next'} direction
+   */
   function step(direction) {
     const target = direction === 'previous' ? page - 1 : page + 1
     const disabled = target < 1 || target > count
@@ -67,11 +88,12 @@ export function createPagination(nav, options = {}, env = {}) {
 
   // Rebuilds the list for the current page and count.
   function render() {
+    /** @type {HTMLElement[]} */
     const items = [step('previous')]
     for (const entry of pageWindow({ page, count, siblings, boundaries })) {
       if (entry === GAP) {
         items.push(element(doc, 'span', 'ap-c-pagination__gap', { 'aria-hidden': 'true' }))
-        items.at(-1).textContent = '…'
+        items[items.length - 1].textContent = '…'
         continue
       }
       const node = control(entry, 'ap-c-pagination__link', labels.page(entry))
@@ -89,17 +111,29 @@ export function createPagination(nav, options = {}, env = {}) {
     )
   }
 
-  // Moves focus back into the list after a re-render: the same step if still enabled, else the
-  // current page.
+  /**
+   * Moves focus back into the list after a re-render: the same step if still enabled, else the
+   * current page.
+   * @param {string} [stepName]
+   */
   function restoreFocus(stepName) {
-    const same = stepName && list.querySelector(`[data-step="${stepName}"]`)
+    const same = stepName
+      ? /** @type {HTMLButtonElement | null} */ (list.querySelector(`[data-step="${stepName}"]`))
+      : null
     const usable = same && !same.disabled && same.getAttribute('aria-disabled') !== 'true'
-    ;(usable ? same : list.querySelector('[aria-current="page"]'))?.focus()
+    ;/** @type {HTMLElement | null} */ (
+      usable ? same : list.querySelector('[aria-current="page"]')
+    )?.focus()
   }
 
-  // Handles a click on a page or a step.
+  /**
+   * Handles a click on a page or a step.
+   * @param {MouseEvent} event
+   */
   function onClick(event) {
-    const node = event.target.closest('[data-page]')
+    const node = /** @type {HTMLButtonElement | null} */ (
+      /** @type {Element} */ (event.target).closest('[data-page]')
+    )
     if (!node || !list.contains(node)) return
     if (node.disabled || node.getAttribute('aria-disabled') === 'true') {
       event.preventDefault()
@@ -131,12 +165,18 @@ export function createPagination(nav, options = {}, env = {}) {
     element: nav,
     getPage: () => page,
     getCount: () => count,
-    // Shows `value` as the current page without firing `ap:page` (programmatic update).
+    /**
+     * Shows `value` as the current page without firing `ap:page` (programmatic update).
+     * @param {number} value
+     */
     setPage(value) {
       page = clampPage(value, count)
       render()
     },
-    // Changes the number of pages, keeping the current page in range.
+    /**
+     * Changes the number of pages, keeping the current page in range.
+     * @param {number} value
+     */
     setCount(value) {
       count = Math.max(Math.trunc(value) || 0, 0)
       page = clampPage(page, count)

@@ -1,21 +1,33 @@
 // Pure page-window computation for pagination: which page numbers to show and where to put gaps.
 
 /** Marker of a run of hidden pages in a page window. */
-export const GAP = 'gap'
+export const GAP = /** @type {const} */ ('gap')
 
-// Integers from `start` to `end`, both included; empty when `end < start`.
+/**
+ * Integers from `start` to `end`, both included; empty when `end < start`.
+ * @param {number} start
+ * @param {number} end
+ */
 function range(start, end) {
   return Array.from({ length: Math.max(end - start + 1, 0) }, (_, index) => start + index)
 }
 
-// Clamps `page` to 1…`count` (1 when there are no pages).
+/**
+ * Clamps `page` to 1…`count` (1 when there are no pages).
+ * @param {number} page
+ * @param {number} count
+ */
 export function clampPage(page, count) {
   return Math.min(Math.max(Math.trunc(page) || 1, 1), Math.max(count, 1))
 }
 
-// Page numbers and `GAP` markers to show for `page` of `count`: `boundaries` pages at each end and
-// `siblings` on each side of the current page. The number of items stays constant while the
-// current page moves, so the control does not jump around.
+/**
+ * Page numbers and `GAP` markers to show for `page` of `count`: `boundaries` pages at each end and
+ * `siblings` on each side of the current page. The number of items stays constant while the
+ * current page moves, so the control does not jump around.
+ * @param {{ page: number, count: number, siblings?: number, boundaries?: number }} args
+ * @returns {(number | 'gap')[]}
+ */
 export function pageWindow({ page, count, siblings = 1, boundaries = 1 }) {
   if (count < 1) return []
   const current = clampPage(page, count)

@@ -6,12 +6,20 @@ import { createPagination } from '../pagination/index.js'
 import { createTabs } from '../tabs/index.js'
 import { createTooltip } from '../tooltip/index.js'
 
-// Page URL from a `data-ap-href` template such as `?page={page}`, or null without one.
+/**
+ * Page URL builder from a `data-ap-href` template such as `?page={page}`, or undefined without one.
+ * @param {string | undefined} template
+ */
 function hrefFrom(template) {
-  return template ? (page) => template.replaceAll('{page}', String(page)) : undefined
+  return template
+    ? (/** @type {number} */ page) => template.replaceAll('{page}', String(page))
+    : undefined
 }
 
-/** Enhancers by selector: each turns one element into a component and returns its handle. */
+/**
+ * Enhancers by selector: each turns one element into a component and returns its handle.
+ * @type {[string, (node: any) => { destroy(): void }][]}
+ */
 const enhancers = [
   [
     'select[data-ap-combobox]',
@@ -41,15 +49,19 @@ const enhancers = [
   ['[data-ap-tooltip]', (trigger) => createTooltip(trigger)],
 ]
 
-// Enhances, under `root`, every `select[data-ap-combobox]` (free text with `data-ap-creatable`),
-// `nav[data-ap-pagination]` (`data-ap-page`, `data-ap-count`, optional `data-ap-href` template
-// with `{page}`), `[data-ap-tabs]` (`data-ap-tabs="manual"` for manual activation) and
-// `dialog[data-ap-dialog]` (`data-ap-dialog="static"` keeps it open on a backdrop click), and the
-// buttons of menus (`data-ap-menu`) and the triggers of tooltips (`data-ap-tooltip`), each naming
-// the id of its popover. Returns
-// the handles; elements already enhanced (`data-ap-enhanced`) are skipped. An element that cannot
-// be enhanced (broken markup) is reported on the console and left as it is; the others go on.
+/**
+ * Enhances, under `root`, every `select[data-ap-combobox]` (free text with `data-ap-creatable`),
+ * `nav[data-ap-pagination]` (`data-ap-page`, `data-ap-count`, optional `data-ap-href` template
+ * with `{page}`), `[data-ap-tabs]` (`data-ap-tabs="manual"` for manual activation) and
+ * `dialog[data-ap-dialog]` (`data-ap-dialog="static"` keeps it open on a backdrop click), and the
+ * buttons of menus (`data-ap-menu`) and the triggers of tooltips (`data-ap-tooltip`), each naming
+ * the id of its popover. Returns
+ * the handles; elements already enhanced (`data-ap-enhanced`) are skipped. An element that cannot
+ * be enhanced (broken markup) is reported on the console and left as it is; the others go on.
+ * @param {ParentNode} [root]
+ */
 export function autoInit(root = document) {
+  /** @type {{ destroy(): void }[]} */
   const handles = []
   for (const [selector, enhance] of enhancers) {
     for (const node of root.querySelectorAll(`${selector}:not([data-ap-enhanced])`)) {

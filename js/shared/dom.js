@@ -2,13 +2,24 @@
 
 let lastId = 0
 
-// Unique id for generated elements, e.g. `ap-tabs-3`.
+/**
+ * Unique id for generated elements, e.g. `ap-tabs-3`.
+ * @param {string} prefix
+ */
 export function nextId(prefix) {
   lastId += 1
   return `${prefix}-${lastId}`
 }
 
-// Creates an element with a class and attributes in `doc`.
+/**
+ * Creates an element with a class and attributes in `doc`.
+ * @template {keyof HTMLElementTagNameMap} T
+ * @param {Document} doc
+ * @param {T} tag
+ * @param {string} [className]
+ * @param {Record<string, string>} [attributes]
+ * @returns {HTMLElementTagNameMap[T]}
+ */
 export function element(doc, tag, className, attributes = {}) {
   const node = doc.createElement(tag)
   if (className) node.className = className
@@ -16,9 +27,15 @@ export function element(doc, tag, className, attributes = {}) {
   return node
 }
 
-// Saves the `names` attributes of `nodes` and returns a function that puts them back as they were.
+/**
+ * Saves the `names` attributes of `nodes` and returns a function that puts them back as they were.
+ * @param {Element[]} nodes
+ * @param {string[]} names
+ */
 export function snapshotAttributes(nodes, names) {
-  const saved = nodes.map((node) => names.map((name) => [name, node.getAttribute(name)]))
+  const saved = nodes.map((node) =>
+    names.map((name) => /** @type {[string, string | null]} */ ([name, node.getAttribute(name)])),
+  )
   return () =>
     nodes.forEach((node, index) => {
       for (const [name, value] of saved[index]) {

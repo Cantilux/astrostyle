@@ -3,24 +3,35 @@
 // it. Contract: scss/components/tooltip/README.md.
 import { positionNear } from '../shared/floating.js'
 
-// Enhances `trigger` and returns its handle. The tooltip is `options.tooltip`, or the element whose
-// id is in the trigger's `data-ap-tooltip`; it must have `popover="manual"` and `role="tooltip"`.
-// Options: `side` (`top`, the default, or `bottom`), `delay` (ms before showing on hover, 300),
-// `hideDelay` (ms before hiding, 100). `env.setTimeout` and `env.clearTimeout` can be injected.
+/**
+ * Enhances `trigger` and returns its handle. The tooltip is `options.tooltip`, or the element whose
+ * id is in the trigger's `data-ap-tooltip`; it must have `popover="manual"` and `role="tooltip"`.
+ * Options: `side` (`top`, the default, or `bottom`), `delay` (ms before showing on hover, 300),
+ * `hideDelay` (ms before hiding, 100). `env.setTimeout` and `env.clearTimeout` can be injected.
+ * @param {HTMLElement} trigger
+ * @param {{ tooltip?: HTMLElement, side?: 'top' | 'bottom', delay?: number, hideDelay?: number }} [options]
+ * @param {{ setTimeout?: (action: () => void, ms: number) => unknown, clearTimeout?: (id: any) => void }} [env]
+ */
 export function createTooltip(trigger, options = {}, env = {}) {
   const doc = trigger.ownerDocument
-  const view = doc.defaultView ?? globalThis
+  const view = doc.defaultView ?? /** @type {Window & typeof globalThis} */ (globalThis)
   const setTimer = env.setTimeout ?? view.setTimeout.bind(view)
   const clearTimer = env.clearTimeout ?? view.clearTimeout.bind(view)
-  const tooltip = options.tooltip ?? doc.getElementById(trigger.dataset.apTooltip)
-  if (!tooltip) throw new Error('createTooltip: no tooltip element')
+  const found = options.tooltip ?? doc.getElementById(trigger.dataset.apTooltip ?? '')
+  if (!found) throw new Error('createTooltip: no tooltip element')
+  const tooltip = found
   const side = options.side ?? 'top'
   const delay = options.delay ?? 300
   const hideDelay = options.hideDelay ?? 100
   let open = false
+  /** @type {any} Timer id: a number in browsers, whatever the injected `setTimeout` returns in tests. */
   let timer = null
 
-  // Runs `action` after `ms`, replacing any pending show or hide.
+  /**
+   * Runs `action` after `ms`, replacing any pending show or hide.
+   * @param {() => void} action
+   * @param {number} ms
+   */
   function schedule(action, ms) {
     clearTimer(timer)
     timer = setTimer(action, ms)
@@ -46,7 +57,7 @@ export function createTooltip(trigger, options = {}, env = {}) {
   const onEnter = () => (open ? clearTimer(timer) : schedule(show, delay))
   const onLeave = () => schedule(hide, hideDelay)
   // Hides on Escape, wherever focus is, without moving it.
-  const onKeydown = (event) => {
+  const onKeydown = (/** @type {KeyboardEvent} */ event) => {
     if (event.key === 'Escape' && open) hide()
   }
 

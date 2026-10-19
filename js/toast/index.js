@@ -16,13 +16,36 @@ const tones = ['accent', 'success', 'warning', 'danger', 'info']
 const closeIcon =
   '<svg class="ap-c-toast__icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>'
 
-// Creates a toaster and returns its handle. Options: `region` (an existing element to use;
-// otherwise one is appended to the body), `duration` (ms before a toast closes, 0 to keep it),
-// `max` (toasts visible at once; later ones wait), `labels`. `env.document`, `env.setTimeout`
-// and `env.clearTimeout` can be injected for tests.
+/**
+ * @typedef {object} ToastContent
+ * @property {string} [title]
+ * @property {string | Node} [message]
+ * @property {string} [tone] One of accent, success, warning, danger, info.
+ * @property {boolean} [urgent] Announces the toast as an alert.
+ * @property {number} [duration] Overrides the toaster's duration; 0 keeps the toast.
+ * @property {{ label: string, onClick?: () => void }} [action]
+ */
+
+/**
+ * Creates a toaster and returns its handle. Options: `region` (an existing element to use;
+ * otherwise one is appended to the body), `duration` (ms before a toast closes, 0 to keep it),
+ * `max` (toasts visible at once; later ones wait), `labels`. `env.document`, `env.setTimeout`
+ * and `env.clearTimeout` can be injected for tests.
+ * @param {{
+ *   region?: HTMLElement,
+ *   duration?: number,
+ *   max?: number,
+ *   labels?: Partial<typeof defaultLabels>,
+ * }} [options]
+ * @param {{
+ *   document?: Document,
+ *   setTimeout?: (action: () => void, ms: number) => unknown,
+ *   clearTimeout?: (id: any) => void,
+ * }} [env]
+ */
 export function createToaster(options = {}, env = {}) {
   const doc = env.document ?? options.region?.ownerDocument ?? globalThis.document
-  const view = doc.defaultView ?? globalThis
+  const view = doc.defaultView ?? /** @type {Window & typeof globalThis} */ (globalThis)
   const setTimer = env.setTimeout ?? view.setTimeout.bind(view)
   const clearTimer = env.clearTimeout ?? view.clearTimeout.bind(view)
   const labels = { ...defaultLabels, ...options.labels }
@@ -36,15 +59,19 @@ export function createToaster(options = {}, env = {}) {
   if (!region.hasAttribute('aria-label')) region.setAttribute('aria-label', labels.region)
   if (ownRegion) doc.body.append(region)
 
+  /** @type {Map<number, { element: HTMLElement, duration: number, timer: any, paused: boolean }>} */
   const toasts = new Map()
-  let queue = emptyQueue()
+  let queue = /** @type {import('./queue.js').QueueState<number>} */ (emptyQueue())
   let lastId = 0
 
   // Fires `ap:<name>` on the region with the toast element.
-  const emit = (name, toast) =>
+  const emit = (/** @type {string} */ name, /** @type {HTMLElement} */ toast) =>
     region.dispatchEvent(new view.CustomEvent(`ap:${name}`, { bubbles: true, detail: { toast } }))
 
-  // Starts (or restarts) the closing timer of toast `id`.
+  /**
+   * Starts (or restarts) the closing timer of toast `id`.
+   * @param {number} id
+   */
   function startTimer(id) {
     const entry = toasts.get(id)
     if (!entry || entry.duration <= 0 || entry.paused) return
@@ -52,7 +79,10 @@ export function createToaster(options = {}, env = {}) {
     entry.timer = setTimer(() => dismiss(id), entry.duration)
   }
 
-  // Stops the closing timer of toast `id` while the user looks at or works in it.
+  /**
+   * Stops the closing timer of toast `id` while the user looks at or works in it.
+   * @param {number} id
+   */
   function pause(id) {
     const entry = toasts.get(id)
     if (!entry) return
@@ -60,7 +90,10 @@ export function createToaster(options = {}, env = {}) {
     clearTimer(entry.timer)
   }
 
-  // Lets the timer of toast `id` run again, for its whole duration.
+  /**
+   * Lets the timer of toast `id` run again, for its whole duration.
+   * @param {number} id
+   */
   function resume(id) {
     const entry = toasts.get(id)
     if (!entry) return
@@ -68,15 +101,22 @@ export function createToaster(options = {}, env = {}) {
     startTimer(id)
   }
 
-  // Inserts toast `id` in the region and starts its timer.
+  /**
+   * Inserts toast `id` in the region and starts its timer.
+   * @param {number} id
+   */
   function reveal(id) {
     const entry = toasts.get(id)
+    if (!entry) return
     region.append(entry.element)
     startTimer(id)
     emit('open', entry.element)
   }
 
-  // Closes toast `id` and reveals the next waiting one.
+  /**
+   * Closes toast `id` and reveals the next waiting one.
+   * @param {number} id
+   */
   function dismiss(id) {
     const entry = toasts.get(id)
     if (!entry) return
@@ -90,10 +130,14 @@ export function createToaster(options = {}, env = {}) {
     result.promoted.forEach(reveal)
   }
 
-  // Builds the element of a toast.
+  /**
+   * Builds the element of a toast.
+   * @param {number} id
+   * @param {ToastContent} content
+   */
   function build(id, { title, message, tone, urgent, action }) {
     const toast = element(doc, 'div', 'ap-c-toast', urgent ? { role: 'alert' } : {})
-    if (tones.includes(tone)) toast.classList.add(`ap-c-toast--${tone}`)
+    if (tone && tones.includes(tone)) toast.classList.add(`ap-c-toast--${tone}`)
     const body = element(doc, 'div', 'ap-c-toast__body')
     if (title) {
       const heading = element(doc, 'p', 'ap-c-toast__title')
@@ -129,7 +173,7 @@ export function createToaster(options = {}, env = {}) {
     toast.addEventListener('pointerleave', () => resume(id))
     toast.addEventListener('focusin', () => pause(id))
     toast.addEventListener('focusout', (event) => {
-      if (!toast.contains(event.relatedTarget)) resume(id)
+      if (!toast.contains(/** @type {Node | null} */ (event.relatedTarget))) resume(id)
     })
     return toast
   }
@@ -141,8 +185,11 @@ export function createToaster(options = {}, env = {}) {
 
   return {
     element: region,
-    // Shows a toast ({ title, message, tone, urgent, duration, action: { label, onClick } }) and
-    // returns its handle.
+    /**
+     * Shows a toast ({ title, message, tone, urgent, duration, action: { label, onClick } }) and
+     * returns its handle.
+     * @param {ToastContent} [content]
+     */
     show(content = {}) {
       lastId += 1
       const id = lastId
