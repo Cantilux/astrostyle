@@ -96,3 +96,6 @@ export function createTooltip(trigger, options = {}, env = {}) {
     },
   }
 }
+
+/** Options of `createTooltip()`. @typedef {NonNullable<Parameters<typeof createTooltip>[1]>} TooltipOptions */
+/** Handle returned by `createTooltip()`. @typedef {ReturnType<typeof createTooltip>} TooltipHandle */

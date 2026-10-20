@@ -218,3 +218,6 @@ export function createMenu(button, options = {}, env = {}) {
     },
   }
 }
+
+/** Options of `createMenu()`. @typedef {NonNullable<Parameters<typeof createMenu>[1]>} MenuOptions */
+/** Handle returned by `createMenu()`. @typedef {ReturnType<typeof createMenu>} MenuHandle */

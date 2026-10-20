@@ -192,3 +192,6 @@ export function createPagination(nav, options = {}, env = {}) {
     },
   }
 }
+
+/** Options of `createPagination()`. @typedef {NonNullable<Parameters<typeof createPagination>[1]>} PaginationOptions */
+/** Handle returned by `createPagination()`. @typedef {ReturnType<typeof createPagination>} PaginationHandle */

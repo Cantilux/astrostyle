@@ -338,3 +338,7 @@ export function createCombobox(select, options = {}, env = {}) {
     },
   }
 }
+
+/** Options of `createCombobox()`. @typedef {NonNullable<Parameters<typeof createCombobox>[1]>} ComboboxOptions */
+/** Handle returned by `createCombobox()`. @typedef {ReturnType<typeof createCombobox>} ComboboxHandle */
+/** @typedef {import('../shared/types.js').ComboboxOption} ComboboxOption */

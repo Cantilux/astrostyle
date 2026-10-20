@@ -119,14 +119,17 @@ export function typeCheckAsConsumer() {
       join(project, 'use.ts'),
       [
         "import { createTabs, pageWindow } from 'astrostyle/js'",
-        "import { createDialog } from 'astrostyle/js/dialog'",
-        "const tabs = createTabs(document.body, { activation: 'manual' })",
+        "import type { ComboboxOption, TabsHandle } from 'astrostyle/js'",
+        "import { createDialog, type DialogOptions } from 'astrostyle/js/dialog'",
+        "const tabs: TabsHandle = createTabs(document.body, { activation: 'manual' })",
+        "const option: ComboboxOption = { value: 'falcon', label: 'Falcon' }",
+        'const dialogOptions: DialogOptions = { modal: false }',
         'const index: number = tabs.getSelected()',
         'const pages: (number | string)[] = pageWindow({ page: 1, count: 5 })',
-        "createDialog(document.querySelector('dialog')!, { modal: false })",
+        "createDialog(document.querySelector('dialog')!, dialogOptions)",
         '// @ts-expect-error the activation must be automatic or manual',
         "createTabs(document.body, { activation: 'sometimes' })",
-        'export { index, pages }',
+        'export { index, option, pages }',
       ].join('\n'),
     )
     const tsc = join(

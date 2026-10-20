@@ -131,6 +131,13 @@ const combobox = createCombobox(select, { creatable: true })
 combobox.setValue('falcon')  // string; getValue() returns a string
 ```
 
+Each component module also exports its types by name, `<Name>Options` and `<Name>Handle` (`ComboboxOptions`, `TabsHandle`, `ToasterOptions`…), plus `ComboboxOption`, `ToastContent` and `Handle` (any handle `autoInit()` returns); `astrostyle/js` re-exports them all:
+
+```ts
+import type { TabsHandle } from 'astrostyle/js'
+import type { DialogOptions } from 'astrostyle/js/dialog'
+```
+
 The declarations live in `dist/types/` and are found through the `types` condition of the package `exports`, so `tsconfig.json` needs `"moduleResolution": "bundler"` (`node16` and `nodenext` work too). The classic `node` resolution does not read `exports`, so the imports would stay untyped.
 
 <br>
@@ -469,7 +476,7 @@ bun install
 | `bun run test` | Runs every `tests/**/*.test.mjs` with `node --test` |
 | `bun run lint` | Stylelint on `scss/` plus a Prettier check |
 | `bun run format` | Rewrites files with Prettier (Markdown is left as written) |
-| `bun run check:package` | After a build: checks what npm would publish, that `@use 'pkg:astrostyle'` compiles that every exported path (`astrostyle/css/button`, `astrostyle/js`…) resolves and that a TypeScript consumer type-checks the public API |
+| `bun run check:package` | After a build: checks what npm would publish, that `@use 'pkg:astrostyle'` compiles, that every exported path (`astrostyle/css/button`, `astrostyle/js`…) resolves and that a TypeScript consumer type-checks the public API |
 | `bun run changeset` | Records a change for the next release |
 | `bun run release:version` | Applies pending changesets: new version and changelog entry |
 

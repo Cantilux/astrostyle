@@ -23,39 +23,39 @@ function hrefFrom(template) {
  */
 
 /**
- * Enhancers by selector: each turns one element into a component and returns its handle. The
- * selector guarantees the element type each enhancer declares, hence `never` here.
- * @type {[string, (node: never) => Handle][]}
+ * Pairs `selector` with the enhancer of the elements it matches; the selector guarantees that
+ * every match is an `E`, the one place where a matched `Element` is narrowed.
+ * @template {Element} E
+ * @param {string} selector
+ * @param {(node: E) => Handle} enhance
+ * @returns {[string, (node: Element) => Handle]}
  */
+function enhancer(selector, enhance) {
+  return [selector, (node) => enhance(/** @type {E} */ (node))]
+}
+
+/** Enhancers by selector: each turns one element into a component and returns its handle. */
 const enhancers = [
-  [
-    'select[data-ap-combobox]',
-    (/** @type {HTMLSelectElement} */ select) =>
-      createCombobox(select, { creatable: select.hasAttribute('data-ap-creatable') }),
-  ],
-  [
-    'nav[data-ap-pagination]',
-    (/** @type {HTMLElement} */ nav) =>
-      createPagination(nav, {
-        page: Number(nav.dataset.apPage) || 1,
-        count: Number(nav.dataset.apCount) || 0,
-        href: hrefFrom(nav.dataset.apHref),
-      }),
-  ],
-  [
-    '[data-ap-tabs]',
-    (/** @type {HTMLElement} */ root) =>
-      createTabs(root, {
-        activation: root.dataset.apTabs === 'manual' ? 'manual' : 'automatic',
-      }),
-  ],
-  [
-    'dialog[data-ap-dialog]',
-    (/** @type {HTMLDialogElement} */ dialog) =>
-      createDialog(dialog, { dismissible: dialog.dataset.apDialog !== 'static' }),
-  ],
-  ['[data-ap-menu]', (/** @type {HTMLElement} */ button) => createMenu(button)],
-  ['[data-ap-tooltip]', (/** @type {HTMLElement} */ trigger) => createTooltip(trigger)],
+  enhancer('select[data-ap-combobox]', (/** @type {HTMLSelectElement} */ select) =>
+    createCombobox(select, { creatable: select.hasAttribute('data-ap-creatable') }),
+  ),
+  enhancer('nav[data-ap-pagination]', (/** @type {HTMLElement} */ nav) =>
+    createPagination(nav, {
+      page: Number(nav.dataset.apPage) || 1,
+      count: Number(nav.dataset.apCount) || 0,
+      href: hrefFrom(nav.dataset.apHref),
+    }),
+  ),
+  enhancer('[data-ap-tabs]', (/** @type {HTMLElement} */ root) =>
+    createTabs(root, {
+      activation: root.dataset.apTabs === 'manual' ? 'manual' : 'automatic',
+    }),
+  ),
+  enhancer('dialog[data-ap-dialog]', (/** @type {HTMLDialogElement} */ dialog) =>
+    createDialog(dialog, { dismissible: dialog.dataset.apDialog !== 'static' }),
+  ),
+  enhancer('[data-ap-menu]', (/** @type {HTMLElement} */ button) => createMenu(button)),
+  enhancer('[data-ap-tooltip]', (/** @type {HTMLElement} */ trigger) => createTooltip(trigger)),
 ]
 
 /**
@@ -75,7 +75,7 @@ export function autoInit(root = document) {
   for (const [selector, enhance] of enhancers) {
     for (const node of root.querySelectorAll(`${selector}:not([data-ap-enhanced])`)) {
       try {
-        handles.push(enhance(/** @type {never} */ (node)))
+        handles.push(enhance(node))
         node.setAttribute('data-ap-enhanced', '')
       } catch (error) {
         console.error('astrostyle autoInit:', error, node)

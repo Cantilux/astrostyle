@@ -213,3 +213,6 @@ export function createToaster(options = {}, env = {}) {
     },
   }
 }
+
+/** Options of `createToaster()`. @typedef {NonNullable<Parameters<typeof createToaster>[0]>} ToasterOptions */
+/** Handle returned by `createToaster()`. @typedef {ReturnType<typeof createToaster>} ToasterHandle */

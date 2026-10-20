@@ -151,3 +151,6 @@ export function createTabs(root, options = {}, env = {}) {
     },
   }
 }
+
+/** Options of `createTabs()`. @typedef {NonNullable<Parameters<typeof createTabs>[1]>} TabsOptions */
+/** Handle returned by `createTabs()`. @typedef {ReturnType<typeof createTabs>} TabsHandle */

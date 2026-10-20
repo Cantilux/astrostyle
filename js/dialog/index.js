@@ -128,3 +128,6 @@ export function createDialog(dialog, options = {}, env = {}) {
     },
   }
 }
+
+/** Options of `createDialog()`. @typedef {NonNullable<Parameters<typeof createDialog>[1]>} DialogOptions */
+/** Handle returned by `createDialog()`. @typedef {ReturnType<typeof createDialog>} DialogHandle */
