@@ -2,14 +2,23 @@
 import { moveActive } from '../shared/navigation.js'
 
 /** Keys that move between tabs, with the direction of each one. */
+/** @type {Record<string, number>} */
 const steps = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }
 
-// Index of the tab `key` moves focus to from `from`, or null for keys tabs do not handle (or when
-// no tab is enabled). `disabled` lists, per tab, whether it is disabled; `orientation` picks the
-// arrow pair.
+/**
+ * Index of the tab `key` moves focus to from `from`, or null for keys tabs do not handle (or when
+ * no tab is enabled). `disabled` lists, per tab, whether it is disabled; `orientation` picks the
+ * arrow pair.
+ * @param {string} key
+ * @param {number} from
+ * @param {boolean[]} disabled
+ * @param {'horizontal' | 'vertical'} [orientation]
+ * @returns {number | null}
+ */
 export function targetForKey(key, from, disabled, orientation = 'horizontal') {
   const arrows = orientation === 'vertical' ? ['ArrowUp', 'ArrowDown'] : ['ArrowLeft', 'ArrowRight']
   const tabs = disabled.map((isDisabled) => ({ disabled: isDisabled }))
+  /** @type {number | null} */
   let target = null
   if (arrows.includes(key)) target = moveActive(tabs, from, steps[key])
   else if (key === 'Home') target = moveActive(tabs, -1, 1)

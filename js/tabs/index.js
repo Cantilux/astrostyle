@@ -1,6 +1,6 @@
 // Tabs: turns a list of buttons and the panels after it into a WAI-ARIA tablist with a roving
 // tabindex, arrow keys, Home and End. Contract: scss/components/tabs/README.md.
-import { nextId, snapshotAttributes } from '../shared/dom.js'
+import { nextId, snapshotAttributes, windowOf } from '../shared/dom.js'
 import { targetForKey } from './navigation.js'
 
 /** Attributes the module sets, restored by destroy(). */
@@ -15,24 +15,36 @@ const managed = [
   'hidden',
 ]
 
-// Whether a tab cannot be chosen.
+/**
+ * Whether a tab cannot be chosen.
+ * @param {HTMLButtonElement} tab
+ */
 const isDisabled = (tab) => tab.disabled || tab.getAttribute('aria-disabled') === 'true'
 
-// Enhances `root` (holding `.ap-c-tabs__list` with `.ap-c-tabs__tab` buttons and one
-// `.ap-c-tabs__panel` per tab, in order) and returns its handle. Options: `selected` (index),
-// `activation` (`automatic`, the default, or `manual`), `orientation` (`horizontal` or
-// `vertical`). `env.document` and `env.createId` can be injected for tests.
+/**
+ * Enhances `root` (holding `.ap-c-tabs__list` with `.ap-c-tabs__tab` buttons and one
+ * `.ap-c-tabs__panel` per tab, in order) and returns its handle. Options: `selected` (index),
+ * `activation` (`automatic`, the default, or `manual`), `orientation` (`horizontal` or
+ * `vertical`). `env.document` and `env.createId` can be injected for tests.
+ * @param {HTMLElement} root
+ * @param {{
+ *   selected?: number,
+ *   activation?: 'automatic' | 'manual',
+ *   orientation?: 'horizontal' | 'vertical',
+ * }} [options]
+ * @param {{ document?: Document, createId?: () => string }} [env]
+ */
 export function createTabs(root, options = {}, env = {}) {
   const doc = env.document ?? root.ownerDocument
-  const view = doc.defaultView ?? globalThis
+  const view = windowOf(doc)
   const createId = env.createId ?? (() => nextId('ap-tabs'))
   const activation = options.activation ?? 'automatic'
   const orientation = options.orientation ?? 'horizontal'
-  const list = root.querySelector('.ap-c-tabs__list')
-  const tabs = [...list.querySelectorAll('.ap-c-tabs__tab')]
-  const panels = [...root.querySelectorAll('.ap-c-tabs__panel')].filter(
-    (panel) => panel.closest('.ap-c-tabs') === root,
-  )
+  const list = /** @type {HTMLElement} */ (root.querySelector('.ap-c-tabs__list'))
+  const tabs = /** @type {HTMLButtonElement[]} */ ([...list.querySelectorAll('.ap-c-tabs__tab')])
+  const panels = /** @type {HTMLElement[]} */ ([
+    ...root.querySelectorAll('.ap-c-tabs__panel'),
+  ]).filter((panel) => panel.closest('.ap-c-tabs') === root)
   if (tabs.length === 0 || tabs.length !== panels.length) {
     throw new Error(`createTabs: ${tabs.length} tabs for ${panels.length} panels`)
   }
@@ -55,7 +67,10 @@ export function createTabs(root, options = {}, env = {}) {
     panel.setAttribute('tabindex', '0')
   })
 
-  // Shows tab `index` and its panel; only the selected tab is in the Tab sequence.
+  /**
+   * Shows tab `index` and its panel; only the selected tab is in the Tab sequence.
+   * @param {number} index
+   */
   function show(index) {
     selected = index
     tabs.forEach((tab, position) => {
@@ -66,7 +81,10 @@ export function createTabs(root, options = {}, env = {}) {
     })
   }
 
-  // Selects tab `index` after a user action and fires `ap:change`.
+  /**
+   * Selects tab `index` after a user action and fires `ap:change`.
+   * @param {number} index
+   */
   function choose(index) {
     if (index === selected || isDisabled(tabs[index])) return
     const previous = selected
@@ -79,15 +97,30 @@ export function createTabs(root, options = {}, env = {}) {
     )
   }
 
-  // Selects a clicked tab.
+  /**
+   * The tab button an event came from; the cast is checked by `indexOf` (-1 when none).
+   * @param {Event} event
+   */
+  const tabOf = (event) =>
+    /** @type {HTMLButtonElement} */ (
+      /** @type {Element} */ (event.target).closest('.ap-c-tabs__tab')
+    )
+
+  /**
+   * Selects a clicked tab.
+   * @param {MouseEvent} event
+   */
   function onClick(event) {
-    const index = tabs.indexOf(event.target.closest('.ap-c-tabs__tab'))
+    const index = tabs.indexOf(tabOf(event))
     if (index >= 0) choose(index)
   }
 
-  // Moves focus with the arrow keys, Home and End; selects too with automatic activation.
+  /**
+   * Moves focus with the arrow keys, Home and End; selects too with automatic activation.
+   * @param {KeyboardEvent} event
+   */
   function onKeydown(event) {
-    const from = tabs.indexOf(event.target.closest('.ap-c-tabs__tab'))
+    const from = tabs.indexOf(tabOf(event))
     if (from < 0) return
     const target = targetForKey(event.key, from, tabs.map(isDisabled), orientation)
     if (target === null) return
@@ -103,7 +136,10 @@ export function createTabs(root, options = {}, env = {}) {
   return {
     element: root,
     getSelected: () => selected,
-    // Selects tab `index` without firing `ap:change` (programmatic update).
+    /**
+     * Selects tab `index` without firing `ap:change` (programmatic update).
+     * @param {number} index
+     */
     select(index) {
       if (tabs[index]) show(index)
     },
@@ -115,3 +151,6 @@ export function createTabs(root, options = {}, env = {}) {
     },
   }
 }
+
+/** Options of `createTabs()`. @typedef {NonNullable<Parameters<typeof createTabs>[1]>} TabsOptions */
+/** Handle returned by `createTabs()`. @typedef {ReturnType<typeof createTabs>} TabsHandle */

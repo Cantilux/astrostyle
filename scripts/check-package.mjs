@@ -5,7 +5,7 @@ import { execFileSync } from 'node:child_process'
 import { mkdtempSync, mkdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import * as sass from 'sass'
 import { exportComponentTokens } from './build.mjs'
@@ -37,6 +37,15 @@ export const requiredFiles = [
   'js/toast/index.js',
   'js/tooltip/index.js',
   'js/auto-init/index.js',
+  'dist/types/index.d.ts',
+  'dist/types/combobox/index.d.ts',
+  'dist/types/dialog/index.d.ts',
+  'dist/types/menu/index.d.ts',
+  'dist/types/pagination/index.d.ts',
+  'dist/types/tabs/index.d.ts',
+  'dist/types/toast/index.d.ts',
+  'dist/types/tooltip/index.d.ts',
+  'dist/types/auto-init/index.d.ts',
   'dist/astrostyle.css',
   'dist/astrostyle.min.css',
   'dist/tokens.json',
@@ -103,6 +112,39 @@ export function resolveAsConsumer(specifiers) {
   })
 }
 
+// Type-checks a snippet that imports the public JS API the way a TypeScript consumer would.
+export function typeCheckAsConsumer() {
+  return withConsumerProject((project) => {
+    writeFileSync(
+      join(project, 'use.ts'),
+      [
+        "import { createTabs, pageWindow } from 'astrostyle/js'",
+        "import type { ComboboxOption, TabsHandle } from 'astrostyle/js'",
+        "import { createDialog, type DialogOptions } from 'astrostyle/js/dialog'",
+        "const tabs: TabsHandle = createTabs(document.body, { activation: 'manual' })",
+        "const option: ComboboxOption = { value: 'falcon', label: 'Falcon' }",
+        'const dialogOptions: DialogOptions = { modal: false }',
+        'const index: number = tabs.getSelected()',
+        'const pages: (number | string)[] = pageWindow({ page: 1, count: 5 })',
+        "createDialog(document.querySelector('dialog')!, dialogOptions)",
+        '// @ts-expect-error the activation must be automatic or manual',
+        "createTabs(document.body, { activation: 'sometimes' })",
+        'export { index, option, pages }',
+      ].join('\n'),
+    )
+    const tsc = join(
+      dirname(createRequire(import.meta.url).resolve('typescript/package.json')),
+      'bin',
+      'tsc',
+    )
+    const args = ['--noEmit', '--strict', '--moduleResolution', 'bundler', '--module', 'esnext']
+    execFileSync(process.execPath, [tsc, ...args, '--lib', 'es2022,dom', 'use.ts'], {
+      cwd: project,
+      encoding: 'utf8',
+    })
+  })
+}
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const components = Object.keys(exportComponentTokens())
   const problems = packageProblems(packedFiles(), [...requiredFiles, ...splitFiles(components)])
@@ -131,5 +173,6 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   for (const [specifier, file] of Object.entries(resolveAsConsumer(subpaths))) {
     assert.ok(/\/(dist|js|fonts)\//.test(file), `${specifier} resolved to ${file}`)
   }
+  typeCheckAsConsumer()
   console.log(`Package contents and ${subpaths.length} entry points resolve correctly.`)
 }

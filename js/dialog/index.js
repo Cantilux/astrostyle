@@ -1,28 +1,40 @@
 // Dialog: enhances a native `<dialog>` (an `ap-c-dialog` or an `ap-c-drawer`) with openers, close
 // buttons, backdrop close and focus return, and reports opening and closing as `ap:` events.
 // Contract: scss/components/dialog/README.md.
+import { windowOf } from '../shared/dom.js'
 
-// Whether a click at (`x`, `y`) falls outside the box of `node`, on its backdrop.
+/**
+ * Whether a click at (`x`, `y`) falls outside the box of `node`, on its backdrop.
+ * @param {Element} node
+ * @param {number} x
+ * @param {number} y
+ */
 function isOutside(node, x, y) {
   const box = node.getBoundingClientRect()
   return x < box.left || x > box.right || y < box.top || y > box.bottom
 }
 
-// Enhances `dialog` and returns its handle. Options: `modal` (default true: `showModal()`,
-// otherwise `show()`), `dismissible` (default true: a click on the backdrop closes it). Buttons
-// with `data-ap-dialog-open="<dialog id>"` anywhere in the document open it; buttons inside it
-// with `data-ap-dialog-close` close it, their `value` becoming the return value. `env.document`
-// can be injected for tests.
+/**
+ * Enhances `dialog` and returns its handle. Options: `modal` (default true: `showModal()`,
+ * otherwise `show()`), `dismissible` (default true: a click on the backdrop closes it). Buttons
+ * with `data-ap-dialog-open="<dialog id>"` anywhere in the document open it; buttons inside it
+ * with `data-ap-dialog-close` close it, their `value` becoming the return value. `env.document`
+ * can be injected for tests.
+ * @param {HTMLDialogElement} dialog
+ * @param {{ modal?: boolean, dismissible?: boolean }} [options]
+ * @param {{ document?: Document }} [env]
+ */
 export function createDialog(dialog, options = {}, env = {}) {
   const doc = env.document ?? dialog.ownerDocument
-  const view = doc.defaultView ?? globalThis
+  const view = windowOf(doc)
   const modal = options.modal ?? true
   const dismissible = options.dismissible ?? true
+  /** @type {Element | null} */
   let opener = null
   let pressedOnBackdrop = false
 
   // Fires `ap:<name>` on the dialog.
-  const emit = (name, detail) =>
+  const emit = (/** @type {string} */ name, /** @type {object} */ detail) =>
     dialog.dispatchEvent(new view.CustomEvent(`ap:${name}`, { bubbles: true, detail }))
 
   // Opens the dialog, remembering where focus was so it can go back there.
@@ -34,7 +46,10 @@ export function createDialog(dialog, options = {}, env = {}) {
     emit('open', {})
   }
 
-  // Closes the dialog with an optional return value.
+  /**
+   * Closes the dialog with an optional return value.
+   * @param {string} [returnValue]
+   */
   function close(returnValue) {
     if (dialog.open) dialog.close(returnValue)
   }
@@ -44,19 +59,29 @@ export function createDialog(dialog, options = {}, env = {}) {
   function onClose() {
     const target = opener
     opener = null
-    if (target?.isConnected && typeof target.focus === 'function') target.focus()
+    if (target?.isConnected && typeof (/** @type {HTMLElement} */ (target).focus) === 'function') {
+      ;/** @type {HTMLElement} */ (target).focus()
+    }
     emit('close', { returnValue: dialog.returnValue })
   }
 
-  // Remembers whether a press started on the backdrop: a drag that starts inside the dialog and
-  // ends outside (selecting text) must not close it.
+  /**
+   * Remembers whether a press started on the backdrop: a drag that starts inside the dialog and
+   * ends outside (selecting text) must not close it.
+   * @param {MouseEvent} event
+   */
   function onMousedown(event) {
     pressedOnBackdrop = event.target === dialog
   }
 
-  // Closes on a close button, or on a backdrop click when dismissible.
+  /**
+   * Closes on a close button, or on a backdrop click when dismissible.
+   * @param {MouseEvent} event
+   */
   function onClick(event) {
-    const button = event.target.closest('[data-ap-dialog-close]')
+    const button = /** @type {HTMLButtonElement | null} */ (
+      /** @type {Element} */ (event.target).closest('[data-ap-dialog-close]')
+    )
     if (button && dialog.contains(button)) {
       close(button.value)
       return
@@ -73,9 +98,12 @@ export function createDialog(dialog, options = {}, env = {}) {
     }
   }
 
-  // Opens on a click on one of this dialog's openers.
+  /**
+   * Opens on a click on one of this dialog's openers.
+   * @param {MouseEvent} event
+   */
   function onDocumentClick(event) {
-    const trigger = event.target.closest?.('[data-ap-dialog-open]')
+    const trigger = /** @type {Element} */ (event.target).closest?.('[data-ap-dialog-open]')
     if (trigger && dialog.id && trigger.getAttribute('data-ap-dialog-open') === dialog.id) {
       open()
     }
@@ -100,3 +128,6 @@ export function createDialog(dialog, options = {}, env = {}) {
     },
   }
 }
+
+/** Options of `createDialog()`. @typedef {NonNullable<Parameters<typeof createDialog>[1]>} DialogOptions */
+/** Handle returned by `createDialog()`. @typedef {ReturnType<typeof createDialog>} DialogHandle */

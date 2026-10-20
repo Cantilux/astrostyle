@@ -1,7 +1,12 @@
 // Pure type-to-select for menu items (`{ label, disabled }`): no DOM, no state.
 
-// Index of the next enabled item after `from` whose label starts with `letter` (any case),
-// wrapping around; -1 when none does.
+/**
+ * Index of the next enabled item after `from` whose label starts with `letter` (any case),
+ * wrapping around; -1 when none does.
+ * @param {{ label: string, disabled?: boolean }[]} items
+ * @param {number} from
+ * @param {string} letter
+ */
 export function nextByLetter(items, from, letter) {
   const wanted = letter.toLocaleLowerCase()
   for (let step = 1; step <= items.length; step += 1) {

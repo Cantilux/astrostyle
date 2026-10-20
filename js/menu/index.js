@@ -1,7 +1,7 @@
 // Menu: a button that opens a list of actions in a popover (WAI-ARIA menu button): arrow keys,
 // Home and End move between items, a letter jumps to the next item starting with it, Escape or a
 // click outside closes it and focus goes back to the button. Contract: scss/components/menu/README.md.
-import { nextId, snapshotAttributes } from '../shared/dom.js'
+import { nextId, snapshotAttributes, windowOf } from '../shared/dom.js'
 import { positionNear, watchViewport } from '../shared/floating.js'
 import { moveActive } from '../shared/navigation.js'
 import { nextByLetter } from './typeahead.js'
@@ -9,25 +9,38 @@ import { nextByLetter } from './typeahead.js'
 /** Attributes the module sets, restored by destroy(). */
 const managed = ['id', 'role', 'tabindex', 'aria-haspopup', 'aria-expanded', 'aria-controls']
 
-// Whether an item cannot be chosen.
+/**
+ * Whether an item cannot be chosen.
+ * @param {HTMLButtonElement} item
+ */
 const isDisabled = (item) => item.disabled || item.getAttribute('aria-disabled') === 'true'
 
-// Enhances `button` and returns its handle. The menu is `options.menu`, or the element whose id is
-// in the button's `data-ap-menu`; it must have `popover` and hold `.ap-c-menu__item` buttons or
-// links. Options: `side` (`bottom`, the default, or `top`). `env.createId` can be injected.
-// Choosing an item fires `ap:select` on the menu with `{ item, value }` (the item's `value` or
-// `data-value`), then closes it.
+/**
+ * Enhances `button` and returns its handle. The menu is `options.menu`, or the element whose id is
+ * in the button's `data-ap-menu`; it must have `popover` and hold `.ap-c-menu__item` buttons or
+ * links. Options: `side` (`bottom`, the default, or `top`). `env.createId` can be injected.
+ * Choosing an item fires `ap:select` on the menu with `{ item, value }` (the item's `value` or
+ * `data-value`), then closes it.
+ * @param {HTMLElement} button
+ * @param {{ menu?: HTMLElement, side?: 'top' | 'bottom' }} [options]
+ * @param {{ createId?: () => string }} [env]
+ */
 export function createMenu(button, options = {}, env = {}) {
   const doc = button.ownerDocument
-  const view = doc.defaultView ?? globalThis
+  const view = windowOf(doc)
   const createId = env.createId ?? (() => nextId('ap-menu'))
-  const menu = options.menu ?? doc.getElementById(button.dataset.apMenu)
-  if (!menu) throw new Error('createMenu: no menu element')
+  const found = options.menu ?? doc.getElementById(/** @type {string} */ (button.dataset.apMenu))
+  if (!found) throw new Error('createMenu: no menu element')
+  const menu = found
   const side = options.side ?? 'bottom'
+  /** @type {(() => void)[]} */
   const restores = [snapshotAttributes([button, menu], managed)]
+  /** @type {Set<HTMLButtonElement>} */
   const known = new Set()
+  /** @type {HTMLButtonElement[]} */
   let items = []
   let open = false
+  /** @type {(() => void) | null} */
   let stopWatching = null
 
   if (!menu.id) menu.id = createId()
@@ -39,7 +52,7 @@ export function createMenu(button, options = {}, env = {}) {
 
   // Reads the items again, wiring the ones added since the last read.
   function refreshItems() {
-    items = [...menu.querySelectorAll('.ap-c-menu__item')]
+    items = /** @type {HTMLButtonElement[]} */ ([...menu.querySelectorAll('.ap-c-menu__item')])
     const fresh = items.filter((item) => !known.has(item))
     fresh.forEach((item) => known.add(item))
     restores.push(snapshotAttributes(fresh, managed))
@@ -51,19 +64,25 @@ export function createMenu(button, options = {}, env = {}) {
   refreshItems()
 
   // Fires `ap:<name>` on the menu.
-  const emit = (name, detail = {}) =>
+  const emit = (/** @type {string} */ name, /** @type {object} */ detail = {}) =>
     menu.dispatchEvent(new view.CustomEvent(`ap:${name}`, { bubbles: true, detail }))
 
   // Item states for the pure navigation helpers.
   const states = () =>
-    items.map((item) => ({ disabled: isDisabled(item), label: item.textContent }))
+    items.map((item) => ({ disabled: isDisabled(item), label: item.textContent ?? '' }))
 
-  // Moves focus to item `index`, when there is one.
+  /**
+   * Moves focus to item `index`, when there is one.
+   * @param {number} index
+   */
   function focusItem(index) {
     if (index >= 0) items[index].focus()
   }
 
-  // Opens the menu under the button and focuses its first (`first`) or last (`last`) item.
+  /**
+   * Opens the menu under the button and focuses its first (`first`) or last (`last`) item.
+   * @param {'first' | 'last'} [focus]
+   */
   function show(focus = 'first') {
     if (!open) {
       open = true
@@ -78,14 +97,20 @@ export function createMenu(button, options = {}, env = {}) {
     focusItem(moveActive(states(), -1, focus === 'last' ? -1 : 1))
   }
 
-  // Closes the menu; `returnFocus` puts focus back on the button.
+  /**
+   * Closes the menu; `returnFocus` puts focus back on the button.
+   * @param {boolean} [returnFocus]
+   */
   function hide(returnFocus = false) {
     if (open) menu.hidePopover()
     closed(returnFocus)
   }
 
-  // Updates the state once the menu is closed, by the module or by the browser (light dismiss,
-  // Escape); focus goes back to the button when it was inside the menu.
+  /**
+   * Updates the state once the menu is closed, by the module or by the browser (light dismiss,
+   * Escape); focus goes back to the button when it was inside the menu.
+   * @param {boolean} returnFocus
+   */
   function closed(returnFocus) {
     if (!open) return
     open = false
@@ -111,16 +136,23 @@ export function createMenu(button, options = {}, env = {}) {
     else show('first')
   }
 
-  // Opens on ArrowDown (first item) or ArrowUp (last item).
+  /**
+   * Opens on ArrowDown (first item) or ArrowUp (last item).
+   * @param {KeyboardEvent} event
+   */
   function onButtonKeydown(event) {
     if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return
     event.preventDefault()
     show(event.key === 'ArrowUp' ? 'last' : 'first')
   }
 
-  // Moves between items, closes on Escape and Tab, and jumps by first letter.
+  /**
+   * Moves between items, closes on Escape and Tab, and jumps by first letter.
+   * @param {KeyboardEvent} event
+   */
   function onMenuKeydown(event) {
-    const current = items.indexOf(doc.activeElement)
+    const current = items.indexOf(/** @type {HTMLButtonElement} */ (doc.activeElement))
+    /** @type {Record<string, number>} */
     const steps = { ArrowDown: 1, ArrowUp: -1 }
     if (event.key in steps) {
       event.preventDefault()
@@ -138,9 +170,14 @@ export function createMenu(button, options = {}, env = {}) {
     }
   }
 
-  // Chooses a clicked item: fires `ap:select` and closes.
+  /**
+   * Chooses a clicked item: fires `ap:select` and closes.
+   * @param {MouseEvent} event
+   */
   function onMenuClick(event) {
-    const item = event.target.closest('.ap-c-menu__item')
+    const item = /** @type {HTMLButtonElement | null} */ (
+      /** @type {Element} */ (event.target).closest('.ap-c-menu__item')
+    )
     if (!item || !items.includes(item)) return
     if (isDisabled(item)) {
       event.preventDefault()
@@ -151,7 +188,7 @@ export function createMenu(button, options = {}, env = {}) {
   }
 
   // Follows a close done by the browser (click outside, Escape).
-  const onToggle = (event) => {
+  const onToggle = (/** @type {ToggleEvent} */ event) => {
     if (event.newState === 'closed') closed(false)
   }
 
@@ -181,3 +218,6 @@ export function createMenu(button, options = {}, env = {}) {
     },
   }
 }
+
+/** Options of `createMenu()`. @typedef {NonNullable<Parameters<typeof createMenu>[1]>} MenuOptions */
+/** Handle returned by `createMenu()`. @typedef {ReturnType<typeof createMenu>} MenuHandle */

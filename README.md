@@ -98,7 +98,7 @@ Every file declares the cascade layer order, so the load order of the files does
 
 ### / JavaScript /
 
-A few components get optional behavior from small, dependency-free ES modules. Without JavaScript they still work as native HTML.
+A few components get optional behavior from small, dependency-free ES modules. Without JavaScript they still work as native HTML. The modules ship TypeScript declarations (`dist/types/`), so `astrostyle/js` and `astrostyle/js/<component>` are typed with no extra install.
 
 ```js
 import { autoInit } from 'astrostyle/js'
@@ -120,6 +120,25 @@ select.addEventListener('ap:change', (event) => console.log(event.detail))
 const toaster = createToaster()
 toaster.show({ title: 'Docked', message: 'All systems online.', tone: 'success' })
 ```
+
+In TypeScript, every `createX()` factory, its options and its handle are typed:
+
+```ts
+import { createCombobox } from 'astrostyle/js/combobox'
+
+const select = document.querySelector<HTMLSelectElement>('#ship')!
+const combobox = createCombobox(select, { creatable: true })
+combobox.setValue('falcon')  // string; getValue() returns a string
+```
+
+Each component module also exports its types by name, `<Name>Options` and `<Name>Handle` (`ComboboxOptions`, `TabsHandle`, `ToasterOptions`…), plus `ComboboxOption`, `ToastContent` and `Handle` (any handle `autoInit()` returns); `astrostyle/js` re-exports them all:
+
+```ts
+import type { TabsHandle } from 'astrostyle/js'
+import type { DialogOptions } from 'astrostyle/js/dialog'
+```
+
+The declarations live in `dist/types/` and are found through the `types` condition of the package `exports`, so `tsconfig.json` needs `"moduleResolution": "bundler"` (`node16` and `nodenext` work too). The classic `node` resolution does not read `exports`, so the imports would stay untyped.
 
 <br>
 
@@ -408,13 +427,13 @@ The house rules, illustrated. Each image has an expandable text version below it
 <details>
 <summary>Text version of JavaScript</summary>
 
-- Native ES modules, zero dependencies, no build step needed on your side.
+- Native ES modules in plain JavaScript, zero dependencies, no build step needed on your side; the types come as generated declarations.
 - One module per interactive component, exposing a `createX(element, options, env)` factory that enhances native markup and returns a handle with `destroy()`; `env` injects the document and id generator for tests.
 - Components talk through DOM events prefixed with `ap:` (`ap:change`, `ap:open`, `ap:close`, `ap:page`, `ap:select`).
 - Pure logic (filtering, page ranges) is kept in separate functions and unit tested; `document` and timers are passed in, never hard-coded.
 - `astrostyle/js` exports only the public API (`createX()`, `autoInit()`, default labels, `pageWindow()`); pure helpers stay inside their modules.
 - JavaScript never sets visual styles inline, except for positioning.
-- Every named function gets a short comment above it saying what it is for.
+- Every named function gets a short comment above it saying what it is for, written as JSDoc with `@param` types: the sources stay plain JavaScript, `tsc` checks them (`checkJs`, strict) and generates the `.d.ts` files.
 
 </details>
 
@@ -452,12 +471,12 @@ bun install
 | Command | What it does |
 | --- | --- |
 | `bun run dev` | Serves the docs at <http://localhost:4321/demo.html> and rebuilds and reloads the page on every change in `scss/`, `site/` or `scripts/`; Sass errors appear in the page |
-| `bun run build` | Builds `dist/`: the full bundle (`astrostyle.css`), `core.css`, one file per component in `components/` (each also `.min`), `fonts.css` and `tokens.json` |
+| `bun run build` | Builds `dist/`: the full bundle (`astrostyle.css`), `core.css`, one file per component in `components/` (each also `.min`), `fonts.css` and `tokens.json`, then type-checks `js/` and writes its declarations to `dist/types/` |
 | `bun run docs:build` | Builds the documentation site into `_site/` (serve it over HTTP, e.g. with `bun run dev`: JavaScript modules do not run from `file://`) |
 | `bun run test` | Runs every `tests/**/*.test.mjs` with `node --test` |
 | `bun run lint` | Stylelint on `scss/` plus a Prettier check |
 | `bun run format` | Rewrites files with Prettier (Markdown is left as written) |
-| `bun run check:package` | After a build: checks what npm would publish, that `@use 'pkg:astrostyle'` compiles and that every exported path (`astrostyle/css/button`, `astrostyle/js`…) resolves |
+| `bun run check:package` | After a build: checks what npm would publish, that `@use 'pkg:astrostyle'` compiles, that every exported path (`astrostyle/css/button`, `astrostyle/js`…) resolves and that a TypeScript consumer type-checks the public API |
 | `bun run changeset` | Records a change for the next release |
 | `bun run release:version` | Applies pending changesets: new version and changelog entry |
 

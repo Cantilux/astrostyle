@@ -1,13 +1,30 @@
 // Pure placement of a floating box (tooltip, menu) next to its anchor, inside the viewport: no
 // DOM, no state. Boxes are `{ top, bottom, left, right, width, height }` in viewport pixels.
 
-// Keeps `value` between `min` and `max`; `min` wins when the range is empty.
+/**
+ * Keeps `value` between `min` and `max`; `min` wins when the range is empty.
+ * @param {number} value
+ * @param {number} min
+ * @param {number} max
+ */
 const clamp = (value, min, max) => Math.max(min, Math.min(value, max))
 
-// Viewport position `{ x, y, side }` of `floating` on the preferred `side` of `anchor` (`top` or
-// `bottom`), `offset` pixels away. It flips to the other side when the preferred one has no room
-// and the other has more. `align` is `start` (the anchor's start edge, the right one when `rtl`)
-// or `center`. The result stays `margin` pixels inside `viewport` (`{ width, height }`).
+/**
+ * Viewport position `{ x, y, side }` of `floating` on the preferred `side` of `anchor` (`top` or
+ * `bottom`), `offset` pixels away. It flips to the other side when the preferred one has no room
+ * and the other has more. `align` is `start` (the anchor's start edge, the right one when `rtl`)
+ * or `center`. The result stays `margin` pixels inside `viewport` (`{ width, height }`).
+ * @param {object} args
+ * @param {import('./types.js').Box} args.anchor
+ * @param {import('./types.js').Box} args.floating
+ * @param {{ width: number, height: number }} args.viewport
+ * @param {'top' | 'bottom'} [args.side]
+ * @param {'start' | 'center'} [args.align]
+ * @param {boolean} [args.rtl]
+ * @param {number} [args.offset]
+ * @param {number} [args.margin]
+ * @returns {{ x: number, y: number, side: 'top' | 'bottom' }}
+ */
 export function place({
   anchor,
   floating,
@@ -25,6 +42,7 @@ export function place({
   const other = side === 'top' ? 'bottom' : 'top'
   const chosen = room[side] < floating.height && room[other] > room[side] ? other : side
   const y = chosen === 'bottom' ? anchor.bottom + offset : anchor.top - offset - floating.height
+  /** @type {number} */
   let x
   if (align === 'center') x = anchor.left + (anchor.width - floating.width) / 2
   else x = rtl ? anchor.right - floating.width : anchor.left

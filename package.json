@@ -36,8 +36,14 @@
     "./fonts.css": "./dist/fonts.css",
     "./fonts/*": "./fonts/*",
     "./tokens.json": "./dist/tokens.json",
-    "./js": "./js/index.js",
-    "./js/*": "./js/*/index.js",
+    "./js": {
+      "types": "./dist/types/index.d.ts",
+      "default": "./js/index.js"
+    },
+    "./js/*": {
+      "types": "./dist/types/*/index.d.ts",
+      "default": "./js/*/index.js"
+    },
     "./scss/*": "./scss/*",
     "./package.json": "./package.json"
   },
@@ -55,7 +61,7 @@
   ],
   "scripts": {
     "dev": "node scripts/dev.mjs",
-    "build": "node scripts/build.mjs",
+    "build": "node scripts/build.mjs && tsc -p .",
     "docs:build": "node scripts/build-docs.mjs",
     "test": "node --test \"tests/**/*.test.mjs\"",
     "lint": "bun run lint:styles && bun run lint:format",
@@ -65,7 +71,7 @@
     "changeset": "changeset",
     "check:package": "node scripts/check-package.mjs",
     "release:version": "changeset version",
-    "prepublishOnly": "node scripts/build.mjs"
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "@changesets/cli": "3.0.3",
@@ -77,7 +83,8 @@
     "sass": "1.105.2",
     "stylelint": "17.16.0",
     "stylelint-config-standard-scss": "17.0.0",
-    "stylelint-declaration-strict-value": "1.12.1"
+    "stylelint-declaration-strict-value": "1.12.1",
+    "typescript": "7.0.2"
   },
   "publishConfig": {
     "access": "public"

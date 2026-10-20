@@ -2,34 +2,48 @@
 // popup). The select stays in the form, hidden and in sync; the combobox replaces it on screen.
 // Contract: scss/components/combobox/README.md.
 import { filterOptions, findByLabel } from './filter.js'
-import { element, nextId } from '../shared/dom.js'
+import { element, nextId, windowOf } from '../shared/dom.js'
 import { firstEnabled, moveActive } from '../shared/navigation.js'
 
 /** Default texts; every one can be replaced through `options.labels`. */
 export const defaultLabels = {
   noResults: 'No results',
-  create: (text) => `Press Enter to use “${text}”`,
-  results: (count) => (count === 1 ? '1 result' : `${count} results`),
+  create: (/** @type {string} */ text) => `Press Enter to use “${text}”`,
+  results: (/** @type {number} */ count) => (count === 1 ? '1 result' : `${count} results`),
   toggle: 'Show options',
 }
 
-// Reads the choices of a <select>: options with an empty value act as its placeholder.
+/**
+ * Reads the choices of a <select>: options with an empty value act as its placeholder.
+ * @param {HTMLSelectElement} select
+ * @returns {import('../shared/types.js').ComboboxOption[]}
+ */
 function readOptions(select) {
   return [...select.options]
     .filter((option) => option.value !== '')
     .map((option) => ({
       value: option.value,
-      label: option.label || option.textContent.trim(),
+      label: option.label || (option.textContent ?? '').trim(),
       disabled: option.disabled,
     }))
 }
 
-// Enhances `select` with a searchable combobox and returns its handle. Options:
-// `creatable` (accept free text), `placeholder`, `labels`, `filter(options, query)`.
-// `env.document` and `env.createId` can be injected for tests.
+/**
+ * Enhances `select` with a searchable combobox and returns its handle. Options:
+ * `creatable` (accept free text), `placeholder`, `labels`, `filter(options, query)`.
+ * `env.document` and `env.createId` can be injected for tests.
+ * @param {HTMLSelectElement} select
+ * @param {{
+ *   creatable?: boolean,
+ *   placeholder?: string,
+ *   labels?: Partial<typeof defaultLabels>,
+ *   filter?: typeof filterOptions,
+ * }} [options]
+ * @param {{ document?: Document, createId?: () => string }} [env]
+ */
 export function createCombobox(select, options = {}, env = {}) {
   const doc = env.document ?? select.ownerDocument
-  const view = doc.defaultView ?? globalThis
+  const view = windowOf(doc)
   const createId = env.createId ?? (() => nextId('ap-combobox'))
   const labels = { ...defaultLabels, ...options.labels }
   const filter = options.filter ?? filterOptions
@@ -39,6 +53,7 @@ export function createCombobox(select, options = {}, env = {}) {
   const wasRequired = select.required
 
   let choices = readOptions(select)
+  /** @type {import('../shared/types.js').ComboboxOption[]} */
   let visible = []
   let active = -1
   let isOpen = false
@@ -57,9 +72,10 @@ export function createCombobox(select, options = {}, env = {}) {
   })
   input.id = inputId
   input.placeholder =
-    options.placeholder ?? (placeholderOption?.label || placeholderOption?.textContent.trim() || '')
+    options.placeholder ??
+    (placeholderOption?.label || (placeholderOption?.textContent ?? '').trim() || '')
   for (const name of ['aria-describedby', 'aria-invalid', 'aria-label', 'aria-labelledby']) {
-    if (select.hasAttribute(name)) input.setAttribute(name, select.getAttribute(name))
+    if (select.hasAttribute(name)) input.setAttribute(name, select.getAttribute(name) ?? '')
   }
   input.required = wasRequired
   input.disabled = select.disabled
@@ -97,10 +113,13 @@ export function createCombobox(select, options = {}, env = {}) {
   const selectedLabel = () => choices.find((choice) => choice.value === select.value)?.label ?? ''
 
   // Dispatches an `ap:<name>` event on the native select.
-  const emit = (name, detail) =>
+  const emit = (/** @type {string} */ name, /** @type {object} */ detail) =>
     select.dispatchEvent(new view.CustomEvent(`ap:${name}`, { bubbles: true, detail }))
 
-  // Marks option `index` of the visible list as active and keeps it in view.
+  /**
+   * Marks option `index` of the visible list as active and keeps it in view.
+   * @param {number} index
+   */
   function setActive(index) {
     active = index
     for (const [position, item] of [...listbox.children].entries()) {
@@ -115,7 +134,10 @@ export function createCombobox(select, options = {}, env = {}) {
     }
   }
 
-  // Rebuilds the listbox for `query` and announces the result count.
+  /**
+   * Rebuilds the listbox for `query` and announces the result count.
+   * @param {string} query
+   */
   function render(query) {
     visible = filter(choices, query)
     listbox.replaceChildren(
@@ -137,8 +159,11 @@ export function createCombobox(select, options = {}, env = {}) {
     setActive(query ? firstEnabled(visible) : visible.findIndex((c) => c.value === select.value))
   }
 
-  // Opens the popup filtered by `query`, reading the options again so ones added to the native
-  // select after setup are listed too.
+  /**
+   * Opens the popup filtered by `query`, reading the options again so ones added to the native
+   * select after setup are listed too.
+   * @param {string} [query]
+   */
   function open(query = '') {
     if (input.disabled) return
     choices = readOptions(select)
@@ -160,7 +185,11 @@ export function createCombobox(select, options = {}, env = {}) {
     isOpen = false
   }
 
-  // Sets the native select to `value`, shows its label and notifies listeners.
+  /**
+   * Sets the native select to `value`, shows its label and notifies listeners.
+   * @param {string} value
+   * @param {boolean} [created]
+   */
   function commit(value, created = false) {
     const changed = select.value !== value
     select.value = value
@@ -172,7 +201,10 @@ export function createCombobox(select, options = {}, env = {}) {
     }
   }
 
-  // Adds free text as a new option of the native select and selects it.
+  /**
+   * Adds free text as a new option of the native select and selects it.
+   * @param {string} text
+   */
   function create(text) {
     const option = element(doc, 'option', '', { 'data-ap-created': '' })
     option.value = text
@@ -192,7 +224,10 @@ export function createCombobox(select, options = {}, env = {}) {
     else input.value = selectedLabel()
   }
 
-  // Keyboard behavior of the editable combobox.
+  /**
+   * Keyboard behavior of the editable combobox.
+   * @param {KeyboardEvent} event
+   */
   function onKeydown(event) {
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       event.preventDefault()
@@ -221,15 +256,18 @@ export function createCombobox(select, options = {}, env = {}) {
   // Filters as the user types.
   const onInput = () => open(input.value)
 
-  // Settles the value when focus leaves the whole combobox.
+  /**
+   * Settles the value when focus leaves the whole combobox.
+   * @param {FocusEvent} event
+   */
   function onFocusOut(event) {
-    if (root.contains(event.relatedTarget)) return
+    if (root.contains(/** @type {Node | null} */ (event.relatedTarget))) return
     close()
     settle()
   }
 
   // Keeps focus in the input while clicking the toggle or an option.
-  const keepFocus = (event) => event.preventDefault()
+  const keepFocus = (/** @type {Event} */ event) => event.preventDefault()
 
   // Toggles the full list from the chevron button.
   function onToggle() {
@@ -238,11 +276,16 @@ export function createCombobox(select, options = {}, env = {}) {
     input.focus()
   }
 
-  // Selects a clicked option.
+  /**
+   * Selects a clicked option.
+   * @param {MouseEvent} event
+   */
   function onOptionClick(event) {
-    const item = event.target.closest('[role="option"]')
+    const item = /** @type {HTMLElement | null} */ (
+      /** @type {Element} */ (event.target).closest('[role="option"]')
+    )
     if (!item || item.getAttribute('aria-disabled') === 'true') return
-    commit(item.dataset.value)
+    commit(item.dataset.value ?? '')
     close()
   }
 
@@ -273,7 +316,10 @@ export function createCombobox(select, options = {}, env = {}) {
   return {
     element: root,
     getValue: () => select.value,
-    // Selects `value` without firing change events (programmatic update).
+    /**
+     * Selects `value` without firing change events (programmatic update).
+     * @param {string} value
+     */
     setValue(value) {
       choices = readOptions(select)
       select.value = value
@@ -292,3 +338,7 @@ export function createCombobox(select, options = {}, env = {}) {
     },
   }
 }
+
+/** Options of `createCombobox()`. @typedef {NonNullable<Parameters<typeof createCombobox>[1]>} ComboboxOptions */
+/** Handle returned by `createCombobox()`. @typedef {ReturnType<typeof createCombobox>} ComboboxHandle */
+/** @typedef {import('../shared/types.js').ComboboxOption} ComboboxOption */
