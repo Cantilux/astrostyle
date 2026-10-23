@@ -28,7 +28,7 @@
 >
 > **Components:** buttons, button groups, fields, inputs, selects, a searchable combobox, checkboxes, radios, switches, ranges, segmented meters, breadcrumbs, pagination, tabs, tags, callouts, progress bars, spinners, empty states, toasts, dialogs, drawers, accordions, tooltips, menus, tables, lists, dividers, key caps, skeletons, and the Design Guide's own blocks: mastheads, section headings, subheadings, windows, cards, tabbed boxes, segment bars, swatches and textured surfaces.
 >
-> **Next:** the `1.0.0` release: API freeze, an accessibility audit, the browser matrix and a customization guide, following the [roadmap](https://github.com/Cantilux/astrostyle/issues). Until then, minor versions may still change the API.
+> **Next:** the road to `1.0.0`, one [milestone](https://github.com/Cantilux/astrostyle/milestones) per minor version: test infrastructure, size and tone scales, utilities, icons, more form, navigation and content components, then the API freeze, an accessibility audit, the browser matrix and a customization guide. The full list is in the [roadmap](https://github.com/Cantilux/astrostyle/issues/94). Until then, minor versions may still change the API.
 
 > [!NOTE]
 > astrostyle is an independent production by Enrico Cantile and is not affiliated with Crescent Chimera. It is published under the [ASTROPRISMA Third Party License](https://www.astroprisma.com/license).
@@ -474,6 +474,7 @@ bun install
 | `bun run build` | Builds `dist/`: the full bundle (`astrostyle.css`), `core.css`, one file per component in `components/` (each also `.min`), `fonts.css` and `tokens.json`, then type-checks `js/` and writes its declarations to `dist/types/` |
 | `bun run docs:build` | Builds the documentation site into `_site/` (serve it over HTTP, e.g. with `bun run dev`: JavaScript modules do not run from `file://`) |
 | `bun run test` | Runs every `tests/**/*.test.mjs` with `node --test` |
+| `bun run test:browser` | Runs the interactive components in Chromium, Firefox and WebKit (`tests/browser/*.browser.mjs`, Playwright); install the browsers once with `bunx playwright install chromium firefox webkit`, pick some with `BROWSERS=chromium,webkit` |
 | `bun run lint` | Stylelint on `scss/` plus a Prettier check |
 | `bun run format` | Rewrites files with Prettier (Markdown is left as written) |
 | `bun run check:package` | After a build: checks what npm would publish, that `@use 'pkg:astrostyle'` compiles, that every exported path (`astrostyle/css/button`, `astrostyle/js`…) resolves and that a TypeScript consumer type-checks the public API |
@@ -484,7 +485,7 @@ bun install
 
 ### / Making a change /
 
-1. **Pick or open an issue.** The roadmap lives in issues [#2–#9](https://github.com/Cantilux/astrostyle/issues).
+1. **Pick or open an issue.** The roadmap is [#94](https://github.com/Cantilux/astrostyle/issues/94), in the order of its [milestones](https://github.com/Cantilux/astrostyle/milestones).
 2. **Branch from `master`.** `master` is protected: nobody pushes to it directly, maintainers included. Name the branch after the kind of change, e.g. `feat/button`, `fix/reset-svg`, `docs/tokens`.
 3. **Commit with Conventional Commits** (`feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`, `ci:`) and reference the issue (`Refs #5`).
 4. **Add a changeset** with `bun run changeset` when the change affects what users get (styles, tokens, classes, JavaScript). Pick the bump from the public contract:
@@ -495,7 +496,7 @@ bun install
    | `minor` | New components, tokens, variants or options |
    | `major` | Renamed or removed tokens, classes, mixins or options (while in `0.x`: `minor`) |
 
-5. **Open a Pull Request.** CI runs lint, tests, the build, the package check and the docs build; merging needs a green CI.
+5. **Open a Pull Request.** CI runs lint, tests, the build, the package check and the docs build, and the real-browser tests in a separate job; merging needs a green CI.
 
 <br>
 
