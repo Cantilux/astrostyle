@@ -339,6 +339,16 @@ test('closing the dialog puts focus back on the element that opened it', () => {
   assert.equal(dialog.returnValue, 'later')
 })
 
+test('focus goes back to a clicked opener even when the click did not focus it (Safari)', () => {
+  const dialog = dialogPage()
+  const handle = createDialog(dialog, {}, { document })
+  document.getElementById('opener').blur()
+  document.getElementById('opener').click()
+  document.getElementById('yes').focus()
+  handle.close()
+  assert.equal(document.activeElement.id, 'opener')
+})
+
 test('a click on the backdrop closes a dismissible dialog only', () => {
   const dialog = dialogPage()
   const box = { left: 100, right: 300, top: 100, bottom: 200 }
