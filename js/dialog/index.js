@@ -37,10 +37,14 @@ export function createDialog(dialog, options = {}, env = {}) {
   const emit = (/** @type {string} */ name, /** @type {object} */ detail) =>
     dialog.dispatchEvent(new view.CustomEvent(`ap:${name}`, { bubbles: true, detail }))
 
-  // Opens the dialog, remembering where focus was so it can go back there.
-  function open() {
+  /**
+   * Opens the dialog, remembering `origin` so focus can go back there on close: the clicked
+   * opener, or else the focused element (Safari does not focus a button when it is clicked).
+   * @param {Element | null} [origin]
+   */
+  function open(origin = doc.activeElement) {
     if (dialog.open) return
-    opener = doc.activeElement
+    opener = origin
     if (modal) dialog.showModal()
     else dialog.show()
     emit('open', {})
@@ -105,7 +109,7 @@ export function createDialog(dialog, options = {}, env = {}) {
   function onDocumentClick(event) {
     const trigger = /** @type {Element} */ (event.target).closest?.('[data-ap-dialog-open]')
     if (trigger && dialog.id && trigger.getAttribute('data-ap-dialog-open') === dialog.id) {
-      open()
+      open(trigger)
     }
   }
 
@@ -116,7 +120,7 @@ export function createDialog(dialog, options = {}, env = {}) {
 
   return {
     element: dialog,
-    open,
+    open: () => open(),
     close,
     isOpen: () => dialog.open,
     // Removes the behavior; an open dialog stays open.
