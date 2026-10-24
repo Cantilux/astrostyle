@@ -514,14 +514,14 @@ Releases leave on a schedule, never from a laptop. Merge pull requests into `mas
 | Branch | Role |
 | --- | --- |
 | `master` | Work for the next scheduled release |
-| `release` | What is on npm; only the release train moves it, and every push to it publishes |
+| `release` | What is on npm; only the release train moves it, then publishes it |
 | `hotfix` | Starts from `release`; urgent fixes merged here ship at once |
 
 1. **Every Tuesday around 12:00 (Rome time)** the **Release train** workflow takes `master`. With no pending changesets it stops. Otherwise it runs `bun run release:version` (new version, `CHANGELOG.md` entry), lint, tests, build and the package check, pushes the `chore: release x.y.z` commit to `master`, fast-forwards `release` to it and moves `hotfix` there too.
-2. **The push to `release`** starts the **Release** workflow: it sees a version npm does not have yet, runs the checks again, publishes with npm trusted publishing (with provenance) and tags `vX.Y.Z`.
+2. **The Release workflow**, dispatched by the train on `release`, sees a version npm does not have yet, runs the checks again, publishes with npm trusted publishing (with provenance) and tags `vX.Y.Z`.
 3. **Hotfix:** open a pull request into `hotfix` with a `patch` changeset (CI rejects `minor` and `major` there) and merge it. The train releases `hotfix` right away the same way, then merges it back into `master`; if that merge conflicts, it opens a pull request to resolve, and the Tuesday train waits for it. Never land the same fix in `master` too: it gets there through the merge back.
 
-The train refuses to release when `release` has commits its source branch lacks, and a branch that moved while it ran makes it stop; it is safe to run again. Its pushes use the `RELEASE_DEPLOY_KEY` deploy key, which may bypass the branch rules of `master`, `hotfix` and `release`.
+The train refuses to release when `release` has commits its source branch lacks, and a branch that moved while it ran makes it stop; it is safe to run again. It pushes with the workflow token (`GITHUB_TOKEN`): the GitHub Actions app is the only bypass actor of the rulesets on `master`, `hotfix` and `release`, and no key or secret is involved. Since pushes made with that token start no workflow, the train dispatches **Release** on `release` itself.
 
 Run `bun run check:package` to see exactly what npm would receive.
 
