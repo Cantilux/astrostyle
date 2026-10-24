@@ -456,7 +456,7 @@ The house rules, illustrated. Each image has an expandable text version below it
 
 ## ![04 / Workflow](.github/assets/section-workflow.svg)
 
-How a change travels from an idea to `master`, and from `master` to npm.
+How a change travels from an idea to `master`, and from `master` to npm on the weekly release train.
 
 <br>
 
@@ -478,14 +478,14 @@ bun install
 | `bun run format` | Rewrites files with Prettier (Markdown is left as written) |
 | `bun run check:package` | After a build: checks what npm would publish, that `@use 'pkg:astrostyle'` compiles, that every exported path (`astrostyle/css/button`, `astrostyle/js`…) resolves and that a TypeScript consumer type-checks the public API |
 | `bun run changeset` | Records a change for the next release |
-| `bun run release:version` | Applies pending changesets: new version and changelog entry |
+| `bun run release:version` | Applies pending changesets: new version and changelog entry (the release train runs it, not people) |
 
 <br>
 
 ### / Making a change /
 
 1. **Pick or open an issue.** The roadmap lives in issues [#2–#9](https://github.com/Cantilux/astrostyle/issues).
-2. **Branch from `master`.** `master` is protected: nobody pushes to it directly, maintainers included. Name the branch after the kind of change, e.g. `feat/button`, `fix/reset-svg`, `docs/tokens`.
+2. **Branch from `master`** (from `hotfix` for an urgent fix, see Releasing). `master` is protected: nobody pushes to it directly, maintainers included; only the release train adds its version and merge-back commits. Name the branch after the kind of change, e.g. `feat/button`, `fix/reset-svg`, `docs/tokens`.
 3. **Commit with Conventional Commits** (`feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`, `ci:`) and reference the issue (`Refs #5`).
 4. **Add a changeset** with `bun run changeset` when the change affects what users get (styles, tokens, classes, JavaScript). Pick the bump from the public contract:
 
@@ -501,11 +501,19 @@ bun install
 
 ### / Releasing /
 
-Releases are cut from a pull request, never from a laptop.
+Releases leave on a schedule, never from a laptop. Merge pull requests into `master` whenever they are ready, each with its changeset; nobody bumps versions by hand.
 
-1. On a `chore/release-x.y.z` branch, run `bun run release:version`. Changesets turns the pending changesets into the new version and the `CHANGELOG.md` entry.
-2. Open the PR and merge it once CI is green.
-3. The **Release** workflow sees a version npm does not have yet, runs lint, tests, build and the package check, publishes it with npm trusted publishing (with provenance) and tags it `vX.Y.Z`.
+| Branch | Role |
+| --- | --- |
+| `master` | Work for the next scheduled release |
+| `release` | What is on npm; only the release train moves it, and every push to it publishes |
+| `hotfix` | Starts from `release`; urgent fixes merged here ship at once |
+
+1. **Every Tuesday around 12:00 (Rome time)** the **Release train** workflow takes `master`. With no pending changesets it stops. Otherwise it runs `bun run release:version` (new version, `CHANGELOG.md` entry), lint, tests, build and the package check, pushes the `chore: release x.y.z` commit to `master`, fast-forwards `release` to it and moves `hotfix` there too.
+2. **The push to `release`** starts the **Release** workflow: it sees a version npm does not have yet, runs the checks again, publishes with npm trusted publishing (with provenance) and tags `vX.Y.Z`.
+3. **Hotfix:** open a pull request into `hotfix` with a `patch` changeset (CI rejects `minor` and `major` there) and merge it. The train releases `hotfix` right away the same way, then merges it back into `master`; if that merge conflicts, it opens a pull request to resolve, and the Tuesday train waits for it. Never land the same fix in `master` too: it gets there through the merge back.
+
+The train refuses to release when `release` has commits its source branch lacks, and a branch that moved while it ran makes it stop; it is safe to run again. Its pushes use the `RELEASE_DEPLOY_KEY` deploy key, which may bypass the branch rules of `master`, `hotfix` and `release`.
 
 Run `bun run check:package` to see exactly what npm would receive.
 
