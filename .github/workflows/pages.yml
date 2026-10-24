@@ -1,9 +1,11 @@
-# Builds the docs site from master and deploys it to GitHub Pages.
+# Builds the docs site from `release` and deploys it to GitHub Pages, so the docs match what is on
+# npm. The release train dispatches it after every release (its own pushes start no workflow); a
+# push to `release` made otherwise starts it too.
 name: Docs
 
 on:
   push:
-    branches: [master]
+    branches: [release]
   workflow_dispatch:
 
 permissions:

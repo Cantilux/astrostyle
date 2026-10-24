@@ -1,9 +1,9 @@
 # Release train. Every Tuesday around 12:00 Rome time it releases what master has gathered; a push
 # to `hotfix` releases that branch at once. It turns the pending changesets into a version commit,
-# runs the checks, pushes the commit to its branch, fast-forwards `release` and dispatches
-# release.yml there, which publishes to npm. A hotfix is then merged back into master; a Tuesday
+# runs the checks, pushes the commit to its branch, fast-forwards `release` and dispatches there
+# release.yml, which publishes to npm, and pages.yml, which deploys the docs. A hotfix is then merged back into master; a Tuesday
 # release moves `hotfix` to the new release. Pushes use GITHUB_TOKEN, whose GitHub Actions app is
-# the bypass actor of the branch rulesets; since such pushes start no workflow, release.yml is
+# the bypass actor of the branch rulesets; since such pushes start no workflow, both workflows are
 # dispatched explicitly (dispatches made with GITHUB_TOKEN do run). See README, "Releasing".
 name: Release train
 
@@ -108,6 +108,7 @@ jobs:
           git push origin "HEAD:refs/heads/$SOURCE"
           git push origin "HEAD:refs/heads/release"
           gh workflow run release.yml --ref release
+          gh workflow run pages.yml --ref release
           echo "Released $SOURCE as ${{ steps.version.outputs.version }}: release.yml publishes it." | tee -a "$GITHUB_STEP_SUMMARY"
       # A hotfix goes back into master as a merge commit, so release stays behind master and the
       # next Tuesday train fast-forwards. On a conflict a person resolves it in a pull request.
