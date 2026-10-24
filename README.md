@@ -475,6 +475,7 @@ bun install
 | `bun run docs:build` | Builds the documentation site into `_site/` (serve it over HTTP, e.g. with `bun run dev`: JavaScript modules do not run from `file://`) |
 | `bun run test` | Runs every `tests/**/*.test.mjs` with `node --test` |
 | `bun run test:browser` | Local only, not in CI: runs the interactive components in Chromium, Firefox and WebKit (`tests/browser/*.browser.mjs`, Playwright); install the browsers once with `bunx playwright install chromium firefox webkit`, pick some with `BROWSERS=chromium,webkit` |
+| `bun run test:visual` | Screenshots every section of every docs page in both themes, plus the open overlays, in Chromium and compares them with `tests/visual/screenshots/`; mismatches leave the new image in `tests/visual/output/actual/` and a diff in `tests/visual/output/diff/`. Baselines come from the CI image (see below) |
 | `bun run lint` | Stylelint on `scss/` plus a Prettier check |
 | `bun run format` | Rewrites files with Prettier (Markdown is left as written) |
 | `bun run check:package` | After a build: checks what npm would publish, that `@use 'pkg:astrostyle'` compiles, that every exported path (`astrostyle/css/button`, `astrostyle/js`…) resolves and that a TypeScript consumer type-checks the public API |
@@ -496,7 +497,13 @@ bun install
    | `minor` | New components, tokens, variants or options |
    | `major` | Renamed or removed tokens, classes, mixins or options (while in `0.x`: `minor`) |
 
-5. **Open a Pull Request.** CI runs lint, tests, the build, the package check and the docs build; merging needs a green CI. Run `bun run test:browser` yourself when you touch a JavaScript module: CI does not run it.
+5. **Open a Pull Request.** CI runs lint, tests, the build, the package check and the docs build; a separate job runs the visual regression. Merging needs a green CI. Run `bun run test:browser` yourself when you touch a JavaScript module: CI does not run it.
+6. **Update the screenshots when the look changes on purpose.** The visual job runs in the `mcr.microsoft.com/playwright:v1.64.0-noble` image, and the baselines are only valid there: fonts and rendering differ on other systems. When it fails, check the diffs in its `visual-output` artifact; if the changes are intended, copy the new images over the baselines and commit them:
+
+   ```sh
+   gh run download <run id> -n visual-output -D tests/visual/output
+   cp -R tests/visual/output/actual/. tests/visual/screenshots/
+   ```
 
 <br>
 

@@ -1,5 +1,6 @@
-# Lint, test and build every pull request and every push to master. The real-browser tests
-# (bun run test:browser) are local only: too heavy for every pull request.
+# Lint, test and build every pull request and every push to master; a second job compares the
+# docs pages with their screenshots. The real-browser tests (bun run test:browser) are local
+# only: too heavy for every pull request.
 name: CI
 
 on:
@@ -32,3 +33,29 @@ jobs:
       - run: bun run build
       - run: bun run check:package
       - run: bun run docs:build
+
+  visual:
+    name: Visual regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # The baselines were taken in this image: the same fonts and rendering on every run.
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.0-noble
+    steps:
+      - uses: actions/checkout@v7
+      # setup-bun unpacks Bun with unzip, which the Playwright image lacks.
+      - run: apt-get update && apt-get install --yes --no-install-recommends unzip
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.2.19
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - run: bun install --frozen-lockfile
+      - run: bun run test:visual
+      - name: Upload the new screenshots and diffs
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: visual-output
+          path: tests/visual/output/
