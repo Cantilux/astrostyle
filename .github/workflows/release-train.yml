@@ -1,9 +1,10 @@
 # Release train. Every Tuesday around 12:00 Rome time it releases what master has gathered; a push
 # to `hotfix` releases that branch at once. It turns the pending changesets into a version commit,
-# runs the checks, pushes the commit to its branch and fast-forwards `release`, whose push publishes
-# to npm (release.yml). A hotfix is then merged back into master; a Tuesday release moves `hotfix`
-# to the new release. Pushes use the RELEASE_DEPLOY_KEY deploy key: pushes made with GITHUB_TOKEN
-# would not start release.yml, and the key bypasses the branch rules. See README, "Releasing".
+# runs the checks, pushes the commit to its branch, fast-forwards `release` and dispatches
+# release.yml there, which publishes to npm. A hotfix is then merged back into master; a Tuesday
+# release moves `hotfix` to the new release. Pushes use GITHUB_TOKEN, whose GitHub Actions app is
+# the bypass actor of the branch rulesets; since such pushes start no workflow, release.yml is
+# dispatched explicitly (dispatches made with GITHUB_TOKEN do run). See README, "Releasing".
 name: Release train
 
 on:
@@ -48,8 +49,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
-      contents: read
+      contents: write
       pull-requests: write
+      actions: write
     env:
       SOURCE: ${{ needs.plan.outputs.source }}
     steps:
@@ -57,7 +59,6 @@ jobs:
         with:
           ref: ${{ needs.plan.outputs.source }}
           fetch-depth: 0
-          ssh-key: ${{ secrets.RELEASE_DEPLOY_KEY }}
       - name: Check that release is behind the source branch
         run: |
           git fetch --no-tags origin release
@@ -99,11 +100,14 @@ jobs:
         run: bun run lint && bun run test && bun run build && bun run check:package
       # Plain pushes: a branch that moved meanwhile rejects them and the train stops, to be run
       # again; release only ever moves forward.
-      - name: Push the version and fast-forward release
+      - name: Push the version, fast-forward release and publish
         if: steps.pending.outputs.found == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           git push origin "HEAD:refs/heads/$SOURCE"
           git push origin "HEAD:refs/heads/release"
+          gh workflow run release.yml --ref release
           echo "Released $SOURCE as ${{ steps.version.outputs.version }}: release.yml publishes it." | tee -a "$GITHUB_STEP_SUMMARY"
       # A hotfix goes back into master as a merge commit, so release stays behind master and the
       # next Tuesday train fast-forwards. On a conflict a person resolves it in a pull request.
