@@ -1,14 +1,12 @@
 # Publishes astrostyle to npm when the `release` branch carries a version that npm does not have
 # yet, then tags it. Only the release train (release-train.yml) moves `release`, after versioning
-# the pending changesets, and then dispatches this workflow on it: its own pushes start no workflow
-# (see README, "Releasing"). A push to `release` made otherwise starts it too. Publishing uses npm
-# trusted publishing (OIDC), so no npm token is stored in the repository.
+# the pending changesets (see README, "Releasing"). Publishing uses npm trusted publishing (OIDC),
+# so no npm token is stored in the repository.
 name: Release
 
 on:
   push:
     branches: [release]
-  workflow_dispatch:
 
 permissions:
   contents: write
