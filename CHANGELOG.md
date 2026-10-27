@@ -1,5 +1,11 @@
 # astrostyle
 
+## 0.6.1
+
+### Patch Changes
+
+- 3c67da2: Dialog: focus goes back to the opener button on close in Safari too, where clicking a button does not focus it.
+
 ## 0.6.0
 
 ### Minor Changes
