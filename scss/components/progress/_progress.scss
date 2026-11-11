@@ -60,6 +60,10 @@ $statuses: (
       animation: #{config.$prefix}-progress-sweep c.private(duration) linear infinite;
     }
 
+    &:where(:dir(rtl):indeterminate) {
+      animation-direction: reverse;
+    }
+
     &:where(:indeterminate)::-moz-progress-bar {
       background-color: transparent;
     }

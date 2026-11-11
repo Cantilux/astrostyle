@@ -34,7 +34,7 @@ One panel per tab, in the same order. Without JavaScript every panel stays visib
 | Input | Effect |
 | --- | --- |
 | `Tab` | Enters the tablist on the selected tab, then moves to its panel |
-| `←` / `→` (`↑` / `↓` when vertical) | Previous or next enabled tab, wrapping; selects it with automatic activation |
+| `←` / `→` (`↑` / `↓` when vertical) | Previous or next enabled tab in reading order (right to left, `←` is next), wrapping; selects it with automatic activation |
 | `Home` / `End` | First or last enabled tab |
 | `Enter`, `Space`, click | Selects the focused tab (manual activation) |
 

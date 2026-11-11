@@ -23,6 +23,7 @@ export const navigation = [
   ['feedback.html', 'Feedback'],
   ['blocks.html', 'Blocks'],
   ['containers.html', 'Containers'],
+  ['rtl.html', 'Right to left'],
 ]
 
 /** Design Guide names of the palette tokens. */

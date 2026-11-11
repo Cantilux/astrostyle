@@ -45,6 +45,13 @@ $backdrop: color-mix(in oklab, #{fn.token('palette-black')} 60%, transparent);
     color: c.private(fg);
     overscroll-behavior: contain;
 
+    // Physical direction of the inline axis, for the slide-in: 1 left to right, -1 right to left.
+    --_inline-sign: 1;
+
+    &:where(:dir(rtl)) {
+      --_inline-sign: -1;
+    }
+
     &:where([open]) {
       display: flex;
       flex-direction: column;
@@ -88,7 +95,7 @@ $backdrop: color-mix(in oklab, #{fn.token('palette-black')} 60%, transparent);
   @keyframes #{config.$prefix}-drawer-in {
     from {
       opacity: 0;
-      translate: c.private(offset) 0;
+      translate: calc(#{c.private(offset)} * var(--_inline-sign)) 0;
     }
   }
 }
