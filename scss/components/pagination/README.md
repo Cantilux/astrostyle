@@ -21,7 +21,7 @@ Without JavaScript, write the same structure by hand (below) with links: the sty
 
 ## What the script builds
 
-`ul.ap-c-pagination__list` with `li.ap-c-pagination__item`, each holding an `a` (with `href`) or a `button.ap-c-pagination__link`: the previous step (`.ap-c-pagination__step` with an `svg.ap-c-pagination__icon`), the page window, gaps (`span.ap-c-pagination__gap`, hidden from assistive technology) and the next step. The current page has `aria-current="page"`; every link has an `aria-label` ("Page 3"); steps at either end are `disabled` (buttons) or `aria-disabled="true"` without `href` (links). The `<nav>` gets `aria-label="Pagination"` unless it already has a name.
+`ul.ap-c-pagination__list` with `li.ap-c-pagination__item`, each holding an `a` (with `href`) or a `button.ap-c-pagination__link`: the previous step (`.ap-c-pagination__step` with an `svg.ap-c-pagination__icon`), the page window, gaps (`span.ap-c-pagination__gap`, hidden from assistive technology) and the next step. The current page has `aria-current="page"`; every link has an `aria-label` ("Page 3"); steps at either end are `disabled` (buttons) or `role="link"` with `aria-disabled="true"` and no `href` (links). The `<nav>` gets `aria-label="Pagination"` unless it already has a name.
 
 ## API
 

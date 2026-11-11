@@ -1,5 +1,5 @@
 # Lint, test and build every pull request and every push to master; a second job compares the
-# docs pages with their screenshots. The real-browser tests (bun run test:browser) are local
+# docs pages with their screenshots, a third checks their accessibility with axe-core. The real-browser tests (bun run test:browser) are local
 # only: too heavy for every pull request.
 name: CI
 
@@ -59,3 +59,23 @@ jobs:
         with:
           name: visual-output
           path: tests/visual/output/
+
+  a11y:
+    name: Accessibility
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # The image ships Chromium for the installed Playwright version.
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.0-noble
+    steps:
+      - uses: actions/checkout@v7
+      # setup-bun unpacks Bun with unzip, which the Playwright image lacks.
+      - run: apt-get update && apt-get install --yes --no-install-recommends unzip
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.2.19
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - run: bun install --frozen-lockfile
+      - run: bun run test:a11y

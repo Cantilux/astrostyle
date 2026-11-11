@@ -31,7 +31,7 @@
     <label class="ap-c-field__label" for="f-log">Log entry</label>
     <textarea class="ap-c-input" id="f-log" placeholder="What happened out there?"></textarea>
   </div>
-  <pre><code>&lt;div class="ap-c-field"&gt;
+  <pre tabindex="0"><code>&lt;div class="ap-c-field"&gt;
   &lt;label class="ap-c-field__label" for="course"&gt;Course&lt;/label&gt;
   &lt;input class="ap-c-input" id="course" aria-describedby="course-hint"&gt;
   &lt;p class="ap-c-field__hint" id="course-hint"&gt;Sector or coordinates.&lt;/p&gt;
@@ -79,7 +79,7 @@
       </select>
     </div>
   </div>
-  <pre><code>&lt;select class="ap-c-input ap-c-select" id="ship" name="ship" data-ap-combobox&gt;
+  <pre tabindex="0"><code>&lt;select class="ap-c-input ap-c-select" id="ship" name="ship" data-ap-combobox&gt;
   &lt;option value=""&gt;Search the registry&lt;/option&gt;
   &lt;option value="heron"&gt;Night Heron&lt;/option&gt;
 &lt;/select&gt;
@@ -117,7 +117,7 @@
       <label class="ap-o-cluster"><input class="ap-c-switch" type="checkbox" role="switch" disabled> Jump drive</label>
     </fieldset>
   </div>
-  <pre><code>&lt;label class="ap-o-cluster"&gt;&lt;input class="ap-c-checkbox" type="checkbox"&gt; Shields&lt;/label&gt;
+  <pre tabindex="0"><code>&lt;label class="ap-o-cluster"&gt;&lt;input class="ap-c-checkbox" type="checkbox"&gt; Shields&lt;/label&gt;
 &lt;label class="ap-o-cluster"&gt;&lt;input class="ap-c-radio" type="radio" name="thrust"&gt; Cruise&lt;/label&gt;
 &lt;label class="ap-o-cluster"&gt;&lt;input class="ap-c-switch" type="checkbox" role="switch"&gt; Autopilot&lt;/label&gt;</code></pre>
   {{tokens-checkbox}}
@@ -145,7 +145,7 @@
     <div class="ap-o-stack ap-o-stack--gap-xs"><span class="ap-u-text-label" id="m-fuel">Fuel 12 / 20</span><div class="ap-c-meter" role="meter" aria-labelledby="m-fuel" aria-valuemin="0" aria-valuemax="20" aria-valuenow="12" style="--ap-meter-value: 12; --ap-meter-max: 20"></div></div>
     <div class="ap-o-stack ap-o-stack--gap-xs"><span class="ap-u-text-label" id="m-shield">Shields 5 / 5</span><div class="ap-c-meter ap-c-meter--success" role="meter" aria-labelledby="m-shield" aria-valuemin="0" aria-valuemax="5" aria-valuenow="5" style="--ap-meter-value: 5; --ap-meter-max: 5"></div></div>
   </div>
-  <pre><code>&lt;div class="ap-c-meter ap-c-meter--danger" role="meter" aria-label="Hull"
+  <pre tabindex="0"><code>&lt;div class="ap-c-meter ap-c-meter--danger" role="meter" aria-label="Hull"
      aria-valuemin="0" aria-valuemax="8" aria-valuenow="3"
      style="--ap-meter-value: 3; --ap-meter-max: 8"&gt;&lt;/div&gt;</code></pre>
   <p class="docs-note">Keep <code>aria-valuenow</code>/<code>aria-valuemax</code> in sync with the two custom properties. Modifiers: <code>--success</code>, <code>--warning</code>, <code>--danger</code>.</p>

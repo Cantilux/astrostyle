@@ -16,5 +16,5 @@ Label, control, hint and error stacked together. Docs: `site/pages/forms.html`. 
 ## Rules
 
 - Elements: `__label` (label role), `__hint` (caption, subtle), `__error` (caption, `danger-text`).
-- A field containing a disabled control dims its label.
+- A field containing a disabled `input`, `select`, `textarea` or `button` dims its label; a disabled `<option>` does not.
 - Errors: `aria-invalid="true"` on the control, `aria-describedby` pointing at the error.
