@@ -58,8 +58,12 @@ export function createPagination(nav, options = {}, env = {}) {
     const node = element(doc, href ? 'a' : 'button', className, { 'aria-label': label })
     node.dataset.page = String(target)
     if (href) {
-      if (disabled) node.setAttribute('aria-disabled', 'true')
-      else node.setAttribute('href', href(target))
+      // A link without `href` has no role, so it could not carry its label: `role="link"` keeps
+      // it announced as a disabled link.
+      if (disabled) {
+        node.setAttribute('role', 'link')
+        node.setAttribute('aria-disabled', 'true')
+      } else node.setAttribute('href', href(target))
     } else {
       const button = /** @type {HTMLButtonElement} */ (node)
       button.type = 'button'
