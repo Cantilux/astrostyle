@@ -435,3 +435,11 @@ test('surface() paints a texture on any rule and rejects unknown kinds', () => {
     /unknown surface `glitter`/,
   )
 })
+
+test('a field dims its label for a disabled control, not for a disabled option', () => {
+  assert.deepEqual(
+    declarationsOf(css, '.ap-c-field:where(:has(:is(input, select, textarea, button):disabled))'),
+    { '--ap-field-label-color': 'var(--ap-text-disabled)' },
+  )
+  assert.equal(declarationsOf(css, '.ap-c-field:where(:has(:disabled))'), null)
+})

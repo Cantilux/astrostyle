@@ -41,7 +41,7 @@ $tokens: (
     color: c.private(error-color);
   }
 
-  #{c.component(field)}:where(:has(:is(input, select, textarea):disabled)) {
+  #{c.component(field)}:where(:has(:is(input, select, textarea, button):disabled)) {
     #{c.public-token(field, label-color)}: #{fn.token('text-disabled')};
   }
 }

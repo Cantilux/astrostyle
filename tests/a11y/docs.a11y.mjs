@@ -11,14 +11,48 @@ import { startSiteServer } from '../helpers/visual.mjs'
 
 const themes = ['light', 'dark']
 
-/** Open states that the static pages do not show: page, a short name, the action that reaches it. */
+/**
+ * Open states that the static pages do not show: page, a short name, the action that reaches it
+ * and a selector that matches only once the overlay is really open, so a broken opener fails the
+ * test instead of scanning the closed page.
+ */
 const states = [
-  ['containers.html', 'dialog-open', (page) => page.click('[data-ap-dialog-open="k-jump"]')],
-  ['containers.html', 'drawer-open', (page) => page.click('[data-ap-dialog-open="k-filters"]')],
-  ['containers.html', 'menu-open', (page) => page.click('[data-ap-menu="k-ship-menu"]')],
-  ['containers.html', 'tooltip-open', (page) => page.focus('[data-ap-tooltip="k-tip-scan"]')],
-  ['demo.html', 'combobox-open', (page) => page.click('.ap-c-combobox__toggle')],
-  ['feedback.html', 'toast', (page) => page.click('[data-docs-toast][data-urgent]')],
+  [
+    'containers.html',
+    'dialog-open',
+    (page) => page.click('[data-ap-dialog-open="k-jump"]'),
+    '#k-jump[open]',
+  ],
+  [
+    'containers.html',
+    'drawer-open',
+    (page) => page.click('[data-ap-dialog-open="k-filters"]'),
+    '#k-filters[open]',
+  ],
+  [
+    'containers.html',
+    'menu-open',
+    (page) => page.click('[data-ap-menu="k-ship-menu"]'),
+    '#k-ship-menu:popover-open',
+  ],
+  [
+    'containers.html',
+    'tooltip-open',
+    (page) => page.focus('[data-ap-tooltip="k-tip-scan"]'),
+    '#k-tip-scan:popover-open',
+  ],
+  [
+    'demo.html',
+    'combobox-open',
+    (page) => page.click('.ap-c-combobox__toggle'),
+    '[role="combobox"][aria-expanded="true"]',
+  ],
+  [
+    'feedback.html',
+    'toast',
+    (page) => page.click('[data-docs-toast][data-urgent]'),
+    '.ap-c-toast__region .ap-c-toast',
+  ],
 ]
 
 let server
@@ -83,10 +117,11 @@ for (const theme of themes) {
     })
   }
 
-  for (const [file, name, reach] of states) {
+  for (const [file, name, reach, open] of states) {
     test(`${file} ${name} · ${theme}`, async (t) => {
       await openPage(file, theme)
       await reach(page)
+      await page.waitForSelector(open, { state: 'visible', timeout: 5000 })
       await settle()
       await check(t)
     })
