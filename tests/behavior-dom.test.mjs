@@ -82,6 +82,7 @@ test('pagination with href renders links; canceling ap:page turns them into clie
   assert.equal(previous.tagName, 'A')
   assert.equal(previous.hasAttribute('href'), false)
   assert.equal(previous.getAttribute('aria-disabled'), 'true')
+  assert.equal(previous.getAttribute('role'), 'link')
   assert.equal(nav.querySelector('[data-step="next"]').getAttribute('href'), '?page=2')
   assert.equal(nav.getAttribute('aria-label'), 'Results')
   nav.addEventListener('ap:page', (event) => event.preventDefault())

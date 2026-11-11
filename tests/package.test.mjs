@@ -16,3 +16,10 @@ test('missing required files and forbidden paths are reported', () => {
     'unexpected tests/x.test.mjs',
   ])
 })
+
+test('the published package installs no dependencies: dev tools stay in devDependencies', async () => {
+  const { default: manifest } = await import('../package.json', { with: { type: 'json' } })
+  for (const field of ['dependencies', 'peerDependencies', 'optionalDependencies']) {
+    assert.equal(manifest[field], undefined, field)
+  }
+})

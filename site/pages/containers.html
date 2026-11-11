@@ -34,7 +34,7 @@
       <button class="ap-c-button ap-c-button--danger" type="button" data-ap-dialog-close value="seal">Seal deck 3</button>
     </footer>
   </dialog>
-  <pre><code>&lt;button class="ap-c-button" type="button" data-ap-dialog-open="jump"&gt;Jump&lt;/button&gt;
+  <pre tabindex="0"><code>&lt;button class="ap-c-button" type="button" data-ap-dialog-open="jump"&gt;Jump&lt;/button&gt;
 
 &lt;dialog class="ap-c-dialog" id="jump" aria-labelledby="jump-title" data-ap-dialog&gt;
   &lt;header class="ap-c-dialog__header"&gt;
@@ -45,7 +45,7 @@
     &lt;button class="ap-c-button" type="button" data-ap-dialog-close value="cancel"&gt;Cancel&lt;/button&gt;
   &lt;/footer&gt;
 &lt;/dialog&gt;</code></pre>
-  <pre><code>import { createDialog } from 'astrostyle/js/dialog'
+  <pre tabindex="0"><code>import { createDialog } from 'astrostyle/js/dialog'
 
 const jump = createDialog(document.querySelector('#jump'), { dismissible: true })
 jump.element.addEventListener('ap:close', (event) =&gt; console.log(event.detail.returnValue))</code></pre>
@@ -90,7 +90,7 @@ jump.element.addEventListener('ap:close', (event) =&gt; console.log(event.detail
       </ul>
     </nav>
   </dialog>
-  <pre><code>&lt;dialog class="ap-c-drawer" id="filters" aria-labelledby="filters-title" data-ap-dialog&gt;
+  <pre tabindex="0"><code>&lt;dialog class="ap-c-drawer" id="filters" aria-labelledby="filters-title" data-ap-dialog&gt;
   &lt;header class="ap-c-drawer__header"&gt;…&lt;/header&gt;
   &lt;div class="ap-c-drawer__body"&gt;…&lt;/div&gt;
   &lt;footer class="ap-c-drawer__footer"&gt;…&lt;/footer&gt;
@@ -115,7 +115,7 @@ jump.element.addEventListener('ap:close', (event) =&gt; console.log(event.detail
       <div class="ap-c-accordion__body"><p>The jump is cancelled and the drive cools for one cycle.</p></div>
     </details>
   </div>
-  <pre><code>&lt;details class="ap-c-accordion" name="faq"&gt;
+  <pre tabindex="0"><code>&lt;details class="ap-c-accordion" name="faq"&gt;
   &lt;summary class="ap-c-accordion__summary"&gt;How far can the ship jump?&lt;/summary&gt;
   &lt;div class="ap-c-accordion__body"&gt;…&lt;/div&gt;
 &lt;/details&gt;</code></pre>
@@ -147,7 +147,7 @@ jump.element.addEventListener('ap:close', (event) =&gt; console.log(event.detail
       </tbody>
     </table>
   </div>
-  <pre><code>&lt;div class="ap-c-table" role="region" aria-labelledby="manifest" tabindex="0"&gt;
+  <pre tabindex="0"><code>&lt;div class="ap-c-table" role="region" aria-labelledby="manifest" tabindex="0"&gt;
   &lt;table&gt;
     &lt;caption id="manifest"&gt;Manifest, cycle 7&lt;/caption&gt;
     …
@@ -171,7 +171,7 @@ jump.element.addEventListener('ap:close', (event) =&gt; console.log(event.detail
       <li class="ap-c-list__item"><button class="ap-c-list__link" type="button">Corsair dock <span class="ap-c-list__meta">3 jumps</span></button></li>
     </ul>
   </div>
-  <pre><code>&lt;ul class="ap-c-list"&gt;
+  <pre tabindex="0"><code>&lt;ul class="ap-c-list"&gt;
   &lt;li class="ap-c-list__item"&gt;Vega &lt;span class="ap-c-list__meta"&gt;Pilot&lt;/span&gt;&lt;/li&gt;
   &lt;li class="ap-c-list__item"&gt;&lt;a class="ap-c-list__link" href="/sectors/7g"&gt;Sector 7G&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</code></pre>
@@ -184,7 +184,7 @@ jump.element.addEventListener('ap:close', (event) =&gt; console.log(event.detail
   <hr class="ap-c-divider">
   <div class="ap-c-divider">Or</div>
   <hr class="ap-c-divider ap-c-divider--strong">
-  <pre><code>&lt;hr class="ap-c-divider"&gt;
+  <pre tabindex="0"><code>&lt;hr class="ap-c-divider"&gt;
 &lt;div class="ap-c-divider"&gt;Or&lt;/div&gt;</code></pre>
   <p class="docs-note">An <code>&lt;hr&gt;</code> is announced as a separator; a labelled divider reads only its label.</p>
   {{tokens-divider}}
@@ -193,30 +193,30 @@ jump.element.addEventListener('ap:close', (event) =&gt; console.log(event.detail
 <section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="kbd">
   <h2 class="ap-c-section-heading" id="kbd">Keyboard key <span class="ap-c-section-heading__index">07</span></h2>
   <p>Press <kbd class="ap-c-kbd">Ctrl</kbd> + <kbd class="ap-c-kbd">K</kbd> to search, <kbd class="ap-c-kbd">Esc</kbd> to close, <kbd class="ap-c-kbd">↑</kbd> <kbd class="ap-c-kbd">↓</kbd> to move.</p>
-  <pre><code>&lt;kbd class="ap-c-kbd"&gt;Ctrl&lt;/kbd&gt; + &lt;kbd class="ap-c-kbd"&gt;K&lt;/kbd&gt;</code></pre>
+  <pre tabindex="0"><code>&lt;kbd class="ap-c-kbd"&gt;Ctrl&lt;/kbd&gt; + &lt;kbd class="ap-c-kbd"&gt;K&lt;/kbd&gt;</code></pre>
   {{tokens-kbd}}
 </section>
 
 <section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="skeleton">
   <h2 class="ap-c-section-heading" id="skeleton">Skeleton <span class="ap-c-section-heading__index">08</span></h2>
   <div class="ap-o-grid ap-o-grid--gap-lg">
-    <div class="ap-c-card ap-o-stack ap-o-stack--gap-sm" aria-busy="true" aria-label="Loading a crew card">
+    <div class="ap-c-card ap-o-stack ap-o-stack--gap-sm" role="group" aria-busy="true" aria-label="Loading a crew card">
       <span class="ap-c-skeleton ap-c-skeleton--circle"></span>
       <span class="ap-c-skeleton" style="--ap-skeleton-inline-size: 60%"></span>
       <span class="ap-c-skeleton"></span>
       <span class="ap-c-skeleton" style="--ap-skeleton-inline-size: 80%"></span>
     </div>
-    <div class="ap-o-stack ap-o-stack--gap-sm" aria-busy="true" aria-label="Loading a sensor view">
+    <div class="ap-o-stack ap-o-stack--gap-sm" role="group" aria-busy="true" aria-label="Loading a sensor view">
       <span class="ap-c-skeleton ap-c-skeleton--block"></span>
       <span class="ap-c-skeleton" style="--ap-skeleton-inline-size: 40%"></span>
     </div>
   </div>
-  <pre><code>&lt;div aria-busy="true" aria-label="Loading crew"&gt;
+  <pre tabindex="0"><code>&lt;div role="group" aria-busy="true" aria-label="Loading crew"&gt;
   &lt;span class="ap-c-skeleton ap-c-skeleton--circle"&gt;&lt;/span&gt;
   &lt;span class="ap-c-skeleton" style="--ap-skeleton-inline-size: 60%"&gt;&lt;/span&gt;
   &lt;span class="ap-c-skeleton ap-c-skeleton--block"&gt;&lt;/span&gt;
 &lt;/div&gt;</code></pre>
-  <p class="docs-note">A text line by default, <code>--block</code> for media, <code>--circle</code> for avatars. Mark the loading region with <code>aria-busy="true"</code>; <code>--ap-skeleton-duration: 0s</code> stops the pulse.</p>
+  <p class="docs-note">A text line by default, <code>--block</code> for media, <code>--circle</code> for avatars. Mark the loading region with <code>role="group"</code>, <code>aria-busy="true"</code> and a name; <code>--ap-skeleton-duration: 0s</code> stops the pulse.</p>
   {{tokens-skeleton}}
 </section>
 
@@ -228,7 +228,7 @@ jump.element.addEventListener('ap:close', (event) =&gt; console.log(event.detail
     <button class="ap-c-button" type="button" aria-describedby="k-tip-jump" data-ap-tooltip="k-tip-jump">Jump</button>
     <span class="ap-c-tooltip" id="k-tip-jump" role="tooltip" popover="manual">Needs two cycles to cool down</span>
   </div>
-  <pre><code>&lt;button class="ap-c-button ap-c-button--icon" type="button" aria-labelledby="scan-tip" data-ap-tooltip="scan-tip"&gt;…&lt;/button&gt;
+  <pre tabindex="0"><code>&lt;button class="ap-c-button ap-c-button--icon" type="button" aria-labelledby="scan-tip" data-ap-tooltip="scan-tip"&gt;…&lt;/button&gt;
 &lt;span class="ap-c-tooltip" id="scan-tip" role="tooltip" popover="manual"&gt;Long-range scan&lt;/span&gt;</code></pre>
   <p class="docs-note">Hover or tab to the buttons. A popover in the top layer, placed above the trigger (below when there is no room) by <code>createTooltip()</code>; Escape hides it. Link it yourself: <code>aria-labelledby</code> for icon buttons, <code>aria-describedby</code> for extra hints.</p>
   {{tokens-tooltip}}
@@ -248,7 +248,7 @@ jump.element.addEventListener('ap:close', (event) =&gt; console.log(event.detail
     <button class="ap-c-menu__item ap-c-menu__item--danger" type="button" value="scrap">Scrap</button>
   </div>
   <p class="docs-note" id="k-menu-output" aria-live="polite">Pick an action: <code>ap:select</code> reports it here.</p>
-  <pre><code>&lt;button class="ap-c-button" type="button" data-ap-menu="ship-menu"&gt;Ship&lt;/button&gt;
+  <pre tabindex="0"><code>&lt;button class="ap-c-button" type="button" data-ap-menu="ship-menu"&gt;Ship&lt;/button&gt;
 &lt;div class="ap-c-menu" id="ship-menu" popover&gt;
   &lt;button class="ap-c-menu__item" type="button" value="rename"&gt;Rename&lt;/button&gt;
   &lt;div class="ap-c-menu__separator" role="separator"&gt;&lt;/div&gt;
