@@ -122,7 +122,8 @@ export function createTabs(root, options = {}, env = {}) {
   function onKeydown(event) {
     const from = tabs.indexOf(tabOf(event))
     if (from < 0) return
-    const target = targetForKey(event.key, from, tabs.map(isDisabled), orientation)
+    const rtl = view.getComputedStyle(list).direction === 'rtl'
+    const target = targetForKey(event.key, from, tabs.map(isDisabled), orientation, rtl)
     if (target === null) return
     event.preventDefault()
     tabs[target].focus()

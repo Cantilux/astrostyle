@@ -52,6 +52,11 @@ $tokens: (
       translate: calc(#{c.private(block-size)} * 0.9) 0;
     }
 
+    // Right to left, the inline end is on the left: the thumb travels the other way.
+    &:where(:dir(rtl):checked)::before {
+      translate: calc(#{c.private(block-size)} * -0.9) 0;
+    }
+
     &:where(:disabled) {
       opacity: 0.5;
     }

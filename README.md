@@ -390,7 +390,7 @@ The house rules, illustrated. Each image has an expandable text version below it
 ### / Responsive /
 
 <p align="center">
-  <img src=".github/assets/conventions-responsive.svg" alt="Responsive: 4 code conventions; full text in the expandable section below" width="100%">
+  <img src=".github/assets/conventions-responsive.svg" alt="Responsive: 5 code conventions; full text in the expandable section below" width="100%">
 </p>
 
 <details>
@@ -399,6 +399,7 @@ The house rules, illustrated. Each image has an expandable text version below it
 - Mobile first: `min-width` media queries only, through `ap.mq()`; container queries through `ap.cq()`.
 - Breakpoints in `em`.
 - Logical properties (`inline-size`, `margin-block`, `padding-inline`) instead of physical ones.
+- Right to left works with `dir="rtl"` alone: what logical properties cannot express (chevrons, translations, gradient angles, arrow keys) mirrors through `:dir(rtl)` or the computed `direction`. The [Right to left page](https://cantilux.github.io/astrostyle/rtl.html) shows it, `tests/browser/rtl.browser.mjs` checks it.
 - Interactive controls are at least 40px tall at every size.
 
 </details>
@@ -474,7 +475,7 @@ bun install
 | `bun run build` | Builds `dist/`: the full bundle (`astrostyle.css`), `core.css`, one file per component in `components/` (each also `.min`), `fonts.css` and `tokens.json`, then type-checks `js/` and writes its declarations to `dist/types/` |
 | `bun run docs:build` | Builds the documentation site into `_site/` (serve it over HTTP, e.g. with `bun run dev`: JavaScript modules do not run from `file://`) |
 | `bun run test` | Runs every `tests/**/*.test.mjs` with `node --test` |
-| `bun run test:browser` | Local only, not in CI: runs the interactive components in Chromium, Firefox and WebKit (`tests/browser/*.browser.mjs`, Playwright); install the browsers once with `bunx playwright install chromium firefox webkit`, pick some with `BROWSERS=chromium,webkit` |
+| `bun run test:browser` | Local only, not in CI: runs the interactive components, and the right-to-left checks (each direction-dependent component must be the mirror image of itself left to right), in Chromium, Firefox and WebKit (`tests/browser/*.browser.mjs`, Playwright); install the browsers once with `bunx playwright install chromium firefox webkit`, pick some with `BROWSERS=chromium,webkit` |
 | `bun run test:visual` | Screenshots every section of every docs page in both themes, plus the open overlays, in Chromium and compares them with `tests/visual/screenshots/`; mismatches leave the new image in `tests/visual/output/actual/` and a diff in `tests/visual/output/diff/`. Baselines come from the CI image (see below) |
 | `bun run test:a11y` | Runs [axe-core](https://github.com/dequelabs/axe-core) on every docs page in both themes, plus the open overlays, in Chromium (`tests/a11y/*.a11y.mjs`): a WCAG 2.2 A/AA or best-practice violation fails, checks axe cannot decide (such as contrast over a gradient) are printed for a manual look. axe-core is a dev dependency: the published package has no dependencies |
 | `bun run lint` | Stylelint on `scss/` plus a Prettier check |

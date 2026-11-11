@@ -27,6 +27,13 @@ $tokens: (
     cursor: pointer;
     appearance: none;
 
+    // Right to left, the chevron sits at the inline end, which is the left edge.
+    &:where(:dir(rtl)) {
+      background-position:
+        left #{fn.space(md)} center,
+        left calc(#{fn.space(md)} + #{c.private(chevron-size)}) center;
+    }
+
     &:where(:disabled) {
       cursor: not-allowed;
     }

@@ -1,0 +1,115 @@
+<!-- title: Right to left -->
+<section class="ap-o-stack ap-o-stack--gap-md">
+  <h1>Right to left</h1>
+  <p>Every component follows the reading direction: set <code>dir="rtl"</code> on the page (or on any container) and layouts, chevrons, fills and motion mirror, with no extra class. The samples below sit in a <code>dir="rtl" lang="ar"</code> container. Keys follow the direction too: in a horizontal tablist, <kbd>←</kbd> moves to the next tab.</p>
+</section>
+
+<section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="rtl-forms">
+  <h2 class="ap-c-section-heading" id="rtl-forms">Forms <span class="ap-c-section-heading__index">01</span></h2>
+  <div class="ap-o-stack ap-o-stack--gap-lg" dir="rtl" lang="ar">
+    <div class="ap-o-grid ap-o-grid--gap-lg">
+      <div class="ap-c-field">
+        <label class="ap-c-field__label" for="r-name">اسم السفينة</label>
+        <input class="ap-c-input" id="r-name" type="text" value="الطائر الليلي">
+      </div>
+      <div class="ap-c-field">
+        <label class="ap-c-field__label" for="r-class">فئة السفينة</label>
+        <select class="ap-c-input ap-c-select" id="r-class">
+          <option value="">اختر فئة</option>
+          <option>فرقاطة</option>
+          <option>ناقلة</option>
+          <option>مدمرة</option>
+        </select>
+      </div>
+      <div class="ap-c-field">
+        <label class="ap-c-field__label" for="r-planet">الكوكب</label>
+        <select class="ap-c-input ap-c-select" id="r-planet" data-ap-combobox>
+          <option value="">ابحث عن كوكب</option>
+          <option>المريخ</option>
+          <option>الزهرة</option>
+          <option>زحل</option>
+          <option>المشتري</option>
+        </select>
+      </div>
+    </div>
+    <div class="ap-o-cluster ap-o-cluster--gap-lg">
+      <label class="ap-o-cluster"><input class="ap-c-switch" type="checkbox" role="switch" checked> دعم الحياة</label>
+      <label class="ap-o-cluster"><input class="ap-c-switch" type="checkbox" role="switch"> الطيار الآلي</label>
+      <label class="ap-o-cluster"><input class="ap-c-checkbox" type="checkbox" checked> الدروع</label>
+      <label class="ap-o-cluster"><input class="ap-c-radio" type="radio" name="r-speed" checked> بطيء</label>
+      <label class="ap-o-cluster"><input class="ap-c-radio" type="radio" name="r-speed"> سريع</label>
+    </div>
+    <div class="ap-o-grid ap-o-grid--gap-lg">
+      <div class="ap-o-stack ap-o-stack--gap-xs"><label class="ap-u-text-label" for="r-thrust">الدفع</label><input class="ap-c-range" id="r-thrust" type="range" value="30"></div>
+      <div class="ap-o-stack ap-o-stack--gap-xs"><span class="ap-u-text-label" id="r-fuel">الوقود 12 / 20</span><div class="ap-c-meter" role="meter" aria-labelledby="r-fuel" aria-valuemin="0" aria-valuemax="20" aria-valuenow="12" style="--ap-meter-value: 12; --ap-meter-max: 20"></div></div>
+      <div class="ap-o-stack ap-o-stack--gap-xs"><span class="ap-u-text-label" id="r-scan">مسح القطاع</span><progress class="ap-c-progress" aria-labelledby="r-scan" max="100" value="40"></progress></div>
+    </div>
+  </div>
+</section>
+
+<section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="rtl-navigation">
+  <h2 class="ap-c-section-heading" id="rtl-navigation">Navigation <span class="ap-c-section-heading__index">02</span></h2>
+  <div class="ap-o-stack ap-o-stack--gap-lg" dir="rtl" lang="ar">
+    <nav class="ap-c-breadcrumb" aria-label="مسار التنقل">
+      <ol class="ap-c-breadcrumb__list">
+        <li class="ap-c-breadcrumb__item"><a class="ap-c-breadcrumb__link" href="#rtl-navigation">الرئيسية</a></li>
+        <li class="ap-c-breadcrumb__item"><a class="ap-c-breadcrumb__link" href="#rtl-navigation">الأسطول</a></li>
+        <li class="ap-c-breadcrumb__item"><a class="ap-c-breadcrumb__link" aria-current="page">المحركات</a></li>
+      </ol>
+    </nav>
+    <nav data-ap-pagination data-ap-page="2" data-ap-count="8" aria-label="الصفحات"></nav>
+    <div class="ap-c-tabs" data-ap-tabs>
+      <div class="ap-c-tabs__list" aria-label="أقسام السفينة">
+        <button class="ap-c-tabs__tab" type="button">الطاقم</button>
+        <button class="ap-c-tabs__tab" type="button">الحمولة</button>
+        <button class="ap-c-tabs__tab" type="button">الأنظمة</button>
+      </div>
+      <div class="ap-c-tabs__panel"><p>أربعة أفراد على متن السفينة.</p></div>
+      <div class="ap-c-tabs__panel"><p>اثنتا عشرة خلية بلازما.</p></div>
+      <div class="ap-c-tabs__panel"><p>الدروع تعمل.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="ap-o-stack ap-o-stack--gap-lg" aria-labelledby="rtl-containers">
+  <h2 class="ap-c-section-heading" id="rtl-containers">Containers <span class="ap-c-section-heading__index">03</span></h2>
+  <div class="ap-o-stack ap-o-stack--gap-lg" dir="rtl" lang="ar">
+    <div>
+      <details class="ap-c-accordion" name="r-faq" open>
+        <summary class="ap-c-accordion__summary">إلى أي مدى تقفز السفينة؟</summary>
+        <div class="ap-c-accordion__body"><p>ثلاثة قطاعات في كل دورة.</p></div>
+      </details>
+      <details class="ap-c-accordion" name="r-faq">
+        <summary class="ap-c-accordion__summary">من يستطيع قيادتها؟</summary>
+        <div class="ap-c-accordion__body"><p>أي طيار مرخص.</p></div>
+      </details>
+    </div>
+    <div class="ap-o-cluster ap-o-cluster--gap-sm">
+      <button class="ap-c-button" type="button" data-ap-dialog-open="r-end">فتح من النهاية</button>
+      <button class="ap-c-button" type="button" data-ap-dialog-open="r-start">فتح من البداية</button>
+      <button class="ap-c-button" type="button" data-ap-menu="r-menu">إجراءات السفينة</button>
+      <button class="ap-c-button" type="button" aria-describedby="r-tip" data-ap-tooltip="r-tip">قفز</button>
+    </div>
+    <span class="ap-c-tooltip" id="r-tip" role="tooltip" popover="manual">تحتاج إلى دورتين للتبريد</span>
+    <div class="ap-c-menu" id="r-menu" popover>
+      <button class="ap-c-menu__item" type="button" value="repair">إصلاح</button>
+      <button class="ap-c-menu__item" type="button" value="refuel">تزويد بالوقود</button>
+      <button class="ap-c-menu__item" type="button" value="dock">إرساء</button>
+    </div>
+    <dialog class="ap-c-drawer" id="r-end" aria-labelledby="r-end-title" data-ap-dialog>
+      <header class="ap-c-drawer__header">
+        <h3 class="ap-c-drawer__title" id="r-end-title">المرشحات</h3>
+        <button class="ap-c-button ap-c-button--quiet" type="button" data-ap-dialog-close>إغلاق</button>
+      </header>
+      <div class="ap-c-drawer__body"><p>يظهر من حافة النهاية، وهي اليسرى.</p></div>
+    </dialog>
+    <dialog class="ap-c-drawer ap-c-drawer--start" id="r-start" aria-labelledby="r-start-title" data-ap-dialog>
+      <header class="ap-c-drawer__header">
+        <h3 class="ap-c-drawer__title" id="r-start-title">القائمة</h3>
+        <button class="ap-c-button ap-c-button--quiet" type="button" data-ap-dialog-close>إغلاق</button>
+      </header>
+      <div class="ap-c-drawer__body"><p>يظهر من حافة البداية، وهي اليمنى.</p></div>
+    </dialog>
+  </div>
+  <p class="docs-note">Drawers come in from their own edge: the end one from the left, the <code>--start</code> one from the right. Menus line up with the right edge of their button.</p>
+</section>

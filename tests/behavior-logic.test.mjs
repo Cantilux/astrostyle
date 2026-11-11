@@ -56,6 +56,13 @@ test('targetForKey wraps with the arrows of the orientation and skips disabled t
   assert.equal(targetForKey('Enter', 0, disabled), null)
 })
 
+test('targetForKey swaps the horizontal arrows right to left, not the vertical ones', () => {
+  const disabled = [false, false, false]
+  assert.equal(targetForKey('ArrowLeft', 0, disabled, 'horizontal', true), 1)
+  assert.equal(targetForKey('ArrowRight', 0, disabled, 'horizontal', true), 2)
+  assert.equal(targetForKey('ArrowDown', 0, disabled, 'vertical', true), 1)
+})
+
 test('targetForKey stays put when every other tab is disabled, and gives up when all are', () => {
   assert.equal(targetForKey('ArrowRight', 0, [false, true, true]), 0)
   assert.equal(targetForKey('Home', 0, [true, true]), null)

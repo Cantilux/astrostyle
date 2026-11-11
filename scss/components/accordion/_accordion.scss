@@ -69,6 +69,16 @@ $tokens: (
       margin-block: 0.25em 0;
       rotate: -135deg;
     }
+
+    // Right to left, `border-inline-end` is the left border: the turn mirrors to keep the
+    // chevron pointing down (up when open).
+    &:where(:dir(rtl))::after {
+      rotate: -45deg;
+    }
+
+    &:where(:dir(rtl):is([open] > *))::after {
+      rotate: 135deg;
+    }
   }
 
   #{c.component(accordion, body)} {

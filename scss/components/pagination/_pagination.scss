@@ -72,6 +72,12 @@ $tokens: (
   #{c.component(pagination, icon)} {
     inline-size: fn.token('size-icon');
     block-size: fn.token('size-icon');
+
+    // Previous points to the inline start, next to the inline end: right to left they mirror.
+    &:where(:dir(rtl)) {
+      scale: -1 1;
+    }
+
   }
 
   #{c.component(pagination, gap)} {
