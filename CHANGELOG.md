@@ -1,5 +1,12 @@
 # astrostyle
 
+## 0.6.2
+
+### Patch Changes
+
+- 2f81dd7: Accessibility fixes found by the new automated checks: a field no longer dims its label when its select only has a disabled `<option>` (the label dims for a disabled `input`, `select`, `textarea` or `button`), and disabled pagination steps rendered as links get `role="link"`, so their `aria-label` stays valid. The skeleton contract now names the loading region with `role="group"`.
+- d12e17d: Right to left (`dir="rtl"`) now mirrors every component: the select chevron sits at the inline end instead of over the text, the switch thumb stays inside its track, the segmented meter fills from the inline start, the accordion chevron keeps pointing down (up when open), the pagination chevrons point the right way, drawers slide in from their own edge, the indeterminate progress sweeps toward the inline end, and in a horizontal tablist `←` moves to the next tab. The docs gain a Right to left page.
+
 ## 0.6.1
 
 ### Patch Changes
